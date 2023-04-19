@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 
+import 'provider/ThemeProvider.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.removeAfter(initialization);
@@ -19,10 +21,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        // Add providers here
-      ],
-      child: MaterialApp(
+        providers: [
+          Provider<ChangeNotifier>(create: (_) => ThemeProvider()),
+        ],
+        child: MaterialApp(
           title: 'Checkmate',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -34,7 +36,56 @@ class MainApp extends StatelessWidget {
               // secondary:
             ),
           ),
-          home: Placeholder()),
+          home: MainPage(),
+        ));
+  }
+}
+
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
+  Widget build(BuildContext context) {
+    return const DefaultTabController(
+      length: 4,
+      child: Scaffold(
+          body: TabBarView(
+            children: [
+              Center(
+                child: Text('List'),
+              ),
+              Center(
+                child: Text('Archive'),
+              ),
+              Center(
+                child: Text('Notifications'),
+              ),
+              Center(
+                child: Text('Settings'),
+              ),
+            ],
+          ),
+          bottomNavigationBar: TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.list_alt_outlined),
+              ),
+              Tab(
+                icon: Icon(Icons.archive_outlined),
+              ),
+              Tab(
+                icon: Icon(Icons.notifications_active_outlined),
+              ),
+              Tab(
+                icon: Icon(Icons.settings_outlined),
+              ),
+            ],
+          )),
     );
   }
 }
