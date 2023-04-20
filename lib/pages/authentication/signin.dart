@@ -5,6 +5,27 @@ class SignIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Sign In screen'),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/signup');
+              },
+              child: const Text('Sign in'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/signup');
+              },
+              child: const Text('Sign Up'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

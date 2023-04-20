@@ -13,19 +13,18 @@ import 'firebase_options.dart';
 import 'provider/theme_provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.removeAfter(initialization);
-
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FlutterNativeSplash.remove();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    MultiProvider(providers: [
-      Provider<ChangeNotifier>(create: (_) => ThemeProvider()),
-      Provider<ChangeNotifier>(create: (_) => Database()),
-    ], child: const MainApp()),
+    const MainApp(),
   );
 }
 
 Future initialization(BuildContext? context) async {
-  await Future.delayed(const Duration(seconds: 3));
+  await Future.delayed(const Duration(seconds: 2));
+  FlutterNativeSplash.remove();
 }
 
 class MainApp extends StatelessWidget {
@@ -41,17 +40,44 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromRGBO(127, 17, 224, 1),
           brightness: Brightness.light,
-          // primary:
-          // secondary:
         ),
       ),
-      initialRoute:
-          FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/home',
-      routes: {
-        '/sign-in': (context) => const SignIn(),
-        '/sign-up': (context) => const SignUp(),
-        '/home': (context) => const Home(),
-      },
+      home: Center(
+        child: FutureBuilder(
+          future: initialization(context),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(create: (_) => ThemeProvider()),
+                  ChangeNotifierProvider(create: (_) => Database()),
+                ],
+                child: StreamBuilder(
+                  stream: FirebaseAuth.instance.authStateChanges(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      final User? user = snapshot.data;
+                      if (user == null) {
+                        return const Scaffold(
+                          body: SignIn(),
+                        );
+                      } else {
+                        return const Scaffold(
+                          body: Home(),
+                        );
+                      }
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
+              );
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
+        ),
+      ),
     );
   }
 }
