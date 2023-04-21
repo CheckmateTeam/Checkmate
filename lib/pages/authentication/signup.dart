@@ -91,50 +91,52 @@ class _SignUpState extends State<SignUp> {
                         margin: const EdgeInsets.all(20),
                         child: Form(
                           key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextFormField(
-                                  controller: emailController,
-                                  validator: (value) {
-                                    if (value == null ||
-                                        value.isEmpty ||
-                                        !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                            .hasMatch(value)) {
-                                      return 'Please enter correct email';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    hintText: "Email",
-                                    labelText: "Email",
-                                    prefixIcon: Icon(Icons.email),
-                                  ),
-                                  style: const TextStyle(fontSize: 10)),
-                              const SizedBox(height: 10),
-                              TextFormField(
-                                  controller: passwordController,
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    hintText: "Password",
-                                    labelText: "Password",
-                                    prefixIcon: Icon(Icons.search),
-                                  ),
-                                  style: const TextStyle(fontSize: 10)),
-                              const SizedBox(height: 10),
-                              TextFormField(
-                                  controller: confirmPasswordController,
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    hintText: "Confirm Password",
-                                    labelText: "Confirm Password",
-                                    prefixIcon: Icon(Icons.search),
-                                  ),
-                                  style: const TextStyle(fontSize: 10))
-                            ],
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextFormField(
+                                    controller: emailController,
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                              .hasMatch(value)) {
+                                        return 'Please enter correct email';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      hintText: "Email",
+                                      labelText: "Email",
+                                      prefixIcon: Icon(Icons.email),
+                                    ),
+                                    style: const TextStyle(fontSize: 10)),
+                                const SizedBox(height: 10),
+                                TextFormField(
+                                    controller: passwordController,
+                                    obscureText: true,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      hintText: "Password",
+                                      labelText: "Password",
+                                      prefixIcon: Icon(Icons.search),
+                                    ),
+                                    style: const TextStyle(fontSize: 10)),
+                                const SizedBox(height: 10),
+                                TextFormField(
+                                    controller: confirmPasswordController,
+                                    obscureText: true,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      hintText: "Confirm Password",
+                                      labelText: "Confirm Password",
+                                      prefixIcon: Icon(Icons.search),
+                                    ),
+                                    style: const TextStyle(fontSize: 10))
+                              ],
+                            ),
                           ),
                         )),
                     SizedBox(

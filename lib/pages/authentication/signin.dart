@@ -109,30 +109,32 @@ class _SignInState extends State<SignIn> {
                     Container(
                         padding: const EdgeInsets.all(15),
                         margin: const EdgeInsets.all(20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextField(
-                                controller: emailController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: "Email",
-                                  labelText: "Email",
-                                  prefixIcon: Icon(Icons.email),
-                                ),
-                                style: const TextStyle(fontSize: 12)),
-                            const SizedBox(height: 20),
-                            TextField(
-                                controller: passwordController,
-                                obscureText: true,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: "Password",
-                                  labelText: "Password",
-                                  prefixIcon: Icon(Icons.search),
-                                ),
-                                style: const TextStyle(fontSize: 12)),
-                          ],
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                  controller: emailController,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: "Email",
+                                    labelText: "Email",
+                                    prefixIcon: Icon(Icons.email),
+                                  ),
+                                  style: const TextStyle(fontSize: 12)),
+                              const SizedBox(height: 20),
+                              TextField(
+                                  controller: passwordController,
+                                  obscureText: true,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: "Password",
+                                    labelText: "Password",
+                                    prefixIcon: Icon(Icons.search),
+                                  ),
+                                  style: const TextStyle(fontSize: 12)),
+                            ],
+                          ),
                         )),
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 1.6,
