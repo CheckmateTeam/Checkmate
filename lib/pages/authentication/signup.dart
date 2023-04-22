@@ -37,8 +37,8 @@ class _SignUpState extends State<SignUp> {
                     begin: Alignment.bottomLeft,
                     end: Alignment.topRight,
                     colors: [
-                      Color.fromRGBO(175, 56, 211, 1),
-                      Color.fromRGBO(54, 122, 240, 1),
+                      Color.fromRGBO(241, 91, 91, 1),
+                      Color.fromRGBO(241, 146, 91, 1),
                     ],
                   )),
             ),
@@ -145,7 +145,7 @@ class _SignUpState extends State<SignUp> {
                       child: ElevatedButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                  const Color.fromRGBO(175, 56, 211, 1))),
+                                  const Color.fromRGBO(241, 91, 91, 1))),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               if (passwordController.text ==

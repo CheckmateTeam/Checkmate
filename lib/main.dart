@@ -32,7 +32,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromRGBO(127, 17, 224, 1),
+            seedColor: const Color.fromRGBO(241, 91, 91, 1),
             brightness: Brightness.light,
           ),
           fontFamily: GoogleFonts.nunito().fontFamily,
@@ -59,9 +59,7 @@ class MainApp extends StatelessWidget {
                             body: SignIn(),
                           );
                         } else {
-                          return const Scaffold(
-                            body: Home(),
-                          );
+                          return Home();
                         }
                       } else {
                         return const CircularProgressIndicator();
