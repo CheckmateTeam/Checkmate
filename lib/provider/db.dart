@@ -5,31 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:checkmate/firebase_options.dart';
 
 class Database extends ChangeNotifier {
-  Database() {
-    init();
-  }
+  Database();
 
-  //Authen
-  bool _loggedIn = false;
-  bool get loggedIn => _loggedIn;
-
-  Future<void> init() async {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
-
-    FirebaseAuth.instance.userChanges().listen((user) {
-      if (user != null) {
-        _loggedIn = true;
-      } else {
-        _loggedIn = false;
-      }
-      notifyListeners();
-    });
-  }
-
-  //CRUD
+  //CRUD + Information
+  // User instance
+  User get user => FirebaseAuth.instance.currentUser!;
+  String get userEmail => user.email!;
+  String get userName => user.displayName!;
+  //Firestore instance
   FirebaseFirestore db = FirebaseFirestore.instance;
-
   //ADD DATA
   // Future<void> addData(String collection, Map<String, dynamic> data) async {
   //   await db.collection(collection).add(data);
