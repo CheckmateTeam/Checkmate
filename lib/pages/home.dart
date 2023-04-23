@@ -1,5 +1,7 @@
+import 'package:checkmate/provider/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -31,19 +33,19 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final _user = FirebaseAuth.instance.currentUser;
+    final userEmail = Provider.of<Database>(context).userEmail;
     return Scaffold(
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           screen_index.elementAt(_selectedIndex),
-          Text('Welcome ${_user!.email}'),
+          Text('Welcome $userEmail'),
           ElevatedButton(
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
               },
-              child: Text('Sign out'))
+              child: const Text('Sign out'))
         ],
       )),
       floatingActionButton: Container(
@@ -53,8 +55,8 @@ class _HomeState extends State<Home> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(100.0))),
           onPressed: () {},
+          backgroundColor: const Color.fromRGBO(241, 91, 91, 1),
           child: const Icon(Icons.add, color: Colors.white),
-          backgroundColor: Color.fromRGBO(241, 91, 91, 1),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -74,7 +76,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ""),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromRGBO(241, 91, 91, 1),
+        selectedItemColor: const Color.fromRGBO(241, 91, 91, 1),
         unselectedItemColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,

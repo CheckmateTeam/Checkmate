@@ -42,74 +42,74 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Column(
-        children: [
-          Stack(children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height / 1.9,
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(60),
-                    bottomRight: Radius.circular(60),
-                  ),
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomLeft,
-                    end: Alignment.topRight,
-                    colors: [
-                      Color.fromRGBO(241, 91, 91, 1),
-                      Color.fromRGBO(241, 146, 91, 1),
-                    ],
-                  )),
-            ),
-            Positioned(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 50),
-                  child: Column(
-                    children: [
-                      const Image(
-                        width: 150,
-                        height: 150,
-                        image: AssetImage('assets/images/logo_w.png'),
-                      ),
-                      Text(
-                        'Sign In',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontFamily: GoogleFonts.poppins().fontFamily,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
+      body: SingleChildScrollView(
+        child: SafeArea(
+            child: Column(
+          children: [
+            Stack(children: <Widget>[
+              Container(
+                height: MediaQuery.of(context).size.height / 1.9,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(60),
+                      bottomRight: Radius.circular(60),
+                    ),
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
+                      colors: [
+                        Color.fromRGBO(241, 91, 91, 1),
+                        Color.fromRGBO(241, 146, 91, 1),
+                      ],
+                    )),
+              ),
+              Positioned(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 50),
+                    child: Column(
+                      children: [
+                        const Image(
+                          width: 150,
+                          height: 150,
+                          image: AssetImage('assets/images/logo_w.png'),
+                        ),
+                        Text(
+                          'Sign In',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontFamily: GoogleFonts.poppins().fontFamily,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-                child: Center(
-              child: Container(
-                height: MediaQuery.of(context).size.height / 1.8,
-                width: MediaQuery.of(context).size.width / 1.1,
-                margin: const EdgeInsets.only(
-                  top: 250,
-                ),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10))
-                    ]),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.all(15),
-                        margin: const EdgeInsets.all(20),
-                        child: SingleChildScrollView(
+              Positioned(
+                  child: Center(
+                child: Container(
+                  height: MediaQuery.of(context).size.height / 1.8,
+                  width: MediaQuery.of(context).size.width / 1.1,
+                  margin: const EdgeInsets.only(
+                    top: 250,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10))
+                      ]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.all(15),
+                          margin: const EdgeInsets.all(20),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -134,68 +134,69 @@ class _SignInState extends State<SignIn> {
                                   ),
                                   style: const TextStyle(fontSize: 12)),
                             ],
-                          ),
-                        )),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 1.6,
-                      height: 50,
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color.fromRGBO(241, 91, 91, 1))),
-                          onPressed: () {
-                            _auth
-                                .signInWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text)
-                                .then((value) => print("Signed in"))
-                                .catchError((e) => showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                          title: const Text("Login failed"),
-                                          content: Text(e.code.toString()),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                child: const Text("OK"))
-                                          ],
-                                        )));
-                          },
-                          child: const Text('Sign in',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ))),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Don\'t have an account?'),
-                        TextButton(
+                          )),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 1.6,
+                        height: 50,
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    const Color.fromRGBO(241, 91, 91, 1))),
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const SignUp()));
+                              _auth
+                                  .signInWithEmailAndPassword(
+                                      email: emailController.text,
+                                      password: passwordController.text)
+                                  .then((value) => print("Signed in"))
+                                  .catchError((e) => showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            title: const Text("Login failed"),
+                                            content: const Text(
+                                                "Please check your email and password"),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  child: const Text("OK"))
+                                            ],
+                                          )));
                             },
-                            child: const Text('Sign up'))
-                      ],
-                    ),
-                    SignInButton(
-                      Buttons.Google,
-                      onPressed: () {
-                        googleSignIn();
-                      },
-                    ),
-                  ],
+                            child: const Text('Sign in',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ))),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Don\'t have an account?'),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const SignUp()));
+                              },
+                              child: const Text('Sign up'))
+                        ],
+                      ),
+                      SignInButton(
+                        Buttons.Google,
+                        onPressed: () {
+                          googleSignIn();
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ))
-          ]),
-        ],
-      )),
+              ))
+            ]),
+          ],
+        )),
+      ),
     );
   }
 }

@@ -13,7 +13,6 @@ dependencies:
   table_calendar: ^3.0.9
   dart_openai: ^1.9.1
   flutter_local_notifications: ^13.0.0
-  flutter_native_splash: ^2.2.19
   animations: ^2.0.7
   dynamic_color: ^1.6.3
   firebase_core: ^2.10.0
@@ -22,6 +21,7 @@ dependencies:
   google_sign_in: ^6.1.0
   flutter_signin_button: ^2.0.0
   google_fonts: ^4.0.3
+  flutter_native_splash: ^2.2.19
 
 dev_dependencies:
   flutter_test:
@@ -30,9 +30,14 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#FFFFFF"
-  image: assets/images/logo.png
+  image: assets/images/logo_w.png
   android: true
+  android_12:
+    background_color: "#FFFFFF"
+    foreground_image: assets/images/logo_w.png
+    foreground_image_dark: assets/images/logo_w.png
   ios: true
+  web: false
 
 flutter:
   assets:
