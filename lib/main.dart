@@ -36,6 +36,7 @@ class MainApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(
               seedColor: const Color.fromRGBO(241, 91, 91, 1),
               brightness: Brightness.light,
+              primary: const Color.fromRGBO(241, 91, 91, 1),
             ),
             fontFamily: GoogleFonts.nunito().fontFamily,
             textTheme: GoogleFonts.nunitoTextTheme()),

@@ -1,3 +1,5 @@
+import 'package:checkmate/pages/main/profile_page.dart';
+import 'package:checkmate/pages/main/task_page.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +16,7 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
   static const List<Widget> screen_index = <Widget>[
-    Text(
-      ' Task',
-    ),
+    TaskListPage(),
     Text(
       ' Archive',
     ),
@@ -26,28 +26,15 @@ class _HomeState extends State<Home> {
     Text(
       ' Notification',
     ),
-    Text(
-      'Profile',
-    ),
+    ProfilePage()
   ];
 
   @override
   Widget build(BuildContext context) {
-    final userEmail = Provider.of<Database>(context).userEmail;
     return Scaffold(
-      body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          screen_index.elementAt(_selectedIndex),
-          Text('Welcome $userEmail'),
-          ElevatedButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-              },
-              child: const Text('Sign out'))
-        ],
-      )),
+      body: SafeArea(
+        child: Center(child: screen_index.elementAt(_selectedIndex)),
+      ),
       floatingActionButton: Container(
         padding: const EdgeInsets.only(top: 30),
         child: FloatingActionButton(
