@@ -1,9 +1,11 @@
 import 'package:checkmate/main.dart';
 import 'package:checkmate/pages/authentication/signin.dart';
 import 'package:checkmate/pages/home.dart';
+import 'package:checkmate/provider/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -157,6 +159,9 @@ class _SignUpState extends State<SignUp> {
                                           email: emailController.text,
                                           password: passwordController.text)
                                       .then((value) {
+                                    final dbProvider = context.read<Database>();
+                                    dbProvider.addNewUser(
+                                        emailController.text, "Username");
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -167,16 +172,21 @@ class _SignUpState extends State<SignUp> {
                                             actions: [
                                               TextButton(
                                                   onPressed: () {
+                                                    _auth.signInWithEmailAndPassword(
+                                                        email: emailController
+                                                            .text,
+                                                        password:
+                                                            passwordController
+                                                                .text);
                                                     Navigator.pushAndRemoveUntil(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    MainApp()),
+                                                            builder: (context) =>
+                                                                const MainApp()),
                                                         (route) => false);
                                                   },
-                                                  child:
-                                                      const Text('Go to login'))
+                                                  child: const Text(
+                                                      'Go to application'))
                                             ],
                                           );
                                         });

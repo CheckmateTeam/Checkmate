@@ -1,4 +1,5 @@
 import 'package:checkmate/pages/authentication/signup.dart';
+import 'package:checkmate/provider/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -27,7 +28,15 @@ class _SignInState extends State<SignIn> {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      UserCredential user = await _auth.signInWithCredential(credential);
+      // ignore: use_build_context_synchronously
+      final dbProvider = Provider.of<Database>(context, listen: false);
+      if (user.additionalUserInfo!.isNewUser) {
+        dbProvider.addNewUser(user.user!.email!, user.user!.displayName!);
+      } else {
+        dbProvider.updateLogin();
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
         print('The account already exists with a different credential.');
@@ -147,7 +156,8 @@ class _SignInState extends State<SignIn> {
                                   .signInWithEmailAndPassword(
                                       email: emailController.text,
                                       password: passwordController.text)
-                                  .then((value) => print("Signed in"))
+                                  .then((value) =>
+                                      context.read<Database>().updateLogin())
                                   .catchError((e) => showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(

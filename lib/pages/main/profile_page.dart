@@ -1,5 +1,4 @@
 import 'package:checkmate/provider/db.dart';
-import 'package:checkmate/provider/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +11,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool isDark = false;
-
+  final TextEditingController _nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final userEmail = Provider.of<Database>(context).userEmail;
-    final userName = Provider.of<Database>(context).userName;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,17 +75,66 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                userName,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              Consumer<Database>(
+                                builder: (context, db, child) => Text(
+                                  db.userName,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  textScaleFactor: 0.8,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  print("Edit");
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text("Edit Name"),
+                                          content: TextField(
+                                            decoration: const InputDecoration(
+                                              hintText: "Enter your name",
+                                            ),
+                                            controller: _nameController,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("Cancel"),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                context
+                                                    .read<Database>()
+                                                    .changeUsername(
+                                                        _nameController.text);
+                                                ScaffoldMessenger.of(context)
+                                                    .hideCurrentSnackBar();
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        "Username changed"),
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    backgroundColor:
+                                                        Color.fromRGBO(
+                                                            241, 91, 91, 1),
+                                                    duration:
+                                                        Duration(seconds: 2),
+                                                  ),
+                                                );
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("Save"),
+                                            ),
+                                          ],
+                                        );
+                                      });
                                 },
                                 child: const Icon(
                                   Icons.edit_outlined,
@@ -106,11 +152,14 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const Text(
-                            "Poinst: 525 points",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
+                          Consumer<Database>(
+                            builder: (context, db, child) => Text(
+                              "Points: ${db.userPoints}",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ],
@@ -136,12 +185,35 @@ class _ProfilePageState extends State<ProfilePage> {
                   print("Points shop");
                 }),
                 menuList("Dark mode", Icons.dark_mode_outlined, true,
-                    Colors.black87, context, isDark, onTap: () {
+                    Colors.black87, context, false, onTap: () {
                   print("Points shop");
                 }),
                 menuList("Sign out", Icons.logout, false,
                     Color.fromRGBO(241, 91, 91, 1), context, false, onTap: () {
-                  FirebaseAuth.instance.signOut();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Sign out"),
+                          content:
+                              const Text("Are you sure you want to sign out?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                FirebaseAuth.instance.signOut();
+                              },
+                              child: const Text("Sign out"),
+                            ),
+                          ],
+                        );
+                      });
                 }),
               ],
             ),
@@ -160,7 +232,6 @@ class _ProfilePageState extends State<ProfilePage> {
 Widget menuList(String title, IconData icon, bool isToggle, Color fontColor,
     BuildContext context, bool isDark,
     {Function()? onTap}) {
-  bool isDark = Provider.of<ThemeProvider>(context).isDark;
   if (isToggle) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
@@ -192,11 +263,8 @@ Widget menuList(String title, IconData icon, bool isToggle, Color fontColor,
                     ],
                   ),
                   Switch(
-                      value: isDark,
-                      onChanged: (value) {
-                        Provider.of<ThemeProvider>(context, listen: false)
-                            .toggleTheme();
-                      },
+                      value: false,
+                      onChanged: (value) {},
                       inactiveTrackColor: Color.fromARGB(255, 255, 255, 255),
                       activeTrackColor: Color.fromARGB(255, 218, 110, 96),
                       activeColor: Color.fromARGB(255, 255, 255, 255)),
