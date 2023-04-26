@@ -14,7 +14,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
 
+  // ignore: constant_identifier_names
   static const List<Widget> screen_index = <Widget>[
     TaskListPage(),
     Text(
@@ -32,6 +37,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Center(child: screen_index.elementAt(_selectedIndex)),
       ),
@@ -53,11 +59,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.archive), label: ""),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.archive,
-                color: Colors.white,
-              ),
-              label: ""),
+              icon: Icon(Icons.archive, color: Colors.transparent), label: ""),
           BottomNavigationBarItem(
               icon: Icon(Icons.notifications_on_outlined), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ""),

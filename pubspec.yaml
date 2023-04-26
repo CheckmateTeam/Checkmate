@@ -22,6 +22,7 @@ dependencies:
   google_fonts: ^4.0.3
   flutter_native_splash: ^2.2.19
   fl_chart: ^0.62.0
+  localstorage: ^4.0.1+2
 
 dev_dependencies:
   flutter_test:
