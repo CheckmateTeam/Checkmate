@@ -16,9 +16,9 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       # - run: flutter test  รอเขียน test case
-    # - run: flutter build apk --release
-    # - uses: actions/upload-artifact@v2
-    #   with:
-    #     name: test-app.apk
-    #     path: build/app/outputs/flutter-apk/app-release.apk
+    - run: flutter build apk --release
+    - uses: actions/upload-artifact@v2
+      with:
+        name: test-app.apk
+        path: build/app/outputs/flutter-apk/app-release.apk
   # build:

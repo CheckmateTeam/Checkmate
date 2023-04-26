@@ -6,6 +6,7 @@ class Database extends ChangeNotifier {
   String username = 'fetching...';
   String email = 'fetching...';
   String points = 'fetching...';
+  bool cycle = false;
   Database() {
     init();
   }
@@ -18,6 +19,7 @@ class Database extends ChangeNotifier {
       username = querySnapshot.docs[0]['displayName'];
       email = querySnapshot.docs[0]['email'];
       points = querySnapshot.docs[0]['points'].toString();
+      cycle = querySnapshot.docs[0]['cycle'];
     });
   }
 
@@ -30,7 +32,7 @@ class Database extends ChangeNotifier {
   String get userName => username;
   String get userEmail => email;
   String get userPoints => points;
-
+  bool get userCycle => cycle;
   Future<void> addNewUser(String email, String name) async {
     await db.collection('user_info').add({
       'uid': user?.uid,
@@ -39,6 +41,7 @@ class Database extends ChangeNotifier {
       'goal': 0,
       'lastLogin': DateTime.now(),
       'points': 0,
+      'cycle': false,
     });
     notifyListeners();
   }

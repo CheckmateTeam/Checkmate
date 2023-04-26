@@ -1,3 +1,4 @@
+import 'package:checkmate/pages/main/components/newTask.dart';
 import 'package:checkmate/pages/main/profile_page.dart';
 import 'package:checkmate/pages/main/task_page.dart';
 import 'package:checkmate/provider/db.dart';
@@ -43,11 +44,17 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: Container(
         padding: const EdgeInsets.only(top: 30),
+        //create task button
         child: FloatingActionButton(
           elevation: 0.0,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(100.0))),
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => const createTask());
+          },
           backgroundColor: const Color.fromRGBO(241, 91, 91, 1),
           child: const Icon(Icons.add, color: Colors.white),
         ),
