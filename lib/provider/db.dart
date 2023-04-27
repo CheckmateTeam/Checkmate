@@ -1,6 +1,8 @@
+import 'package:checkmate/model/taskModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class Database extends ChangeNotifier {
   String username = 'fetching...';
@@ -33,6 +35,7 @@ class Database extends ChangeNotifier {
   String get userEmail => email;
   String get userPoints => points;
   bool get userCycle => cycle;
+
   Future<void> addNewUser(String email, String name) async {
     await db.collection('user_info').add({
       'uid': user?.uid,
@@ -42,6 +45,20 @@ class Database extends ChangeNotifier {
       'lastLogin': DateTime.now(),
       'points': 0,
       'cycle': false,
+    });
+    notifyListeners();
+  }
+
+  Future<void> addTask(Task task) async {
+    await db.collection('task').add({
+      'uid': user?.uid,
+      'taskId': Uuid().v4().toString(),
+      'taskName': task.taskName,
+      'taskDesc': task.taskDesc,
+      'startDate': task.startDate,
+      'endDate': task.endDate,
+      'cycle': task.cycle,
+      'notify': task.notify,
     });
     notifyListeners();
   }

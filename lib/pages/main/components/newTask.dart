@@ -1,5 +1,9 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:checkmate/model/taskModel.dart';
+import 'package:checkmate/provider/db.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class createTask extends StatefulWidget {
   const createTask({super.key});
@@ -11,13 +15,20 @@ class createTask extends StatefulWidget {
 class _createTaskState extends State<createTask> {
   List<String> dropdownItems = [
     'Never',
-    'xxx before deadline',
-    'xxd before deadline',
-    'xxc before deadline',
+    '5 mins before deadline',
+    '10 mins before deadline',
+    '15 mins before deadline',
+    '30 mins before deadline',
+    '1 hour before deadline',
+    '2 hours before deadline',
+    '1 day before deadline',
+    '2 days before deadline',
+    '1 week before deadline'
   ];
-
+  String cycle = 'none';
   String dropdownValue = 'Never';
   TextEditingController taskName = TextEditingController();
+  TextEditingController taskDescription = TextEditingController();
   TimeOfDay timestart = TimeOfDay.now();
   TimeOfDay timeend = TimeOfDay.now();
   DateTime datestart = DateTime.now();
@@ -301,8 +312,22 @@ class _createTaskState extends State<createTask> {
                   minimumSize: MaterialStateProperty.all<Size>(Size(170, 40)),
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.redAccent)),
-              onPressed: () {},
-              child: Text("Create",
+              onPressed: () {
+                context.read<Database>().addTask(Task(
+                    taskName: taskName.text,
+                    taskDesc: taskDescription.text,
+                    startDate: DateTime(datestart.year, datestart.month,
+                        datestart.day, timestart.hour, timestart.minute),
+                    endDate: DateTime(dateend.year, dateend.month, dateend.day,
+                        timeend.hour, timeend.minute),
+                    cycle: cycle,
+                    notify: dropdownValue));
+                AnimatedSnackBar.material("Success! Your task has created",
+                        type: AnimatedSnackBarType.success)
+                    .show(context);
+                Navigator.pop(context);
+              },
+              child: const Text("Create",
                   style: TextStyle(
                       fontSize: 14,
                       color: Colors.white,
