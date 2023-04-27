@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/provider/db.dart';
@@ -53,6 +55,7 @@ class _createTaskState extends State<createTask> {
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
               SizedBox(height: 5),
               TextField(
+                controller: taskName,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -300,6 +303,7 @@ class _createTaskState extends State<createTask> {
               Text("Description",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
               TextField(
+                controller: taskDescription,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),

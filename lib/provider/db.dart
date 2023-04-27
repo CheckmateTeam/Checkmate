@@ -9,6 +9,8 @@ class Database extends ChangeNotifier {
   String email = 'fetching...';
   String points = 'fetching...';
   bool cycle = false;
+  List<Task> taskList = [];
+
   Database() {
     init();
   }
@@ -23,6 +25,24 @@ class Database extends ChangeNotifier {
       points = querySnapshot.docs[0]['points'].toString();
       cycle = querySnapshot.docs[0]['cycle'];
     });
+    await db
+        .collection('user_task')
+        .where('user_uid', isEqualTo: user?.uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      taskList = [];
+      for (final element in querySnapshot.docs) {
+        taskList.add(Task(
+          taskName: element['taskName'],
+          taskDesc: element['taskDesc'],
+          startDate: element['startDate'].toDate(),
+          endDate: element['endDate'].toDate(),
+          cycle: element['cycle'],
+          notify: element['notify'],
+        ));
+      }
+    });
+    notifyListeners();
   }
 
   //CRUD + Information
@@ -44,15 +64,15 @@ class Database extends ChangeNotifier {
       'goal': 0,
       'lastLogin': DateTime.now(),
       'points': 0,
-      'cycle': false,
+      'cycle': 'none',
     });
     notifyListeners();
   }
 
   Future<void> addTask(Task task) async {
-    await db.collection('task').add({
-      'uid': user?.uid,
-      'taskId': Uuid().v4().toString(),
+    await db.collection('user_task').add({
+      'user_uid': user?.uid,
+      'taskId': const Uuid().v4().toString(),
       'taskName': task.taskName,
       'taskDesc': task.taskDesc,
       'startDate': task.startDate,
