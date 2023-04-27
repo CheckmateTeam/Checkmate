@@ -1,3 +1,4 @@
+import 'package:checkmate/pages/challenge/mainChallenge.dart';
 import 'package:checkmate/pages/main/utilities/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -123,168 +124,198 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
           const SizedBox(height: 8.0),
           Expanded(
-              child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-              ),
-              border: Border.all(
-                color: Colors.grey.withOpacity(0.2),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.4),
-                  spreadRadius: 0,
-                  blurRadius: 20,
-                  offset: const Offset(0, 4), // changes position of shadow
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
                 ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  const Text("Today's Tasks",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black)),
-                  const SizedBox(height: 8.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 10.0),
-                    child: Divider(
-                      color: Colors.grey.withOpacity(0.6),
-                      thickness: 1,
-                    ),
+                border: Border.all(
+                  color: Colors.grey.withOpacity(0.2),
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.4),
+                    spreadRadius: 0,
+                    blurRadius: 20,
+                    offset: const Offset(0, 4), // changes position of shadow
                   ),
-                  Expanded(
-                    child: ValueListenableBuilder<List<Event>>(
-                      valueListenable: _selectedEvents,
-                      builder: (context, value, _) {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: value.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Text(
-                                          "xx.00",
-                                          style: TextStyle(
-                                              fontSize: 14, color: Colors.grey),
-                                        ),
-                                        Text(
-                                          "|",
-                                          style: TextStyle(
-                                              fontSize: 27, color: Colors.grey),
-                                        ),
-                                        Text(
-                                          "xx.00",
-                                          style: TextStyle(
-                                              fontSize: 14, color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-
-                                    // Task tile here =>>
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () {
-                                          print(value[index].title);
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 20.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Color.fromARGB(
-                                                    99, 158, 158, 158),
-                                                spreadRadius: 0,
-                                                blurRadius: 10,
-                                                offset: Offset(0,
-                                                    2), // changes position of shadow
-                                              )
-                                            ],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    const Text("Today's Tasks",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
+                    const SizedBox(height: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 10.0),
+                      child: Divider(
+                        color: Colors.grey.withOpacity(0.6),
+                        thickness: 1,
+                      ),
+                    ),
+                    Expanded(
+                      child: ValueListenableBuilder<List<Event>>(
+                        valueListenable: _selectedEvents,
+                        builder: (context, value, _) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: value.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Text(
+                                            "xx.00",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey),
                                           ),
-                                          margin:
-                                              const EdgeInsets.only(left: 10.0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(14.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    const CircleAvatar(
-                                                      child: Icon(
-                                                          Icons
-                                                              .table_view_sharp,
-                                                          color: Colors.red),
-                                                    ),
-                                                    const SizedBox(width: 15.0),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          value[index].title,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 16),
-                                                        ),
-                                                        Text("Description")
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                                Checkbox(
-                                                  value: false,
-                                                  onChanged: (bool? value) {},
+                                          Text(
+                                            "|",
+                                            style: TextStyle(
+                                                fontSize: 27,
+                                                color: Colors.grey),
+                                          ),
+                                          Text(
+                                            "xx.00",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+
+                                      // Task tile here =>>
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: () {
+                                            print(value[index].title);
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 20.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Color.fromARGB(
+                                                      99, 158, 158, 158),
+                                                  spreadRadius: 0,
+                                                  blurRadius: 10,
+                                                  offset: Offset(0,
+                                                      2), // changes position of shadow
                                                 )
                                               ],
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            margin: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(14.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const CircleAvatar(
+                                                        child: Icon(
+                                                            Icons
+                                                                .table_view_sharp,
+                                                            color: Colors.red),
+                                                      ),
+                                                      const SizedBox(
+                                                          width: 15.0),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            value[index].title,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 16),
+                                                          ),
+                                                          Text("Description")
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Checkbox(
+                                                    value: false,
+                                                    onChanged: (bool? value) {},
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 30.0,
-                                    ),
-                                    child: Seperator())
-                              ],
-                            );
-                          },
-                        );
-                      },
+                                    ],
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 30.0,
+                                      ),
+                                      child: Seperator())
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                    //go yo challenge
+                    Positioned(
+                      left: 200,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MainChallenge()));
+                          },
+                          child: Icon(
+                            Icons.fire_extinguisher_outlined,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 20.0),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40.0)),
+                          )),
+                    )
+                  ],
+                ),
               ),
             ),
-          )),
+          ),
         ],
       ),
     );

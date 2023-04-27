@@ -107,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               child: const Text("Cancel"),
                                             ),
                                             TextButton(
-                                              onPressed: () {
+                                              onPressed: () async {
                                                 context
                                                     .read<Database>()
                                                     .changeUsername(
