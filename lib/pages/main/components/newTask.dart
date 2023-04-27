@@ -17,7 +17,7 @@ class _createTaskState extends State<createTask> {
   ];
 
   String dropdownValue = 'Never';
-
+  TextEditingController taskName = TextEditingController();
   TimeOfDay timestart = TimeOfDay.now();
   TimeOfDay timeend = TimeOfDay.now();
   DateTime datestart = DateTime.now();
