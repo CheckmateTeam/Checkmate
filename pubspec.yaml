@@ -47,5 +47,10 @@ flutter:
   assets:
     - assets/images/
     - assets/google_fonts/
+    - assets/background/
+    - assets/character/
+    - assets/boss/
+    - assets/elements/
+    - assets/audio/
 
   uses-material-design: true
