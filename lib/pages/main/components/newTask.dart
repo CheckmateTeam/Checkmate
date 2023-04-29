@@ -3,6 +3,7 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/provider/db.dart';
+import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -329,6 +330,7 @@ class _createTaskState extends State<createTask> {
                 AnimatedSnackBar.material("Success! Your task has created",
                         type: AnimatedSnackBarType.success)
                     .show(context);
+                context.read<CalendarModel>().init();
                 Navigator.pop(context);
               },
               child: const Text("Create",

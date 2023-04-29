@@ -1,6 +1,7 @@
 import 'package:checkmate/pages/authentication/signin.dart';
 import 'package:checkmate/pages/home.dart';
 import 'package:checkmate/provider/db.dart';
+import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
@@ -19,6 +20,7 @@ void main() async {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ChangeNotifierProvider(create: (_) => Database()),
+      ChangeNotifierProvider(create: (_) => CalendarModel())
     ], child: const MainApp()),
   );
 }
@@ -33,13 +35,18 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   @override
   void initState() {
-    Provider.of<Database>(context, listen: false).init();
+    // Provider.of<Database>(context, listen: false).init();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.read<Database>().init();
     return MaterialApp(
+      supportedLocales: [
+        const Locale('en', 'US'),
+        const Locale('th', 'TH'),
+      ],
       title: 'Checkmate',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
