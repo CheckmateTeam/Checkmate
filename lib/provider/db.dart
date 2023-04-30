@@ -9,13 +9,12 @@ class Database extends ChangeNotifier {
   String email = 'fetching...';
   String points = 'fetching...';
   bool cycle = false;
-  List<Task> taskList = [];
 
   Database() {
     init();
   }
-  Future init() async {
-    await db
+  init() {
+    db
         .collection('user_info')
         .where('uid', isEqualTo: user?.uid)
         .get()
@@ -25,27 +24,10 @@ class Database extends ChangeNotifier {
       points = querySnapshot.docs[0]['points'].toString();
       cycle = querySnapshot.docs[0]['cycle'];
     });
-    await db
-        .collection('user_task')
-        .where('user_uid', isEqualTo: user?.uid)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      taskList = [];
-      for (final element in querySnapshot.docs) {
-        taskList.add(Task(
-          taskName: element['taskName'],
-          taskDesc: element['taskDesc'],
-          startDate: element['startDate'].toDate(),
-          endDate: element['endDate'].toDate(),
-          cycle: element['cycle'],
-          notify: element['notify'],
-        ));
-      }
-    });
+
     notifyListeners();
   }
 
-  //CRUD + Information
   // User instance
   User? get user => FirebaseAuth.instance.currentUser;
 
@@ -55,7 +37,7 @@ class Database extends ChangeNotifier {
   String get userEmail => email;
   String get userPoints => points;
   bool get userCycle => cycle;
-
+  //DB FUNCTION
   Future<void> addNewUser(String email, String name) async {
     await db.collection('user_info').add({
       'uid': user?.uid,
@@ -79,7 +61,23 @@ class Database extends ChangeNotifier {
       'endDate': task.endDate,
       'cycle': task.cycle,
       'notify': task.notify,
+      'isDone': task.isDone,
     });
+    notifyListeners();
+  }
+
+  Future<void> updateDoneTask() async {
+    await db
+        .collection('user_task')
+        .where('user_uid', isEqualTo: user?.uid)
+        .where('isDone', isEqualTo: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (final task in querySnapshot.docs) {
+        task.reference.delete();
+      }
+    });
+
     notifyListeners();
   }
 
