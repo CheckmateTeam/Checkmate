@@ -1,5 +1,6 @@
 import 'package:checkmate/pages/authentication/signup.dart';
 import 'package:checkmate/provider/db.dart';
+import 'package:checkmate/provider/task_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -156,9 +157,10 @@ class _SignInState extends State<SignIn> {
                                   .signInWithEmailAndPassword(
                                       email: emailController.text,
                                       password: passwordController.text)
-                                  .then((value) =>
-                                      context.read<Database>().updateLogin())
-                                  .catchError((e) => showDialog(
+                                  .then((value) {
+                                context.read<Database>().updateLogin();
+                                context.read<CalendarModel>().fetchTask();
+                              }).catchError((e) => showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(
                                             title: const Text("Login failed"),
