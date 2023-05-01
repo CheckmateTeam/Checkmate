@@ -44,7 +44,7 @@ const ANDROID_MAPPING = {
   109: GAMEPAD_BUTTON_SELECT
 };
 
-const SWITCH_PRO_MAPPING = {
+Map<int, String?> SWITCH_PRO_MAPPING = {
   19: GAMEPAD_DPAD_UP,
   20: GAMEPAD_DPAD_DOWN,
   21: GAMEPAD_DPAD_LEFT,
@@ -62,7 +62,7 @@ const SWITCH_PRO_MAPPING = {
 };
 
 class GamePad {
-  KeyListener listener;
+  late KeyListener listener;
 
   static const MethodChannel _channel = const MethodChannel('gamepad');
 
@@ -76,11 +76,13 @@ class GamePad {
     return name;
   }
 
-  static Map<int, String> get switchMap => SWITCH_PRO_MAPPING;
+  static Map<int, String?> get switchMap => SWITCH_PRO_MAPPING;
 
-  void setListener({GamePadListener gamePadListener, String name}) {
+  void setListener(
+      {required void Function(bool, String) gamePadListener, String? name}) {
     listener = (RawKeyEvent e) {
-      String evtType = e is RawKeyDownEvent ? GAMEPAD_BUTTON_DOWN : GAMEPAD_BUTTON_UP;
+      String evtType =
+          e is RawKeyDownEvent ? GAMEPAD_BUTTON_DOWN : GAMEPAD_BUTTON_UP;
 
       if (e.data is RawKeyEventDataAndroid) {
         RawKeyEventDataAndroid androidEvent = e.data as RawKeyEventDataAndroid;
@@ -88,9 +90,9 @@ class GamePad {
         String key = "";
 
         if (name == "Pro Controller") {
-          key = SWITCH_PRO_MAPPING[androidEvent.keyCode];
+          key = SWITCH_PRO_MAPPING[androidEvent.keyCode]!;
         } else {
-          key = ANDROID_MAPPING[androidEvent.keyCode];
+          key = ANDROID_MAPPING[androidEvent.keyCode]!;
         }
 
         if (key != null) {
