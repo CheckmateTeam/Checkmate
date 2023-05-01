@@ -7,10 +7,11 @@ class Database extends ChangeNotifier {
   String email = 'fetching...';
   String points = 'fetching...';
   bool cycle = false;
+
   Database() {
     init();
   }
-  Future init() async {
+  Future<void> init() async {
     await db
         .collection('user_info')
         .where('uid', isEqualTo: user?.uid)
@@ -21,9 +22,10 @@ class Database extends ChangeNotifier {
       points = querySnapshot.docs[0]['points'].toString();
       cycle = querySnapshot.docs[0]['cycle'];
     });
+
+    notifyListeners();
   }
 
-  //CRUD + Information
   // User instance
   User? get user => FirebaseAuth.instance.currentUser;
 
@@ -33,6 +35,7 @@ class Database extends ChangeNotifier {
   String get userEmail => email;
   String get userPoints => points;
   bool get userCycle => cycle;
+  //DB FUNCTION
   Future<void> addNewUser(String email, String name) async {
     await db.collection('user_info').add({
       'uid': user?.uid,
@@ -41,28 +44,22 @@ class Database extends ChangeNotifier {
       'goal': 0,
       'lastLogin': DateTime.now(),
       'points': 0,
-      'cycle': false,
+      'cycle': 'none',
     });
     notifyListeners();
   }
 
-  Future<void> updateLogin() async {
+  void updateLogin() {
     init();
-    await db
-        .collection('user_info')
-        .where('uid', isEqualTo: user?.uid)
-        .get()
-        .then((QuerySnapshot querySnapshot) => querySnapshot.docs[0].reference
+    db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
+        (QuerySnapshot querySnapshot) => querySnapshot.docs[0].reference
             .update({'lastLogin': DateTime.now()}));
     notifyListeners();
   }
 
-  Future<void> changeUsername(String name) async {
-    await db
-        .collection('user_info')
-        .where('uid', isEqualTo: user?.uid)
-        .get()
-        .then((QuerySnapshot querySnapshot) =>
+  void changeUsername(String name) {
+    db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
+        (QuerySnapshot querySnapshot) =>
             querySnapshot.docs[0].reference.update({'displayName': name}));
     username = name;
     notifyListeners();

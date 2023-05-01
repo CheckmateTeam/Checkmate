@@ -12,9 +12,15 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<Database>(context, listen: false).init();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final userEmail = Provider.of<Database>(context).userEmail;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -143,14 +149,16 @@ class _ProfilePageState extends State<ProfilePage> {
                               )
                             ],
                           ),
-                          Text(
-                            userEmail,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
+                          Consumer<Database>(
+                            builder: (context, db, child) => Text(
+                              db.userEmail,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                           Consumer<Database>(
                             builder: (context, db, child) => Text(
