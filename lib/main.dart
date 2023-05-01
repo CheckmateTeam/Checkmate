@@ -17,11 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => ThemeProvider()),
-      ChangeNotifierProvider(create: (_) => Database()),
-      ChangeNotifierProvider(create: (_) => CalendarModel())
-    ], child: const MainApp()),
+    const MainApp(),
   );
 }
 
@@ -35,57 +31,61 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   @override
   void initState() {
-    // Provider.of<Database>(context, listen: false).init();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    context.read<Database>().init();
-    return MaterialApp(
-      supportedLocales: [
-        const Locale('en', 'US'),
-        const Locale('th', 'TH'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CalendarModel()),
+        ChangeNotifierProvider(create: (_) => Database()),
       ],
-      title: 'Checkmate',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromRGBO(241, 91, 91, 1),
-            brightness: Brightness.light,
-            primary: const Color.fromRGBO(241, 91, 91, 1),
-          ),
-          fontFamily: GoogleFonts.nunito().fontFamily,
-          textTheme: GoogleFonts.nunitoTextTheme()),
-      home: SafeArea(
-        child: Center(
-          child: FutureBuilder(
-            future: Firebase.initializeApp(
-                options: DefaultFirebaseOptions.currentPlatform),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return StreamBuilder(
-                  stream: FirebaseAuth.instance.authStateChanges(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      final User? user = snapshot.data;
-                      if (user == null) {
-                        return const Scaffold(
-                          body: SignIn(),
-                        );
+      child: MaterialApp(
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('th', 'TH'),
+        ],
+        title: 'Checkmate',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color.fromRGBO(241, 91, 91, 1),
+              brightness: Brightness.light,
+              primary: const Color.fromRGBO(241, 91, 91, 1),
+            ),
+            fontFamily: GoogleFonts.nunito().fontFamily,
+            textTheme: GoogleFonts.nunitoTextTheme()),
+        home: SafeArea(
+          child: Center(
+            child: FutureBuilder(
+              future: Firebase.initializeApp(
+                  options: DefaultFirebaseOptions.currentPlatform),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return StreamBuilder(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        final User? user = snapshot.data;
+                        if (user == null) {
+                          return const Scaffold(
+                            body: SignIn(),
+                          );
+                        } else {
+                          return const Home();
+                        }
                       } else {
-                        return const Home();
+                        return const CircularProgressIndicator();
                       }
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  },
-                );
-              } else {
-                return const CircularProgressIndicator();
-              }
-            },
+                    },
+                  );
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
+            ),
           ),
         ),
       ),

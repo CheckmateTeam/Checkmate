@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class Tablecalendar extends StatelessWidget {
+class Tablecalendar extends StatefulWidget {
   const Tablecalendar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    CalendarModel calendarmodel = Provider.of<CalendarModel>(context);
+  State<Tablecalendar> createState() => _TablecalendarState();
+}
 
+class _TablecalendarState extends State<Tablecalendar> {
+  @override
+  Widget build(BuildContext context) {
+    var calendarmodel = context.watch<CalendarModel>();
     return Column(
       children: [
         TableCalendar<Task>(
@@ -29,6 +33,7 @@ class Tablecalendar extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             outsideDaysVisible: false,
+            markersAlignment: Alignment.bottomCenter,
           ),
           firstDay: kFirstDay,
           lastDay: kLastDay,
@@ -38,7 +43,7 @@ class Tablecalendar extends StatelessWidget {
           rangeStartDay: calendarmodel.rangeStart,
           rangeEndDay: calendarmodel.rangeEnd,
           calendarFormat: calendarmodel.calendarFormat,
-          eventLoader: calendarmodel.getEventsForDay,
+          eventLoader: calendarmodel.getTasksForDay,
           startingDayOfWeek: StartingDayOfWeek.monday,
           onFormatChanged: (format) {
             if (calendarmodel.calendarFormat != format) {
@@ -50,7 +55,7 @@ class Tablecalendar extends StatelessWidget {
             calendarmodel.onPageChanged(focusedDay);
           },
         ),
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
       ],
     );
   }
