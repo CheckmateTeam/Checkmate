@@ -1,8 +1,6 @@
-import 'package:checkmate/model/taskModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 class Database extends ChangeNotifier {
   String username = 'fetching...';
@@ -13,8 +11,8 @@ class Database extends ChangeNotifier {
   Database() {
     init();
   }
-  init() {
-    db
+  Future<void> init() async {
+    await db
         .collection('user_info')
         .where('uid', isEqualTo: user?.uid)
         .get()
@@ -51,53 +49,17 @@ class Database extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addTask(Task task) async {
-    await db.collection('user_task').add({
-      'user_uid': user?.uid,
-      'taskId': const Uuid().v4().toString(),
-      'taskName': task.taskName,
-      'taskDesc': task.taskDesc,
-      'startDate': task.startDate,
-      'endDate': task.endDate,
-      'cycle': task.cycle,
-      'notify': task.notify,
-      'isDone': task.isDone,
-    });
-    notifyListeners();
-  }
-
-  Future<void> updateDoneTask() async {
-    await db
-        .collection('user_task')
-        .where('user_uid', isEqualTo: user?.uid)
-        .where('isDone', isEqualTo: true)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (final task in querySnapshot.docs) {
-        task.reference.delete();
-      }
-    });
-
-    notifyListeners();
-  }
-
-  Future<void> updateLogin() async {
+  void updateLogin() {
     init();
-    await db
-        .collection('user_info')
-        .where('uid', isEqualTo: user?.uid)
-        .get()
-        .then((QuerySnapshot querySnapshot) => querySnapshot.docs[0].reference
+    db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
+        (QuerySnapshot querySnapshot) => querySnapshot.docs[0].reference
             .update({'lastLogin': DateTime.now()}));
     notifyListeners();
   }
 
-  Future<void> changeUsername(String name) async {
-    await db
-        .collection('user_info')
-        .where('uid', isEqualTo: user?.uid)
-        .get()
-        .then((QuerySnapshot querySnapshot) =>
+  void changeUsername(String name) {
+    db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
+        (QuerySnapshot querySnapshot) =>
             querySnapshot.docs[0].reference.update({'displayName': name}));
     username = name;
     notifyListeners();

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:uuid/uuid.dart';
 
 final kToday = DateTime.now();
 final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
@@ -24,69 +25,84 @@ class CalendarModel extends ChangeNotifier {
 
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-  List<Task>? _selectedEvents;
+  DateTime? _selectedDay = DateTime.now();
+  List<Task>? _selectedTasks;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
 
-  LinkedHashMap<DateTime, List<Task>> _taskMap =
-      LinkedHashMap<DateTime, List<Task>>();
+  Map<DateTime, List<Task>> _taskMap = {};
+  Map<String, bool> _taskStatus = {};
+
   get focusedDay => _focusedDay;
   get selectedDay => _selectedDay;
-  get selectedEvents => _selectedEvents;
+  get selectedTasks => _selectedTasks;
   get onDaySelected => _onDaySelected;
-  get events => _taskMap;
-  get getEventsForDay => _getEventsForDay;
+  get tasks => _taskMap;
+  get getTasksForDay => _getTasksForDay;
   get rangeStart => _rangeStart;
   get rangeEnd => _rangeEnd;
   get calendarFormat => _calendarFormat;
+  get taskStatus => _taskStatus;
 
   CalendarModel() {
-    init();
     _selectedDay = _focusedDay;
-    _selectedEvents = _taskMap[_selectedDay] ?? [];
-    notifyListeners();
+    _selectedTasks = _taskMap[DateTime(
+          DateTime.now().year,
+          DateTime.now().month,
+          DateTime.now().day,
+        )] ??
+        [];
   }
 
-  init() {
-    _taskMap.clear();
-    db
+  Future<String> fetchTask() async {
+    print('fetching task');
+    // await clearAll();
+
+    QuerySnapshot querySnapshot = await db
         .collection('user_task')
         .where('user_uid', isEqualTo: user?.uid)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (final task in querySnapshot.docs) {
-        Task newTask = Task(
-          taskId: task['taskId'],
-          taskName: task['taskName'],
-          taskDesc: task['taskDesc'],
-          startDate: (task['startDate'] as Timestamp).toDate(),
-          endDate: (task['endDate'] as Timestamp).toDate(),
-          cycle: task['cycle'],
-          notify: task['notify'],
-        );
-        final keyDate = DateTime(
-          newTask.startDate.year,
-          newTask.startDate.month,
-          newTask.startDate.day,
-        );
-        final key = keyDate;
+        .orderBy('startDate')
+        .get();
+    for (var task in querySnapshot.docs) {
+      Task newTask = Task(
+        taskId: task['taskId'],
+        taskName: task['taskName'],
+        taskDesc: task['taskDesc'],
+        startDate: (task['startDate'] as Timestamp).toDate(),
+        endDate: (task['endDate'] as Timestamp).toDate(),
+        cycle: task['cycle'],
+        notify: task['notify'],
+      );
+      final keyDate = DateTime(
+        newTask.startDate.year,
+        newTask.startDate.month,
+        newTask.startDate.day,
+      );
+      final key = keyDate;
 
-        if (_taskMap.containsKey(key)) {
-          _taskMap[key]?.add(newTask);
-        } else {
-          _taskMap[key] = [newTask];
+      if (_taskMap.containsKey(key)) {
+        if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+          _taskMap[key]!.add(newTask);
         }
+      } else {
+        _taskMap[key] = [newTask];
       }
-    });
-  }
 
-  // void checkKey() {
-  //   _taskMap.forEach((key, value) {
-  //     print(key.toString() + "    amount:" + value.length.toString());
-  //   });
-  //   print(selectedDay);
-  // }
+      final taskIdKey = task['taskId'];
+      final isDone = task['isDone'];
+      _taskStatus[taskIdKey] = isDone;
+    }
+    _selectedDay = _focusedDay;
+    _selectedTasks = _taskMap[DateTime(
+          _selectedDay!.year,
+          _selectedDay!.month,
+          _selectedDay!.day,
+        )] ??
+        [];
+    await Future.delayed(Duration(milliseconds: 100));
+    notifyListeners();
+    return 'success';
+  }
 
   _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
@@ -99,7 +115,8 @@ class CalendarModel extends ChangeNotifier {
       selectedDay.month,
       selectedDay.day,
     );
-    _selectedEvents = _taskMap[selectedDate] ?? [];
+    _selectedTasks = _getTasksForDay(selectedDate);
+    // _selectedTasks = _taskMap[selectedDate] ?? [];
     notifyListeners();
   }
 
@@ -113,7 +130,123 @@ class CalendarModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Task> _getEventsForDay(DateTime day) {
-    return _taskMap[day] ?? [];
+  void statusChange(String taskId) {
+    _taskStatus[taskId] = !_taskStatus[taskId]!;
+    notifyListeners();
+  }
+
+  Future<void> updateTask(DateTime day) async {
+    fetchTask();
+    notifyListeners();
+  }
+
+  List<Task> _getTasksForDay(DateTime day) {
+    return _taskMap[DateTime(
+          day.year,
+          day.month,
+          day.day,
+        )] ??
+        [];
+  }
+
+  Future<void> addTask(Task task) async {
+    await db.collection('user_task').add({
+      'user_uid': user?.uid,
+      'taskId': const Uuid().v4().toString(),
+      'taskName': task.taskName,
+      'taskDesc': task.taskDesc,
+      'startDate': task.startDate,
+      'endDate': task.endDate,
+      'cycle': task.cycle,
+      'notify': task.notify,
+      'isDone': task.isDone,
+    });
+
+    notifyListeners();
+  }
+
+  void updateDoneTask(String taskId) async {
+    await db
+        .collection('user_task')
+        .where('taskId', isEqualTo: taskId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs[0].reference
+          .update({'isDone': !querySnapshot.docs[0]['isDone']});
+    });
+
+    notifyListeners();
+  }
+
+  void deleteTask(Task task) async {
+    await db
+        .collection('user_task')
+        .where('taskId', isEqualTo: task.taskId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs[0].reference.delete();
+    });
+    final keyDate = DateTime(
+      task.startDate.year,
+      task.startDate.month,
+      task.startDate.day,
+    );
+    final key = keyDate;
+
+    if (_taskMap.containsKey(key)) {
+      if (_taskMap[key]!.any((t) => t.taskId == task.taskId)) {
+        _taskMap[key]!.remove(task);
+      }
+    }
+    _selectedDay = _focusedDay;
+    _selectedTasks = _taskMap[DateTime(
+          _selectedDay!.year,
+          _selectedDay!.month,
+          _selectedDay!.day,
+        )] ??
+        [];
+    await Future.delayed(Duration(milliseconds: 100));
+    notifyListeners();
+  }
+
+  void editTask(Task task, String newTaskName, String newTaskDesc) async {
+    await db
+        .collection('user_task')
+        .where('taskId', isEqualTo: task.taskId)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs[0].reference.update({
+        'taskName': newTaskName,
+        'taskDesc': newTaskDesc,
+      });
+    });
+    final keyDate = DateTime(
+      task.startDate.year,
+      task.startDate.month,
+      task.startDate.day,
+    );
+    final key = keyDate;
+
+    if (_taskMap.containsKey(key)) {
+      if (_taskMap[key]!.any((t) => t.taskId == task.taskId)) {
+        _taskMap[key]
+            ?.where((element) => element.taskId == task.taskId)
+            .first
+            .taskName = newTaskName;
+        _taskMap[key]
+            ?.where((element) => element.taskId == task.taskId)
+            .first
+            .taskDesc = newTaskDesc;
+      }
+    }
+    _selectedDay = _focusedDay;
+    _selectedTasks = _taskMap[DateTime(
+          _selectedDay!.year,
+          _selectedDay!.month,
+          _selectedDay!.day,
+        )] ??
+        [];
+    await Future.delayed(Duration(milliseconds: 100));
+    notifyListeners();
   }
 }
