@@ -1,4 +1,5 @@
 import 'package:checkmate/pages/main/components/newTask.dart';
+import 'package:checkmate/pages/main/notification_page.dart';
 import 'package:checkmate/pages/main/profile_page.dart';
 import 'package:checkmate/pages/main/task_page.dart';
 import 'package:checkmate/provider/db.dart';
@@ -15,7 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 3;
   @override
   void initState() {
     super.initState();
@@ -30,9 +31,7 @@ class _HomeState extends State<Home> {
     Text(
       'Add todo',
     ),
-    Text(
-      ' Notification',
-    ),
+    NotificationPage(),
     ProfilePage()
   ];
 
