@@ -178,12 +178,12 @@ class _SignUpState extends State<SignUp> {
                                                         password:
                                                             passwordController
                                                                 .text);
-                                                    Navigator.pushAndRemoveUntil(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const MainApp()),
-                                                        (route) => false);
+                                                    // Navigator.pushAndRemoveUntil(
+                                                    //     context,
+                                                    //     MaterialPageRoute(
+                                                    //         builder: (context) =>
+                                                    //             const MainApp()),
+                                                    //     (route) => false);
                                                   },
                                                   child: const Text(
                                                       'Go to application'))
