@@ -1,5 +1,5 @@
 import 'package:checkmate/Services/noti_service.dart';
-import 'package:checkmate/pages/main/utilities/utils.dart';
+
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -35,17 +35,9 @@ class _NotificationPageState extends State<NotificationPage> {
     super.dispose();
   }
 
-  List<Event> _getEventsForDay(DateTime day) {
-    return kEvents[day] ?? [];
-  }
+  
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    final days = daysInRange(start, end);
-
-    return [
-      for (final d in days) ..._getEventsForDay(d),
-    ];
-  }
+  
 
   
 
