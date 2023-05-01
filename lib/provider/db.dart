@@ -6,7 +6,7 @@ class Database extends ChangeNotifier {
   String username = 'fetching...';
   String email = 'fetching...';
   String points = 'fetching...';
-  bool cycle = false;
+  String cycle = 'fetching...';
 
   Database() {
     init();
@@ -34,7 +34,7 @@ class Database extends ChangeNotifier {
   String get userName => username;
   String get userEmail => email;
   String get userPoints => points;
-  bool get userCycle => cycle;
+  String get userCycle => cycle;
   //DB FUNCTION
   Future<void> addNewUser(String email, String name) async {
     await db.collection('user_info').add({

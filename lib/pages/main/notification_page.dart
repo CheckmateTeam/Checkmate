@@ -12,34 +12,18 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  
-
   final NotificationService noti = NotificationService();
-
-
 
   @override
   void initState() {
-    
-    
     NotificationService.initNotification();
     super.initState();
-
-
   }
-  
 
   @override
   void dispose() {
-
     super.dispose();
   }
-
-  
-
-  
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -99,23 +83,22 @@ class _NotificationPageState extends State<NotificationPage> {
                                 color: Color.fromARGB(255, 255, 0, 0))),
                       ],
                     ),
-
                     Divider(
                       color: Colors.grey.withOpacity(0.6),
                       thickness: 1,
                     ),
-
                     const SizedBox(height: 8.0),
-
                     Expanded(
                       child: SingleChildScrollView(
                           child: Column(children: [
                         ElevatedButton(
-                                                      child: const Text('Show notifications'),
-                                                      onPressed: () {
-                                                        noti.sendNotification(title: "New message title", body: "Your long body");
-                                                      },
-                                                    ),
+                          child: const Text('Show notifications'),
+                          onPressed: () {
+                            noti.sendNotification(
+                                title: "New message title",
+                                body: "Your long body");
+                          },
+                        ),
 
                         //Older from now on
 
@@ -145,5 +128,3 @@ class _NotificationPageState extends State<NotificationPage> {
     );
   }
 }
-
-
