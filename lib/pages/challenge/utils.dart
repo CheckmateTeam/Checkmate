@@ -6,7 +6,7 @@ import 'powerups.dart';
 import 'bosses.dart';
 import 'dart:math';
 
-class Pair<K,V> {
+class Pair<K, V> {
   K key;
   V value;
 
@@ -14,7 +14,6 @@ class Pair<K,V> {
 }
 
 class Utils {
-
   static String colorTest(String hex, double lum) {
     RegExp hexColor = RegExp(r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$');
     Iterable<Match> matches = hexColor.allMatches(hex);
@@ -22,17 +21,19 @@ class Utils {
     matches.toList()[0].group(1).runes.forEach((int rune) {
       var character = String.fromCharCode(rune);
       if (character != null) {
-       values += character;
+        values += character;
       }
     });
     if (values.length < 6) {
-      values = values[0] + values[0] + values[1] + values[1] + values[2] + values[2];
+      values =
+          values[0] + values[0] + values[1] + values[1] + values[2] + values[2];
     }
     var rgb = "";
     for (int i = 0; i < 3; i++) {
       var value = values.substring(i * 2, 2 * (i + 1));
       var parse = int.tryParse(value, radix: 16);
-      var string = min(max(0, parse + (parse * lum)), 255).round().toRadixString(16);
+      var string =
+          min(max(0, parse + (parse * lum)), 255).round().toRadixString(16);
 
       rgb += ("00" + string).substring(string.length);
     }
@@ -46,7 +47,7 @@ class Utils {
   }
 
   static List<PowerUps> getPowerUps() {
-    var list = List<PowerUps>();
+    var list = <PowerUps>[];
     list.add(PowerUps("Master Sword", 2.15, false, 50));
     list.add(PowerUps("Lengendary Sword", 2.45, false, 180));
     list.add(PowerUps("Keyblade", 3.75, false, 300));
@@ -57,7 +58,7 @@ class Utils {
   }
 
   static List<Bosses> getBosses() {
-    var list = List<Bosses>();
+    var list = <Bosses>[];
     list.add(Bosses("Lunabi", 450, "assets/boss/boss_one.png"));
     list.add(Bosses("ivygrass", 880, "assets/boss/boss_two.png"));
     list.add(Bosses("Tombster", 1120, "assets/boss/boss_three.png"));
