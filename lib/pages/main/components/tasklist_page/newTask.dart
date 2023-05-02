@@ -19,6 +19,7 @@ class createTask extends StatefulWidget {
 }
 
 class _createTaskState extends State<createTask> {
+  bool _validate = false;
   List<String> dropdownItems = [
     'Never',
     '5 mins before deadline',
@@ -60,8 +61,9 @@ class _createTaskState extends State<createTask> {
               const SizedBox(height: 5),
               TextField(
                 controller: taskName,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
+                  errorText: _validate ? 'Value Can\'t Be Empty' : null,
                 ),
               ),
               const SizedBox(height: 20),
@@ -308,8 +310,9 @@ class _createTaskState extends State<createTask> {
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
               TextField(
                 controller: taskDescription,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
+                  errorText: _validate ? 'Value Can\'t Be Empty' : null,
                 ),
               ),
             ],
@@ -322,6 +325,13 @@ class _createTaskState extends State<createTask> {
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.redAccent)),
               onPressed: () async {
+                if (taskName.text.isEmpty || taskDescription.text.isEmpty) {
+                  setState(() {
+                    _validate = true;
+                  });
+                  return;
+                }
+
                 context.read<CalendarModel>().addTask(Task(
                     taskName: taskName.text,
                     taskDesc: taskDescription.text,
