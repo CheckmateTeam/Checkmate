@@ -1,4 +1,4 @@
-import 'package:checkmate/Services/noti_service.dart';
+import 'package:checkmate/services/noti_service.dart';
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';

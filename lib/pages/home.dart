@@ -1,4 +1,4 @@
-import 'package:checkmate/pages/main/components/newTask.dart';
+import 'package:checkmate/pages/main/archive_page.dart';
 import 'package:checkmate/pages/main/notification_page.dart';
 import 'package:checkmate/pages/main/profile_page.dart';
 import 'package:checkmate/pages/main/task_page.dart';
@@ -8,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'main/components/tasklist_page/newTask.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -16,7 +18,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 3;
+  int _selectedIndex = 1;
   @override
   void initState() {
     super.initState();
@@ -25,9 +27,7 @@ class _HomeState extends State<Home> {
   // ignore: constant_identifier_names
   static const List<Widget> screen_index = <Widget>[
     TaskListPage(),
-    Text(
-      ' Archive',
-    ),
+    ArchivePage(),
     Text(
       'Add todo',
     ),

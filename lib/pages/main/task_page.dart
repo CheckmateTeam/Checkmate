@@ -1,10 +1,11 @@
-import 'package:checkmate/pages/main/components/bossTile.dart';
-import 'package:checkmate/pages/main/components/tableCalendar.dart';
-import 'package:checkmate/pages/main/components/taskList.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+
+import 'components/tasklist_page/bossTile.dart';
+import 'components/tasklist_page/tableCalendar.dart';
+import 'components/tasklist_page/taskList.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});
