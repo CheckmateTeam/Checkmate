@@ -21,7 +21,8 @@ class FancyButton extends StatefulWidget {
   _FancyButtonState createState() => _FancyButtonState();
 }
 
-class _FancyButtonState extends State<FancyButton> with TickerProviderStateMixin {
+class _FancyButtonState extends State<FancyButton>
+    with TickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> _pressedAnimation;
 
@@ -91,7 +92,9 @@ class _FancyButtonState extends State<FancyButton> with TickerProviderStateMixin
     final radius = BorderRadius.circular(horzPadding * 0.5);
 
     return Container(
-      padding: widget.onPressed != null ?  EdgeInsets.only(bottom: 2, left: 0.5, right: 0.5) : null,
+      padding: widget.onPressed != null
+          ? EdgeInsets.only(bottom: 2, left: 0.5, right: 0.5)
+          : null,
       decoration: BoxDecoration(
         color: Colors.black87,
         borderRadius: radius,
@@ -112,14 +115,13 @@ class _FancyButtonState extends State<FancyButton> with TickerProviderStateMixin
                 ),
                 AnimatedBuilder(
                   animation: _pressedAnimation,
-                  builder: (BuildContext context, Widget child) {
+                  builder: (BuildContext context2, Widget child) {
                     return Transform.translate(
                       offset: Offset(0.0, _pressedAnimation.value),
                       child: child,
                     );
                   },
                   child: Stack(
-                    overflow: Overflow.visible,
                     children: <Widget>[
                       ClipRRect(
                         borderRadius: radius,
