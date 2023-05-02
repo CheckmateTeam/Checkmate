@@ -10,7 +10,6 @@ import 'scroll.dart';
 import 'utils.dart';
 import 'powerups.dart';
 import 'route.dart';
-import 'welcome.dart';
 import 'gamepad.dart';
 
 class Game extends StatefulWidget {

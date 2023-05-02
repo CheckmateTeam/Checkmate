@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class InitRoute extends PageRoute {
-
   InitRoute(this.child);
 
   final Widget child;
@@ -10,7 +9,7 @@ class InitRoute extends PageRoute {
   Color get barrierColor => Colors.black;
 
   @override
-  String get barrierLabel => null;
+  String get barrierLabel => '';
 
   @override
   bool get maintainState => true;
@@ -19,7 +18,8 @@ class InitRoute extends PageRoute {
   Duration get transitionDuration => Duration(milliseconds: 500);
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
     return FadeTransition(opacity: animation, child: child);
   }
 }
