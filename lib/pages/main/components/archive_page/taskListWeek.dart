@@ -31,7 +31,7 @@ class _TaskListWeekState extends State<TaskListWeek> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
                 taskList.length.toString() + " tasks",
@@ -40,12 +40,12 @@ class _TaskListWeekState extends State<TaskListWeek> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              Text("01:20:00 hours",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  )),
-              Text(taskList.length.toString() + " days",
+              // Text("01:20:00 hours",
+              //     style: TextStyle(
+              //       fontSize: 14,
+              //       fontWeight: FontWeight.w700,
+              //     )),
+              Text(barData.length.toString() + " days",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -213,7 +213,7 @@ class _TaskListWeekState extends State<TaskListWeek> {
     switch (value.toInt()) {
       case 0:
         switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 6)))
+            .format(DateTime.now().subtract(Duration(days: 7)))
             .toString()) {
           case "Monday":
             text = "Mn";
@@ -239,7 +239,31 @@ class _TaskListWeekState extends State<TaskListWeek> {
         }
         break;
       case 1:
-        text = 'Te';
+        switch (DateFormat('EEEE')
+            .format(DateTime.now().subtract(Duration(days: 6)))
+            .toString()) {
+          case "Monday":
+            text = "Mn";
+            break;
+          case "Tuesday":
+            text = "Te";
+            break;
+          case "Wednesday":
+            text = "Wd";
+            break;
+          case "Thursday":
+            text = "Tu";
+            break;
+          case "Friday":
+            text = "Fr";
+            break;
+          case "Saturday":
+            text = "St";
+            break;
+          case "Sunday":
+            text = "Sn";
+            break;
+        }
         break;
       case 2:
         switch (DateFormat('EEEE')
@@ -428,11 +452,18 @@ class _TaskListWeekState extends State<TaskListWeek> {
           barRods: [
             BarChartRodData(
               toY: barData[DateTime(
-                DateTime.now().subtract(Duration(days: 6)).year,
-                DateTime.now().subtract(Duration(days: 6)).month,
-                DateTime.now().subtract(Duration(days: 6)).day,
-              )]!
-                  .toDouble(),
+                        DateTime.now().subtract(Duration(days: 6)).year,
+                        DateTime.now().subtract(Duration(days: 6)).month,
+                        DateTime.now().subtract(Duration(days: 6)).day,
+                      )] ==
+                      null
+                  ? 0
+                  : barData[DateTime(
+                      DateTime.now().subtract(Duration(days: 6)).year,
+                      DateTime.now().subtract(Duration(days: 6)).month,
+                      DateTime.now().subtract(Duration(days: 6)).day,
+                    )]!
+                      .toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -443,11 +474,18 @@ class _TaskListWeekState extends State<TaskListWeek> {
           barRods: [
             BarChartRodData(
               toY: barData[DateTime(
-                DateTime.now().subtract(Duration(days: 5)).year,
-                DateTime.now().subtract(Duration(days: 5)).month,
-                DateTime.now().subtract(Duration(days: 5)).day,
-              )]!
-                  .toDouble(),
+                        DateTime.now().subtract(Duration(days: 5)).year,
+                        DateTime.now().subtract(Duration(days: 5)).month,
+                        DateTime.now().subtract(Duration(days: 5)).day,
+                      )] ==
+                      null
+                  ? 0
+                  : barData[DateTime(
+                      DateTime.now().subtract(Duration(days: 5)).year,
+                      DateTime.now().subtract(Duration(days: 5)).month,
+                      DateTime.now().subtract(Duration(days: 5)).day,
+                    )]!
+                      .toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -457,7 +495,19 @@ class _TaskListWeekState extends State<TaskListWeek> {
           x: 2,
           barRods: [
             BarChartRodData(
-              toY: 2,
+              toY: barData[DateTime(
+                        DateTime.now().subtract(Duration(days: 4)).year,
+                        DateTime.now().subtract(Duration(days: 4)).month,
+                        DateTime.now().subtract(Duration(days: 4)).day,
+                      )] ==
+                      null
+                  ? 0
+                  : barData[DateTime(
+                      DateTime.now().subtract(Duration(days: 4)).year,
+                      DateTime.now().subtract(Duration(days: 4)).month,
+                      DateTime.now().subtract(Duration(days: 4)).day,
+                    )]!
+                      .toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -467,7 +517,19 @@ class _TaskListWeekState extends State<TaskListWeek> {
           x: 3,
           barRods: [
             BarChartRodData(
-              toY: 4,
+              toY: barData[DateTime(
+                        DateTime.now().subtract(Duration(days: 3)).year,
+                        DateTime.now().subtract(Duration(days: 3)).month,
+                        DateTime.now().subtract(Duration(days: 3)).day,
+                      )] ==
+                      null
+                  ? 0
+                  : barData[DateTime(
+                      DateTime.now().subtract(Duration(days: 3)).year,
+                      DateTime.now().subtract(Duration(days: 3)).month,
+                      DateTime.now().subtract(Duration(days: 3)).day,
+                    )]!
+                      .toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -477,7 +539,19 @@ class _TaskListWeekState extends State<TaskListWeek> {
           x: 4,
           barRods: [
             BarChartRodData(
-              toY: 6,
+              toY: barData[DateTime(
+                        DateTime.now().subtract(Duration(days: 3)).year,
+                        DateTime.now().subtract(Duration(days: 3)).month,
+                        DateTime.now().subtract(Duration(days: 3)).day,
+                      )] ==
+                      null
+                  ? 0
+                  : barData[DateTime(
+                      DateTime.now().subtract(Duration(days: 3)).year,
+                      DateTime.now().subtract(Duration(days: 3)).month,
+                      DateTime.now().subtract(Duration(days: 3)).day,
+                    )]!
+                      .toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -487,7 +561,19 @@ class _TaskListWeekState extends State<TaskListWeek> {
           x: 5,
           barRods: [
             BarChartRodData(
-              toY: 9,
+              toY: barData[DateTime(
+                        DateTime.now().subtract(Duration(days: 2)).year,
+                        DateTime.now().subtract(Duration(days: 2)).month,
+                        DateTime.now().subtract(Duration(days: 2)).day,
+                      )] ==
+                      null
+                  ? 0
+                  : barData[DateTime(
+                      DateTime.now().subtract(Duration(days: 2)).year,
+                      DateTime.now().subtract(Duration(days: 2)).month,
+                      DateTime.now().subtract(Duration(days: 2)).day,
+                    )]!
+                      .toDouble(),
               gradient: _barsGradient,
             )
           ],
@@ -497,7 +583,19 @@ class _TaskListWeekState extends State<TaskListWeek> {
           x: 6,
           barRods: [
             BarChartRodData(
-              toY: 3,
+              toY: barData[DateTime(
+                        DateTime.now().subtract(Duration(days: 1)).year,
+                        DateTime.now().subtract(Duration(days: 1)).month,
+                        DateTime.now().subtract(Duration(days: 1)).day,
+                      )] ==
+                      null
+                  ? 0
+                  : barData[DateTime(
+                      DateTime.now().subtract(Duration(days: 1)).year,
+                      DateTime.now().subtract(Duration(days: 1)).month,
+                      DateTime.now().subtract(Duration(days: 1)).day,
+                    )]!
+                      .toDouble(),
               gradient: _barsGradient,
             )
           ],
