@@ -18,7 +18,7 @@ class Utils {
     RegExp hexColor = RegExp(r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$');
     Iterable<Match> matches = hexColor.allMatches(hex);
     String values = "";
-    matches.toList()[0].group(1).runes.forEach((int rune) {
+    matches.toList()[0].group(1)?.runes.forEach((int rune) {
       var character = String.fromCharCode(rune);
       if (character != null) {
         values += character;
@@ -33,7 +33,7 @@ class Utils {
       var value = values.substring(i * 2, 2 * (i + 1));
       var parse = int.tryParse(value, radix: 16);
       var string =
-          min(max(0, parse + (parse * lum)), 255).round().toRadixString(16);
+          min(max(0, parse! + (parse * lum)), 255).round().toRadixString(16);
 
       rgb += ("00" + string).substring(string.length);
     }
@@ -41,7 +41,7 @@ class Utils {
     return rgb.toUpperCase();
   }
 
-  static int hexToInt({String color, double lum = 0.0}) {
+  static int hexToInt({required String color, double lum = 0.0}) {
     var value = "0xFF${Utils.colorTest(color, lum ?? 0)}";
     return int.parse(value);
   }
@@ -91,20 +91,19 @@ class Utils {
 class StrokeText extends StatelessWidget {
   final String text;
   final double fontSize;
-  final FontWeight fontWeight;
+
   final Color color;
   final Color strokeColor;
   final double strokeWidth;
   final String fontFamily;
 
   const StrokeText(this.text,
-      {Key key,
-      this.fontSize,
-      this.fontWeight,
-      this.color,
-      this.strokeColor,
-      this.strokeWidth,
-      this.fontFamily})
+      {Key? key,
+      required this.fontSize,
+      required this.color,
+      required this.strokeColor,
+      required this.strokeWidth,
+      required this.fontFamily})
       : super(key: key);
 
   @override
@@ -115,7 +114,6 @@ class StrokeText extends StatelessWidget {
           text,
           style: TextStyle(
             fontSize: fontSize,
-            fontWeight: fontWeight,
             fontFamily: fontFamily,
             color: color,
           ),
@@ -124,7 +122,6 @@ class StrokeText extends StatelessWidget {
           text,
           style: TextStyle(
             fontSize: fontSize,
-            fontWeight: fontWeight,
             fontFamily: fontFamily,
             foreground: Paint()
               ..strokeWidth = strokeWidth

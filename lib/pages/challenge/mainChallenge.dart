@@ -32,9 +32,9 @@ class _MainChallengeState extends State<MainChallenge> {
 
 class _GameState extends State<Game>
     with WidgetsBindingObserver, TickerProviderStateMixin {
-  AnimationController controller;
+  late AnimationController controller;
   int duration = 1000 * 30;
-  int durationBackup;
+  int? durationBackup;
 
   static const MethodChannel _channel = const MethodChannel('gamepad');
 
@@ -63,18 +63,18 @@ class _GameState extends State<Game>
 
   var earnedCoin = false;
 
-  AudioPlayer hitPlayer;
-  AudioCache hitCache;
+  late AudioPlayer hitPlayer;
+  late AudioCache hitCache;
 
-  AudioPlayer coinPlayer;
-  AudioCache coinCache;
+  late AudioPlayer coinPlayer;
+  late AudioCache coinCache;
 
-  static AudioCache musicCache;
-  static AudioPlayer instance;
+  // static AudioCache musicCache = AudioCache(prefix: "audio/");
+  // static AudioPlayer instance;
 
   var musicPlaying = false;
 
-  VoidCallback onEarnTime;
+  late VoidCallback onEarnTime;
 
   var gameOver = false;
 
@@ -83,35 +83,85 @@ class _GameState extends State<Game>
   var _gamepadConnected = false;
 
   String get timerString {
-    Duration duration = controller.duration * controller.value;
+    Duration duration = controller.duration! * controller.value;
     return '${(duration.inMinutes).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
   }
 
-  void initPlayer() {
-    hitPlayer = AudioPlayer();
-    hitCache = AudioCache(fixedPlayer: hitPlayer);
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: duration),
+    );
 
-    coinPlayer = AudioPlayer();
-    coinCache = AudioCache(fixedPlayer: coinPlayer);
+    // if (!Utils.isDesktop()) {
+    //   initPlayer();
+    //   if (!musicPlaying) {
+    //     musicPlaying = true;
+    //     playMusic();
+    //   }
+    // }
+
+    initClock(add: 0);
+    onEarnTime = () {
+      initClock(add: addedDuration);
+    };
+    damageBar = bosses[bossIndex].life.toDouble() * multiplier;
+
+    GamePad.isGamePadConnected.then((connected) {
+      setState(() {
+        _gamepadConnected = connected;
+      });
+    });
+
+    _channel.setMethodCallHandler((call) async {
+      switch (call.method) {
+        case "keyCode":
+          var pair = Utils.mapToPair(Map<int, bool>.from(call.arguments));
+          setState(() {
+            if (!gameOver) {
+              if (pair.value) {
+                switch (GamePad.switchMap[pair.key]) {
+                  case "A":
+                    damage(null);
+                    break;
+                }
+              } else {
+                hide(null);
+              }
+            }
+          });
+          break;
+      }
+    });
   }
+  // void initPlayer() {
+  //   hitPlayer = AudioPlayer();
+  //   hitCache = AudioCache(fixedPlayer: hitPlayer);
 
-  void playMusic() async {
-    musicCache = AudioCache(prefix: "audio/");
-    instance = await musicCache.loop("bgmusic.mp3");
-    await instance.setVolume(0.5);
-  }
+  //   coinPlayer = AudioPlayer();
+  //   coinCache = AudioCache(fixedPlayer: coinPlayer);
+  // }
 
-  void playGameOver() async {
-    musicCache = AudioCache(prefix: "audio/");
-    instance = await musicCache.loop("game_over.mp3");
-    await instance.setVolume(0.5);
-  }
+  // void playMusic() async {
+  //   // musicCache = AudioCache(prefix: "audio/");
+  //   instance = await musicCache.loop("bgmusic.mp3");
+  //   await instance.setVolume(0.5);
+  // }
 
-  void damage(TapDownDetails details) {
-    if (!Utils.isDesktop()) {
-      hitPlayer.pause();
-      hitCache.play('audio/sword.mp3');
-    }
+  // void playGameOver() async {
+  //   // musicCache = AudioCache(prefix: "audio/");
+  //   instance = await musicCache.loop("game_over.mp3");
+  //   await instance.setVolume(0.5);
+  // }
+
+  void damage(TapDownDetails? details) {
+    // if (!Utils.isDesktop()) {
+    //   hitPlayer.pause();
+    //   hitCache.play('audio/sword.mp3');
+    // }
     setState(() {
       if (details != null) {
         xAxis = details.globalPosition.dx - 40.0;
@@ -131,10 +181,10 @@ class _GameState extends State<Game>
         bossIndex = (bossIndex + 1 >= bosses.length) ? 0 : ++bossIndex;
         damageBar = bosses[bossIndex].life.toDouble() * multiplier;
         earnedCoin = true;
-        onEarnTime?.call();
-        if (!Utils.isDesktop()) {
-          coinCache.play('audio/coin.mp3');
-        }
+        onEarnTime.call();
+        // if (!Utils.isDesktop()) {
+        //   coinCache.play(AssetSource('audio/coin.mp3'));
+        // }
         Future.delayed(const Duration(seconds: 1), () {
           setState(() {
             earnedCoin = false;
@@ -146,7 +196,7 @@ class _GameState extends State<Game>
     });
   }
 
-  void hide(TapUpDetails details) {
+  void hide(TapUpDetails? details) {
     setState(() {
       tap = false;
     });
@@ -253,30 +303,28 @@ class _GameState extends State<Game>
         "Tap Hero: I survive until ${bosses[bossIndex].name} LV$level! Now is your turn!");
   }
 
-  void switchMusic() {
-    if (!Utils.isDesktop()) {
-      if (musicPlaying && instance != null) {
-        instance.pause();
-        musicPlaying = false;
-      } else {
-        playMusic();
-        musicPlaying = true;
-      }
-    }
-  }
+  // void switchMusic() {
+  //   if (!Utils.isDesktop()) {
+  //     if (musicPlaying && instance != null) {
+  //       instance.pause();
+  //       musicPlaying = false;
+  //     } else {
+  //       playMusic();
+  //       musicPlaying = true;
+  //     }
+  //   }
+  // }
 
   Widget gameEngine(BuildContext context) {
     return width(context) >= 700
         ? Row(
             children: <Widget>[
               gamePanel(),
-              sidePanel(),
             ],
           )
         : Column(
             children: <Widget>[
               gamePanel(),
-              sidePanel(),
             ],
           );
   }
@@ -430,159 +478,24 @@ class _GameState extends State<Game>
     );
   }
 
-  Widget sidePanel() {
-    return Container(
-      color: Colors.black,
-      height: listHeight(context),
-      width: width(context) >= 700
-          ? width(context) >= 700 && width(context) <= 900
-              ? width(context) - 700 + 300
-              : 400
-          : width(context),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20.0, horizontal: 15.0),
-                    child: Text(
-                      "Power-Ups",
-                      style: Utils.textStyle(12.0),
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 15.0),
-                  child: FancyButton(
-                    size: 20,
-                    color: Color(0xFF67AC5B),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "SHARE SCORE",
-                        style: Utils.textStyle(12.0),
-                      ),
-                    ),
-                    onPressed: share,
-                  ),
-                ),
-              )
-            ],
-          ),
-          Expanded(
-            child: ScrollConfiguration(
-              behavior: GlowBehavior(),
-              child: ListView.builder(
-                padding: EdgeInsets.only(bottom: 20.0, left: 10.0, right: 10.0),
-                itemCount: list.length,
-                itemBuilder: (context, position) {
-                  PowerUps powerUp = list[position];
-                  int bgColor = !powerUp.bought && coins >= powerUp.coins
-                      ? 0xFF808080
-                      : !powerUp.bought
-                          ? 0xFF505050
-                          : 0xFF202020;
-
-                  return swordElement(bgColor, powerUp, position);
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget swordElement(int bgColor, PowerUps powerUp, int position) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 5.0,
-      ),
-      child: Container(
-        height: 70,
-        child: Card(
-          color: Color(bgColor),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text(
-                    powerUp.name,
-                    style: Utils.textStyle(11.0),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-                child: FancyButton(
-                  size: 20,
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, bottom: 2, top: 2),
-                        child: Text(
-                          !powerUp.bought ? "BUY" : "BOUGHT",
-                          style: Utils.textStyle(13.0,
-                              color:
-                                  !powerUp.bought ? Colors.white : Colors.grey),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 8.0, right: !powerUp.bought ? 2.0 : 0.0),
-                        child: Text(
-                          !powerUp.bought ? powerUp.coins.toString() : "",
-                          style: Utils.textStyle(13.0),
-                        ),
-                      ),
-                      coinVisibility(powerUp.bought),
-                    ],
-                  ),
-                  color: !powerUp.bought && coins >= powerUp.coins
-                      ? Colors.deepPurpleAccent
-                      : Colors.deepPurple,
-                  onPressed: !powerUp.bought && coins >= powerUp.coins
-                      ? () => buyPowerUp(position)
-                      : null,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void initClock({int add}) {
+  void initClock({int? add}) {
     if (controller == null) {
       durationBackup = duration;
     } else {
-      Duration currentDuration = controller.duration * controller.value;
+      Duration currentDuration = controller.duration! * controller.value;
       durationBackup = currentDuration.inMilliseconds;
       controller.stop();
     }
 
-    controller = null;
+    // controller = null;
     controller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: durationBackup + add));
+        vsync: this, duration: Duration(milliseconds: durationBackup! + add!));
     controller.reverse(from: controller.value == 0.0 ? 1.0 : controller.value);
     controller.addListener(() {
       setState(() {
         timerString;
 
-        Duration duration = controller.duration * controller.value;
+        Duration duration = controller.duration! * controller.value;
 
         if (duration.inSeconds >= 0 && (duration.inSeconds % 60) > 20) {
           clockColor = Color(0xFF67AC5B);
@@ -607,60 +520,13 @@ class _GameState extends State<Game>
   }
 
   @override
-  void initState() {
-    WidgetsBinding.instance.addObserver(this);
-    super.initState();
-
-    if (!Utils.isDesktop()) {
-      initPlayer();
-      if (!musicPlaying) {
-        musicPlaying = true;
-        playMusic();
-      }
-    }
-
-    initClock(add: 0);
-    onEarnTime = () {
-      initClock(add: addedDuration);
-    };
-    damageBar = bosses[bossIndex].life.toDouble() * multiplier;
-
-    GamePad.isGamePadConnected.then((connected) {
-      setState(() {
-        _gamepadConnected = connected;
-      });
-    });
-
-    _channel.setMethodCallHandler((call) async {
-      switch (call.method) {
-        case "keyCode":
-          var pair = Utils.mapToPair(Map<int, bool>.from(call.arguments));
-          setState(() {
-            if (!gameOver) {
-              if (pair.value) {
-                switch (GamePad.switchMap[pair.key]) {
-                  case "A":
-                    damage(null);
-                    break;
-                }
-              } else {
-                hide(null);
-              }
-            }
-          });
-          break;
-      }
-    });
-  }
-
-  @override
   void dispose() {
-    if (!Utils.isDesktop()) {
-      if (musicPlaying && instance != null) {
-        instance.stop();
-        musicPlaying = false;
-      }
-    }
+    // if (!Utils.isDesktop()) {
+    //   if (musicPlaying && instance != null) {
+    //     instance.stop();
+    //     musicPlaying = false;
+    //   }
+    // }
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -669,39 +535,39 @@ class _GameState extends State<Game>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    if (!Utils.isDesktop()) {
-      if (state == AppLifecycleState.inactive && instance != null) {
-        if (musicPlaying) {
-          instance.stop();
-          musicPlaying = false;
-        }
-      } else if (state == AppLifecycleState.resumed) {
-        if (!gameOver) {
-          if (!musicPlaying) {
-            musicPlaying = true;
-            playMusic();
-          }
-        } else {
-          if (!musicPlaying) {
-            musicPlaying = true;
-            playGameOver();
-          }
-        }
-      }
-    }
+    // if (!Utils.isDesktop()) {
+    //   if (state == AppLifecycleState.inactive && instance != null) {
+    //     if (musicPlaying) {
+    //       instance.stop();
+    //       musicPlaying = false;
+    //     }
+    //   } else if (state == AppLifecycleState.resumed) {
+    //     if (!gameOver) {
+    //       if (!musicPlaying) {
+    //         musicPlaying = true;
+    //         playMusic();
+    //       }
+    //     } else {
+    //       if (!musicPlaying) {
+    //         musicPlaying = true;
+    //         playGameOver();
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   Widget showGameOver() {
     if (gameOver) {
-      if (musicPlaying && instance != null) {
-        instance.stop();
-        musicPlaying = false;
-      }
+      // if (musicPlaying && instance != null) {
+      //   instance.stop();
+      //   musicPlaying = false;
+      // }
 
-      if (!musicPlaying) {
-        musicPlaying = true;
-        playGameOver();
-      }
+      // if (!musicPlaying) {
+      //   musicPlaying = true;
+      //   playGameOver();
+      // }
 
       return Stack(
         children: <Widget>[
@@ -715,6 +581,12 @@ class _GameState extends State<Game>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   FancyButton(
+                    size: width(context) / 10,
+                    color: Color(0xFFCA3034),
+                    onPressed: () {
+                      // Navigator.of(context)
+                      //     .pushReplacement(InitRoute(Welcome()));
+                    },
                     child: Text(
                       "GAME OVER",
                       textAlign: TextAlign.center,
@@ -724,16 +596,13 @@ class _GameState extends State<Game>
                         fontFamily: 'Gameplay',
                       ),
                     ),
-                    size: width(context) / 10,
-                    color: Color(0xFFCA3034),
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacement(InitRoute(Welcome()));
-                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 30),
                     child: FancyButton(
+                      size: width(context) / 20,
+                      color: Color(0xFF67AC5B),
+                      onPressed: share,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 5),
@@ -747,9 +616,6 @@ class _GameState extends State<Game>
                           ),
                         ),
                       ),
-                      size: width(context) / 20,
-                      color: Color(0xFF67AC5B),
-                      onPressed: share,
                     ),
                   )
                 ],

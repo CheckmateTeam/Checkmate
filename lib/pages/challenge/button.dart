@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class FancyButton extends StatefulWidget {
   const FancyButton({
-    Key key,
-    @required this.child,
-    @required this.size,
-    @required this.color,
+    Key? key,
+    required this.child,
+    required this.size,
+    required this.color,
     this.duration = const Duration(milliseconds: 160),
     this.onPressed,
   }) : super(key: key);
@@ -13,7 +13,7 @@ class FancyButton extends StatefulWidget {
   final Widget child;
   final Color color;
   final Duration duration;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   final double size;
 
@@ -23,17 +23,20 @@ class FancyButton extends StatefulWidget {
 
 class _FancyButtonState extends State<FancyButton>
     with TickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _pressedAnimation;
+  late AnimationController _animationController = AnimationController(
+    duration: Duration(microseconds: widget.duration.inMicroseconds ~/ 2),
+    vsync: this,
+  );
+  late Animation<double> _pressedAnimation;
 
-  TickerFuture _downTicker;
+  TickerFuture? _downTicker;
 
   double get buttonDepth => widget.size * 0.2;
 
   void _setupAnimation() {
-    _animationController?.stop();
-    final oldControllerValue = _animationController?.value ?? 0.0;
-    _animationController?.dispose();
+    _animationController.stop();
+    final oldControllerValue = _animationController.value;
+    _animationController.dispose();
     _animationController = AnimationController(
       duration: Duration(microseconds: widget.duration.inMicroseconds ~/ 2),
       vsync: this,
@@ -72,7 +75,7 @@ class _FancyButtonState extends State<FancyButton>
 
   void _onTapUp(_) {
     if (widget.onPressed != null) {
-      _downTicker.whenComplete(() {
+      _downTicker!.whenComplete(() {
         _animationController.animateTo(0.0);
         widget.onPressed?.call();
       });
@@ -115,11 +118,13 @@ class _FancyButtonState extends State<FancyButton>
                 ),
                 AnimatedBuilder(
                   animation: _pressedAnimation,
-                  builder: (BuildContext context2, Widget child) {
-                    return Transform.translate(
-                      offset: Offset(0.0, _pressedAnimation.value),
-                      child: child,
-                    );
+                  builder: (BuildContext context, Widget? child) {
+                    return _animationController == null
+                        ? child!
+                        : Transform.translate(
+                            offset: Offset(0.0, _pressedAnimation.value),
+                            child: child!,
+                          );
                   },
                   child: Stack(
                     children: <Widget>[
