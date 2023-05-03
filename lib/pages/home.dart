@@ -2,11 +2,7 @@ import 'package:checkmate/pages/main/archive_page.dart';
 import 'package:checkmate/pages/main/notification_page.dart';
 import 'package:checkmate/pages/main/profile_page.dart';
 import 'package:checkmate/pages/main/task_page.dart';
-import 'package:checkmate/provider/db.dart';
-import 'package:checkmate/provider/task_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'main/components/tasklist_page/newTask.dart';
 
