@@ -1,6 +1,9 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:math';
+
 import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:checkmate/Services/noti_service.dart';
 import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/pages/home.dart';
 import 'package:checkmate/pages/main/task_page.dart';
@@ -16,6 +19,7 @@ class createTask extends StatefulWidget {
 
   @override
   State<createTask> createState() => _createTaskState();
+  
 }
 
 class _createTaskState extends State<createTask> {
@@ -322,6 +326,7 @@ class _createTaskState extends State<createTask> {
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.redAccent)),
               onPressed: () async {
+                int notiId = Random().nextInt(10000);
                 context.read<CalendarModel>().addTask(Task(
                     taskName: taskName.text,
                     taskDesc: taskDescription.text,
@@ -330,7 +335,8 @@ class _createTaskState extends State<createTask> {
                     endDate: DateTime(dateend.year, dateend.month, dateend.day,
                         timeend.hour, timeend.minute),
                     cycle: cycle,
-                    notify: dropdownValue));
+                    notify: dropdownValue,
+                    notiId: notiId));
 
                 AnimatedSnackBar.material("Success! Your task has created",
                         type: AnimatedSnackBarType.success)
@@ -338,6 +344,8 @@ class _createTaskState extends State<createTask> {
                 Navigator.pop(context, true);
                 await Provider.of<CalendarModel>(context, listen: false)
                     .updateTask(DateTime.now());
+
+                    NotificationService().scheduledNotification(title:taskName.text,body: taskDescription.text ,month: datestart.month, day:datestart.day, hour: timestart.hour, minutes: timestart.minute, id:notiId);
               },
               child: const Text("Create",
                   style: TextStyle(
