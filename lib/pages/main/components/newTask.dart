@@ -1,6 +1,9 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:math';
+
 import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:checkmate/Services/noti_service.dart';
 import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/pages/home.dart';
 import 'package:checkmate/pages/main/task_page.dart';
@@ -338,6 +341,8 @@ class _createTaskState extends State<createTask> {
                 Navigator.pop(context, true);
                 await Provider.of<CalendarModel>(context, listen: false)
                     .updateTask(DateTime.now());
+
+                    NotificationService().scheduledNotification(hour: timestart.hour, minutes: timestart.minute, id: Random().nextInt(1000));
               },
               child: const Text("Create",
                   style: TextStyle(

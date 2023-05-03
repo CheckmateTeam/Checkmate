@@ -99,7 +99,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           child: const Text('Show notifications'),
                           onPressed: () {
                             noti.scheduledNotification(
-                                hour: 4, minutes: 48,id: 0);
+                                hour: 11, minutes: 27,id: 0);
                           },
                         ),
 
