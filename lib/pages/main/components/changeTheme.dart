@@ -15,89 +15,75 @@ class _ChangeThemeState extends State<ChangeTheme> {
         padding: const EdgeInsets.all(30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Change Theme',
+          children: const [
+            Text('Change Theme',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 )),
-            const Divider(
+            Divider(
               color: Colors.grey,
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  width: 70,
-                  height: 70,
-                  decoration:  BoxDecoration(
-                    border: Border.all(width: 3, color: const Color.fromARGB(50, 255, 255, 255),),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Colors.yellow,
-                        Colors.red,
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Container(
-                  width: 70,
-                  height: 70,
-                  decoration:  BoxDecoration(
-                    border: Border.all(width: 3, color: const Color.fromARGB(50, 255, 255, 255),),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Colors.indigo,
-                        Color.fromARGB(255, 210, 22, 122),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Container(
-                  width: 70,
-                  height: 70,
-                  decoration:  BoxDecoration(
-                    border: Border.all(width: 3, color: const Color.fromARGB(50, 255, 255, 255),),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Colors.green,
-                        Color.fromARGB(255, 219, 224, 72),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Container(
-                  width: 70,
-                  height: 70,
-                  decoration:  BoxDecoration(
-                    border: Border.all(width: 3, color: const Color.fromARGB(50, 255, 255, 255),),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromARGB(255, 82, 59, 255),
-                        Color.fromARGB(255, 54, 200, 244),
-                      ],
-                    ),
-                    
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ],
-            )
+            SizedBox(height: 20),
+            ThemeRadio(),
           ],
         ),
       ),
     ]);
+  }
+}
+
+class ThemeRadio extends StatefulWidget {
+  const ThemeRadio({super.key});
+  @override
+  State<ThemeRadio> createState() => _ThemeRadioState();
+}
+
+class _ThemeRadioState extends State<ThemeRadio> {
+  int value = 1; //Current theme
+  Widget customRadioButton(Color color1, Color color2, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          value = index;
+        });
+      },
+      child: Container(
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 3,
+            color: (value == index)
+                ? const Color.fromARGB(124, 0, 0, 0)
+                : const Color.fromARGB(50, 255, 255, 255),
+          ),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              color1,
+              color2,
+            ],
+          ),
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        customRadioButton(Colors.yellow, Colors.red, 1),
+        customRadioButton(const Color.fromARGB(255, 126, 6, 178),
+            const Color.fromARGB(255, 255, 0, 132), 2),
+        customRadioButton(Colors.green, Colors.yellow, 3),
+        customRadioButton(
+            Colors.blue, const Color.fromARGB(255, 174, 228, 252), 4)
+      ],
+    );
   }
 }
