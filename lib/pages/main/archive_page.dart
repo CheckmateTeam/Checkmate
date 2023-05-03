@@ -59,10 +59,7 @@ class _ArchivePageState extends State<ArchivePage> {
                 ),
               ],
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [SelectWeek()],
-            ),
+            child: SelectWeek(),
           )),
         ],
       ),
@@ -192,11 +189,6 @@ class _SelectWeekState extends State<SelectWeek> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedIndex = 3;
-                      });
-                    },
                     child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
@@ -220,7 +212,9 @@ class _SelectWeekState extends State<SelectWeek> {
             ],
           ),
         ),
-        mode_index[_selectedIndex],
+        Expanded(
+          child: mode_index[_selectedIndex],
+        ),
       ],
     );
   }

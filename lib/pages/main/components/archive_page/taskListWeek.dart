@@ -18,6 +18,8 @@ class _TaskListWeekState extends State<TaskListWeek> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    Provider.of<ArchiveProvider>(context, listen: false).fetchWeek();
     barData = Provider.of<ArchiveProvider>(context, listen: false).taskMap;
   }
 
@@ -77,103 +79,126 @@ class _TaskListWeekState extends State<TaskListWeek> {
           ],
         ),
         //week
-        Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Text(DateFormat('MMMM').format(DateTime(
-                  0, DateTime.now().subtract(Duration(days: 7)).month)) +
-              " " +
-              DateTime.now().subtract(Duration(days: 7)).day.toString() +
-              " - " +
-              DateFormat('MMMM').format(DateTime(
-                  0, DateTime.now().subtract(Duration(days: 1)).month)) +
-              " " +
-              DateTime.now().subtract(Duration(days: 1)).day.toString()),
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: taskList.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 20.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color.fromARGB(99, 158, 158, 158),
-                                  spreadRadius: 0,
-                                  blurRadius: 10,
-                                  offset: Offset(
-                                      0, 2), // changes position of shadow
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            margin: const EdgeInsets.only(left: 10.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                children: [
+                  Row(children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(DateFormat('MMMM').format(DateTime(
+                              0,
+                              DateTime.now()
+                                  .subtract(Duration(days: 7))
+                                  .month)) +
+                          " " +
+                          DateTime.now()
+                              .subtract(Duration(days: 7))
+                              .day
+                              .toString() +
+                          " - " +
+                          DateFormat('MMMM').format(DateTime(
+                              0,
+                              DateTime.now()
+                                  .subtract(Duration(days: 1))
+                                  .month)) +
+                          " " +
+                          DateTime.now()
+                              .subtract(Duration(days: 1))
+                              .day
+                              .toString()),
+                    ),
+                  ]),
+                  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: taskList.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color.fromARGB(99, 158, 158, 158),
+                                      spreadRadius: 0,
+                                      blurRadius: 10,
+                                      offset: Offset(
+                                          0, 2), // changes position of shadow
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                margin: const EdgeInsets.only(left: 10.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14.0),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const CircleAvatar(
-                                        child: Icon(Icons.table_view_sharp,
-                                            color: Colors.red),
-                                      ),
-                                      const SizedBox(width: 15.0),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      Row(
                                         children: [
-                                          Text(
-                                            taskList[index].taskName,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                decoration:
-                                                    TextDecoration.none),
+                                          const CircleAvatar(
+                                            child: Icon(Icons.table_view_sharp,
+                                                color: Colors.red),
                                           ),
-                                          Text(
-                                            taskList[index].taskDesc.length > 15
-                                                ? taskList[index]
-                                                        .taskDesc
-                                                        .substring(0, 15) +
-                                                    "..."
-                                                : taskList[index].taskDesc,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                decoration:
-                                                    TextDecoration.none),
+                                          const SizedBox(width: 15.0),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                taskList[index].taskName,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                    decoration:
+                                                        TextDecoration.none),
+                                              ),
+                                              Text(
+                                                taskList[index]
+                                                            .taskDesc
+                                                            .length >
+                                                        15
+                                                    ? taskList[index]
+                                                            .taskDesc
+                                                            .substring(0, 15) +
+                                                        "..."
+                                                    : taskList[index].taskDesc,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    decoration:
+                                                        TextDecoration.none),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 30.0,
-                            ),
-                            child: Seperator()),
-                      ],
-                    );
-                  }),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 30.0,
+                                ),
+                                child: Seperator()),
+                          ],
+                        );
+                      }),
+                ],
+              ),
             ),
-          ],
+          ),
         ),
       ],
     );

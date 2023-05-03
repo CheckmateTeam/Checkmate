@@ -66,9 +66,10 @@ class ArchiveProvider extends ChangeNotifier {
       } else {
         _taskMap[key] = 1;
       }
+      print(_taskMap.length);
+      print(_taskList.length);
     }
     notifyListeners();
-    print(_taskList.length);
   }
 
   Future<void> fetchMonth() async {
@@ -98,11 +99,12 @@ class ArchiveProvider extends ChangeNotifier {
         ));
       }
     }
-    for (var task in _taskList) {
+    // amount tasklist
+    for (var task in querySnapshot.docs) {
       final keyDate = DateTime(
-        task.startDate.year,
-        task.startDate.month,
-        task.startDate.day,
+        task['startDate'].year,
+        task['startDate'].month,
+        task['startDate'].day,
       );
       final key = keyDate;
 
@@ -111,9 +113,10 @@ class ArchiveProvider extends ChangeNotifier {
       } else {
         _taskMap[key] = 1;
       }
+      print(_taskMap.length);
+      print(_taskList.length);
     }
     notifyListeners();
-    print(_taskList.length);
   }
 
   Future<void> fetchYear() async {
