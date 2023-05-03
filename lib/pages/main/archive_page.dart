@@ -19,7 +19,6 @@ class _ArchivePageState extends State<ArchivePage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ArchiveProvider>(context, listen: false).fetchWeek();
   }
 
   @override
@@ -59,10 +58,7 @@ class _ArchivePageState extends State<ArchivePage> {
                 ),
               ],
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [SelectWeek()],
-            ),
+            child: const SelectWeek(),
           )),
         ],
       ),
@@ -77,6 +73,12 @@ class SelectWeek extends StatefulWidget {
 }
 
 class _SelectWeekState extends State<SelectWeek> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   int _selectedIndex = 0;
   // ignore: constant_identifier_names
   static const List<Widget> mode_index = <Widget>[
@@ -85,6 +87,7 @@ class _SelectWeekState extends State<SelectWeek> {
     Text("year"),
     Text("all")
   ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -106,7 +109,7 @@ class _SelectWeekState extends State<SelectWeek> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: InkWell(
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
                         _selectedIndex = 0;
                       });
@@ -192,11 +195,6 @@ class _SelectWeekState extends State<SelectWeek> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedIndex = 3;
-                      });
-                    },
                     child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
@@ -220,7 +218,9 @@ class _SelectWeekState extends State<SelectWeek> {
             ],
           ),
         ),
-        mode_index[_selectedIndex],
+        Expanded(
+          child: mode_index[_selectedIndex],
+        ),
       ],
     );
   }

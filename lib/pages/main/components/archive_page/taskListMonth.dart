@@ -13,168 +13,186 @@ class TaskListMonth extends StatefulWidget {
 
 class _TaskListMonthState extends State<TaskListMonth> {
   late Map<DateTime, int> barData;
+  late Future<String> _myFuture;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    barData = Provider.of<ArchiveProvider>(context, listen: false).taskMap;
+
+    _myFuture =
+        Provider.of<ArchiveProvider>(context, listen: false).fetchMonth();
   }
 
   Widget build(BuildContext context) {
     final taskList = context.read<ArchiveProvider>().taskList;
     final barData = context.read<ArchiveProvider>().taskMap;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                taskList.length.toString() + " tasks",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Text("01:20:00 hours",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  )),
-              Text(taskList.length.toString() + " days",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ))
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        //Chart hereeee
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return FutureBuilder(
+      future: _myFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-                height: 100,
-                width: MediaQuery.of(context).size.width - 30,
-                child: BarChart(
-                  BarChartData(
-                    barTouchData: barTouchData,
-                    titlesData: titlesData,
-                    borderData: borderData,
-                    barGroups: barGroups,
-                    gridData: FlGridData(show: false),
-                    alignment: BarChartAlignment.spaceAround,
-                    maxY: 20,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    taskList.length.toString() + " tasks",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                )),
-          ],
-        ),
-        //week
-        Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Text(DateFormat('MMMM').format(DateTime(
-                  0, DateTime.now().subtract(Duration(days: 7)).month)) +
-              " " +
-              DateTime.now().subtract(Duration(days: 7)).day.toString() +
-              " - " +
-              DateFormat('MMMM').format(DateTime(
-                  0, DateTime.now().subtract(Duration(days: 1)).month)) +
-              " " +
-              DateTime.now().subtract(Duration(days: 1)).day.toString()),
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: taskList.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 20.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color.fromARGB(99, 158, 158, 158),
-                                  spreadRadius: 0,
-                                  blurRadius: 10,
-                                  offset: Offset(
-                                      0, 2), // changes position of shadow
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            margin: const EdgeInsets.only(left: 10.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+                  Text("01:20:00 hours",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      )),
+                  Text(taskList.length.toString() + " days",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ))
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            //Chart hereeee
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width - 30,
+                    child: BarChart(
+                      BarChartData(
+                        barTouchData: barTouchData,
+                        titlesData: titlesData,
+                        borderData: borderData,
+                        barGroups: barGroups,
+                        gridData: FlGridData(show: false),
+                        alignment: BarChartAlignment.spaceAround,
+                        maxY: 20,
+                      ),
+                    )),
+              ],
+            ),
+            //week
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Text(DateFormat('MMMM').format(DateTime(
+                      0, DateTime.now().subtract(Duration(days: 7)).month)) +
+                  " " +
+                  DateTime.now().subtract(Duration(days: 7)).day.toString() +
+                  " - " +
+                  DateFormat('MMMM').format(DateTime(
+                      0, DateTime.now().subtract(Duration(days: 1)).month)) +
+                  " " +
+                  DateTime.now().subtract(Duration(days: 1)).day.toString()),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: taskList.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color.fromARGB(99, 158, 158, 158),
+                                      spreadRadius: 0,
+                                      blurRadius: 10,
+                                      offset: Offset(
+                                          0, 2), // changes position of shadow
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                margin: const EdgeInsets.only(left: 10.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14.0),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const CircleAvatar(
-                                        child: Icon(Icons.table_view_sharp,
-                                            color: Colors.red),
-                                      ),
-                                      const SizedBox(width: 15.0),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      Row(
                                         children: [
-                                          Text(
-                                            taskList[index].taskName,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                decoration:
-                                                    TextDecoration.none),
+                                          const CircleAvatar(
+                                            child: Icon(Icons.table_view_sharp,
+                                                color: Colors.red),
                                           ),
-                                          Text(
-                                            taskList[index].taskDesc.length > 15
-                                                ? taskList[index]
-                                                        .taskDesc
-                                                        .substring(0, 15) +
-                                                    "..."
-                                                : taskList[index].taskDesc,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                decoration:
-                                                    TextDecoration.none),
+                                          const SizedBox(width: 15.0),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                taskList[index].taskName,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                    decoration:
+                                                        TextDecoration.none),
+                                              ),
+                                              Text(
+                                                taskList[index]
+                                                            .taskDesc
+                                                            .length >
+                                                        15
+                                                    ? taskList[index]
+                                                            .taskDesc
+                                                            .substring(0, 15) +
+                                                        "..."
+                                                    : taskList[index].taskDesc,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    decoration:
+                                                        TextDecoration.none),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 30.0,
-                            ),
-                            child: Seperator()),
-                      ],
-                    );
-                  }),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 30.0,
+                                ),
+                                child: Seperator()),
+                          ],
+                        );
+                      }),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 

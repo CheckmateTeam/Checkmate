@@ -26,7 +26,8 @@ class ArchiveProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchWeek() async {
+  Future<String> fetchWeek() async {
+    await clearAll();
     print('fetching week');
     QuerySnapshot querySnapshot = await db
         .collection('user_task')
@@ -68,10 +69,11 @@ class ArchiveProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
-    print(_taskList.length);
+    Duration(milliseconds: 1000);
+    return 'success';
   }
 
-  Future<void> fetchMonth() async {
+  Future<String> fetchMonth() async {
     print('fetching month');
     QuerySnapshot querySnapshot = await db
         .collection('user_task')
@@ -80,7 +82,7 @@ class ArchiveProvider extends ChangeNotifier {
         .where('startDate',
             isGreaterThanOrEqualTo:
                 DateTime.now().subtract(const Duration(days: 30)))
-        .orderBy('startDate')
+        .orderBy('startDate', descending: true)
         .get();
 
     // normal tasklist
@@ -98,11 +100,12 @@ class ArchiveProvider extends ChangeNotifier {
         ));
       }
     }
-    for (var task in _taskList) {
+    // amount tasklist
+    for (var task in querySnapshot.docs) {
       final keyDate = DateTime(
-        task.startDate.year,
-        task.startDate.month,
-        task.startDate.day,
+        task['startDate'].year,
+        task['startDate'].month,
+        task['startDate'].day,
       );
       final key = keyDate;
 
@@ -111,9 +114,11 @@ class ArchiveProvider extends ChangeNotifier {
       } else {
         _taskMap[key] = 1;
       }
+      print(_taskMap.length);
+      print(_taskList.length);
     }
     notifyListeners();
-    print(_taskList.length);
+    return 'success';
   }
 
   Future<void> fetchYear() async {
