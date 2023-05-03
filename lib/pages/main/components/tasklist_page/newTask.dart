@@ -87,6 +87,11 @@ class _createTaskState extends State<createTask> {
                               lastDate: DateTime(2050));
 
                           if (date != null) {
+                            if (date.isAfter(dateend)) {
+                              setState(() {
+                                dateend = date;
+                              });
+                            }
                             setState(() {
                               datestart = date;
                             });
@@ -169,6 +174,11 @@ class _createTaskState extends State<createTask> {
                               lastDate: DateTime(2050));
 
                           if (date != null) {
+                            if(dateend.isBefore(datestart)){
+                              setState(() {
+                                datestart = date;
+                              });
+                            }
                             setState(() {
                               dateend = date;
                             });
