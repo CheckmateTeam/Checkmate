@@ -7,6 +7,7 @@ class Task {
   String cycle;
   String notify;
   bool isDone;
+  int notiId;
   Task({
     this.taskId = '',
     required this.taskName,
@@ -15,6 +16,7 @@ class Task {
     required this.endDate,
     required this.cycle,
     required this.notify,
+    this.notiId = 0,
     this.isDone = false,
   });
 }
