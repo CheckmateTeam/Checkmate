@@ -1,6 +1,7 @@
 import 'package:checkmate/pages/authentication/signin.dart';
 import 'package:checkmate/pages/home.dart';
-import 'package:checkmate/Services/noti_service.dart';
+import 'package:checkmate/provider/archive_provider.dart';
+import 'package:checkmate/services/noti_service.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
@@ -15,14 +16,12 @@ import 'firebase_options.dart';
 
 import 'provider/theme_provider.dart';
 
-
-  FlutterLocalNotificationsPlugin notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin notificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void main() async {
-  
-  NotificationService.initNotification();
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService.initNotification();
   await Firebase.initializeApp();
   runApp(
     const MainApp(),
@@ -48,6 +47,7 @@ class _MainAppState extends State<MainApp> {
       providers: [
         ChangeNotifierProvider(create: (_) => CalendarModel()),
         ChangeNotifierProvider(create: (_) => Database()),
+        ChangeNotifierProvider(create: (_) => ArchiveProvider()),
       ],
       child: MaterialApp(
         supportedLocales: const [

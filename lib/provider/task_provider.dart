@@ -59,9 +59,6 @@ class CalendarModel extends ChangeNotifier {
   }
 
   Future<String> fetchTask() async {
-    print('fetching task');
-    // await clearAll();
-
     QuerySnapshot querySnapshot = await db
         .collection('user_task')
         .where('user_uid', isEqualTo: user?.uid)

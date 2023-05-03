@@ -20,7 +20,7 @@ class Database extends ChangeNotifier {
       username = querySnapshot.docs[0]['displayName'];
       email = querySnapshot.docs[0]['email'];
       points = querySnapshot.docs[0]['points'].toString();
-      cycle = querySnapshot.docs[0]['cycle'];
+      cycle = querySnapshot.docs[0]['cycle'].toString();
     });
 
     notifyListeners();

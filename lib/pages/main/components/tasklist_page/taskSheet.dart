@@ -1,11 +1,10 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:checkmate/model/taskModel.dart';
-import 'package:checkmate/pages/main/components/taskEditSheet.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../home.dart';
+import 'taskEditSheet.dart';
 
 class TaskSheet extends StatefulWidget {
   final Task selectedTask;
