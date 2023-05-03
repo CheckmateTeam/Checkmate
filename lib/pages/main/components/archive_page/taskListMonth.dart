@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class TaskListWeek extends StatefulWidget {
-  const TaskListWeek({Key? key}) : super(key: key);
+class TaskListMonth extends StatefulWidget {
+  const TaskListMonth({super.key});
 
   @override
-  State<TaskListWeek> createState() => _TaskListWeekState();
+  State<TaskListMonth> createState() => _TaskListMonthState();
 }
 
-class _TaskListWeekState extends State<TaskListWeek> {
+class _TaskListMonthState extends State<TaskListMonth> {
   late Map<DateTime, int> barData;
 
   @override
@@ -21,7 +21,6 @@ class _TaskListWeekState extends State<TaskListWeek> {
     barData = Provider.of<ArchiveProvider>(context, listen: false).taskMap;
   }
 
-  @override
   Widget build(BuildContext context) {
     final taskList = context.read<ArchiveProvider>().taskList;
     final barData = context.read<ArchiveProvider>().taskMap;
@@ -179,7 +178,7 @@ class _TaskListWeekState extends State<TaskListWeek> {
     );
   }
 
-//Chart setting
+  //Chart setting
   BarTouchData get barTouchData => BarTouchData(
         enabled: false,
         touchTooltipData: BarTouchTooltipData(
