@@ -196,8 +196,7 @@ class _TaskListState extends State<TaskList> {
                                                         .selectedTasks[index]
                                                         .taskId);
                                                     data.updateDoneTask(
-                                                      data.selectedTasks[index]
-                                                          .taskId,
+                                                      data.selectedTasks[index],
                                                     );
                                                   },
                                                 )
