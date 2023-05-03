@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'components/changeTheme.dart';
+import 'components/howToUsePointSheet.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -12,9 +15,15 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<Database>(context, listen: false).init();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final userEmail = Provider.of<Database>(context).userEmail;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -143,14 +152,16 @@ class _ProfilePageState extends State<ProfilePage> {
                               )
                             ],
                           ),
-                          Text(
-                            userEmail,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
+                          Consumer<Database>(
+                            builder: (context, db, child) => Text(
+                              db.userEmail,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                           Consumer<Database>(
                             builder: (context, db, child) => Text(
@@ -178,11 +189,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     Colors.black87,
                     context,
                     false, onTap: () {
-                  print("Points shop");
+                  showModalBottomSheet<dynamic>(
+                                              isScrollControlled: true,
+                                              context: context,
+                                              builder: (context) => const HowToUsePointSheet());
                 }),
                 menuList("Change theme", Icons.edit_outlined, false,
                     Colors.black87, context, false, onTap: () {
-                  print("Points shop");
+                  showModalBottomSheet<dynamic>(
+                                              isScrollControlled: true,
+                                              context: context,
+                                              builder: (context) => const ChangeTheme());
                 }),
                 menuList("Dark mode", Icons.dark_mode_outlined, true,
                     Colors.black87, context, false, onTap: () {

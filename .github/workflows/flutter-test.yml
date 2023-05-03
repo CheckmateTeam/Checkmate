@@ -9,16 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter analyze
-      # - run: flutter test  รอเขียน test case
-      - run: flutter build apk --release
-      - uses: actions/upload-artifact@v2
+      - run: flutter build apk
+      - uses: actions/upload-artifact@v3
         with:
-          name: test-app.apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-  # build:
+          name: release-apk
+          path: build/app/outputs/apk/release/app-release.apk
