@@ -190,16 +190,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     context,
                     false, onTap: () {
                   showModalBottomSheet<dynamic>(
-                                              isScrollControlled: true,
-                                              context: context,
-                                              builder: (context) => const HowToUsePointSheet());
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) => const HowToUsePointSheet());
                 }),
                 menuList("Change theme", Icons.edit_outlined, false,
                     Colors.black87, context, false, onTap: () {
                   showModalBottomSheet<dynamic>(
-                                              isScrollControlled: true,
-                                              context: context,
-                                              builder: (context) => const ChangeTheme());
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) => const ChangeTheme());
                 }),
                 menuList("Dark mode", Icons.dark_mode_outlined, true,
                     Colors.black87, context, false, onTap: () {
