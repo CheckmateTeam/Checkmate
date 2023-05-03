@@ -52,6 +52,8 @@ class NotificationService {
 
 
   scheduledNotification({
+    required String title,
+    required String body,
     required int month,
     required int day,
     required int hour,
@@ -62,8 +64,8 @@ class NotificationService {
     await FlutterLocalNotificationsPlugin().zonedSchedule(
       
       id,
-      'It\'s time to drink water!',
-      'After drinking, touch the cup to confirm',
+      title,
+      body,
       _convertTime(month,day,hour, minutes),
       const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -87,27 +89,11 @@ class NotificationService {
 
   
 
-  Future<void> sendNotification(
-      {required String body, required String title}) async {
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('your channel id', 'your channel name',
-            channelDescription: 'your channel description',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
-    await FlutterLocalNotificationsPlugin()
-        .show(0, title, body, notificationDetails);
-  }
+  
 
   cancelAll() async => await FlutterLocalNotificationsPlugin().cancelAll();
   cancel(id) async => await FlutterLocalNotificationsPlugin().cancel(id);
 
-
-
-
-  
 }
 
 

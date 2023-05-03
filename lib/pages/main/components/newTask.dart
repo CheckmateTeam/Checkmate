@@ -345,7 +345,7 @@ class _createTaskState extends State<createTask> {
                 await Provider.of<CalendarModel>(context, listen: false)
                     .updateTask(DateTime.now());
 
-                    NotificationService().scheduledNotification(month: datestart.month, day:datestart.day, hour: timestart.hour, minutes: timestart.minute, id:notiId);
+                    NotificationService().scheduledNotification(title:taskName.text,body: taskDescription.text ,month: datestart.month, day:datestart.day, hour: timestart.hour, minutes: timestart.minute, id:notiId);
               },
               child: const Text("Create",
                   style: TextStyle(
