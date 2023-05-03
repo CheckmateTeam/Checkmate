@@ -98,8 +98,8 @@ class _NotificationPageState extends State<NotificationPage> {
                         ElevatedButton(
                           child: const Text('Show notifications'),
                           onPressed: () {
-                            noti.scheduledNotification(
-                                hour: 11, minutes: 27,id: 0);
+                            // noti.scheduledNotification(
+                            //     hour: 11, minutes: 27,id: 0);
                           },
                         ),
 

@@ -28,13 +28,13 @@ class NotificationService {
     
   }
 
-  tz.TZDateTime _convertTime(int hour, int minutes) {
+  tz.TZDateTime _convertTime(int month, int day,int hour, int minutes) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduleDate = tz.TZDateTime(
       tz.local,
       now.year,
-      now.month,
-      now.day,
+      month,
+      day,
       hour,
       minutes,
     );
@@ -52,6 +52,8 @@ class NotificationService {
 
 
   scheduledNotification({
+    required int month,
+    required int day,
     required int hour,
     required int minutes,
     required int id,
@@ -62,7 +64,7 @@ class NotificationService {
       id,
       'It\'s time to drink water!',
       'After drinking, touch the cup to confirm',
-      _convertTime(hour, minutes),
+      _convertTime(month,day,hour, minutes),
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'your channel id',

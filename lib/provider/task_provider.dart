@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:checkmate/Services/noti_service.dart';
 import 'package:checkmate/model/taskModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,12 +17,15 @@ int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }
 
+int x = 0;
+
 class CalendarModel extends ChangeNotifier {
   // User instance
   User? get user => FirebaseAuth.instance.currentUser;
   //Firestore instance
   FirebaseFirestore db = FirebaseFirestore.instance;
   List<Task> taskList = [];
+  
 
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
@@ -206,6 +210,7 @@ class CalendarModel extends ChangeNotifier {
         )] ??
         [];
     await Future.delayed(Duration(milliseconds: 100));
+    NotificationService().cancel(task.notiId);
     notifyListeners();
   }
 
