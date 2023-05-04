@@ -347,14 +347,14 @@ class _GameState extends State<Game>
                 fit: BoxFit.cover,
               ),
             ),
-            Align(
-              child: Image.asset(
-                stageAsset(),
-                alignment: Alignment.bottomCenter,
-                fit: BoxFit.fitWidth,
-              ),
-              alignment: Alignment.bottomCenter,
-            ),
+            // Align(
+            //   child: Image.asset(
+            //     stageAsset(),
+            //     alignment: Alignment.bottomCenter,
+            //     fit: BoxFit.fitWidth,
+            //   ),
+            //   alignment: Alignment.bottomCenter,
+            // ),
             Align(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 80.0),
