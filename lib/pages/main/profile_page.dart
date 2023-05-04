@@ -1,3 +1,4 @@
+import 'package:checkmate/main.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -181,7 +182,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 menuList("Points shop", Icons.shopping_bag_outlined, false,
                     Colors.black87, context, false, onTap: () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const PointShopPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PointShopPage()));
                 }),
                 menuList(
                     "How to points can be use?",
@@ -226,6 +230,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 FirebaseAuth.instance.signOut();
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const MainApp()));
                               },
                               child: const Text("Sign out"),
                             ),

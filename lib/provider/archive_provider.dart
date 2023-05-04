@@ -35,7 +35,8 @@ class ArchiveProvider extends ChangeNotifier {
         .where('isDone', isEqualTo: true)
         .where('startDate',
             isGreaterThanOrEqualTo:
-                DateTime.now().subtract(const Duration(days: 7)))
+                DateTime.now().subtract(const Duration(days: 7)),
+            isLessThan: DateTime.now())
         .orderBy('startDate')
         .get();
 

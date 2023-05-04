@@ -83,9 +83,9 @@ class _SelectWeekState extends State<SelectWeek> {
   // ignore: constant_identifier_names
   static const List<Widget> mode_index = <Widget>[
     TaskListWeek(),
-    Text("month"),
-    Text("year"),
-    Text("all")
+    TaskListWeek(),
+    TaskListWeek(),
+    TaskListWeek()
   ];
 
   @override
@@ -195,6 +195,11 @@ class _SelectWeekState extends State<SelectWeek> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = 3;
+                      });
+                    },
                     child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),

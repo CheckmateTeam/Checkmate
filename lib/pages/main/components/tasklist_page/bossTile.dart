@@ -4,8 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class BossTile extends StatelessWidget {
+class BossTile extends StatefulWidget {
   const BossTile({super.key});
+
+  @override
+  State<BossTile> createState() => _BossTileState();
+}
+
+class _BossTileState extends State<BossTile> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,22 +86,16 @@ class BossTile extends StatelessWidget {
               DateTime.now().day,
             )]
                 .length;
-            print(taskLength);
+
             int completedTask = 0;
             for (int i = 0; i < taskLength; i++) {
-              if (taskData
-                      .tasks[DateTime(
-                    DateTime.now().year,
-                    DateTime.now().month,
-                    DateTime.now().day,
-                  )][i]
-                      .isDone ==
-                  true) {
+              print(taskData.selectedTasks[i].isDone);
+              if (taskData.selectedTasks[i].isDone) {
                 completedTask++;
               }
             }
-            print(completedTask);
-            if (completedTask < taskLength) {
+
+            if (completedTask != taskLength) {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -182,7 +187,7 @@ class BossTile extends StatelessWidget {
               children: const [
                 Text("Current boss",
                     style: TextStyle(fontSize: 14, color: Colors.grey)),
-                Text("Reaper",
+                Text("Ancient Wizard",
                     style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
@@ -190,12 +195,12 @@ class BossTile extends StatelessWidget {
                 SizedBox(
                   width: 100,
                   child: LinearProgressIndicator(
-                    value: 0.5,
+                    value: 1,
                     backgroundColor: Colors.grey,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                   ),
                 ),
-                Text("250/300")
+                Text("5000/5000")
               ],
             ),
             IconButton(

@@ -122,11 +122,14 @@ class _TaskListState extends State<TaskList> {
                                               children: [
                                                 Row(
                                                   children: [
-                                                    const CircleAvatar(
+                                                    CircleAvatar(
                                                       child: Icon(
                                                           Icons
                                                               .table_view_sharp,
-                                                          color: Colors.red),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary),
                                                     ),
                                                     const SizedBox(width: 15.0),
                                                     Column(
