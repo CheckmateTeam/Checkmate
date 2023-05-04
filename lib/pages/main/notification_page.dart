@@ -1,12 +1,7 @@
 import 'package:checkmate/Services/noti_service.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
-
+import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
-
+import 'package:provider/provider.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -17,9 +12,11 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   final NotificationService noti = NotificationService();
+  late Future<String> _myNoti;
 
   @override
   void initState() {
+    _myNoti = Provider.of<CalendarModel>(context, listen: false).fetchTask();
     NotificationService.initNotification();
     super.initState();
   }
@@ -31,6 +28,8 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final data = context.watch<CalendarModel>();
+    
     return Scaffold(
       body: Column(
         children: [
@@ -48,6 +47,10 @@ class _NotificationPageState extends State<NotificationPage> {
               textAlign: TextAlign.center,
             ),
           ),
+
+
+
+
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -69,6 +72,10 @@ class _NotificationPageState extends State<NotificationPage> {
                   ),
                 ],
               ),
+
+
+
+
               child: Padding(
                 padding:
                     const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
@@ -84,43 +91,118 @@ class _NotificationPageState extends State<NotificationPage> {
                         Text("Mask as all read",
                             style: TextStyle(
                                 fontSize: 14,
-                                color: Color.fromARGB(255, 255, 0, 0))),
+                                color: Color.fromARGB(255, 255, 0, 0))
+                                ),
                       ],
                     ),
+
+
+
+
                     Divider(
                       color: Colors.grey.withOpacity(0.6),
                       thickness: 1,
                     ),
                     const SizedBox(height: 8.0),
+                    
+                    
+                    
+                    
                     Expanded(
-                      child: SingleChildScrollView(
-                          child: Column(children: [
-                        ElevatedButton(
-                          child: const Text('Show notifications'),
-                          onPressed: () {
-                            // noti.scheduledNotification(
-                            //     hour: 11, minutes: 27,id: 0);
-                          },
-                        ),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: data.selectedTasks.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Row(
+                                  children: [          
 
-                        //Older from now on
+                                    // Task tile here =>>
+                                    Expanded(
+                                      child: InkWell(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: Color.fromARGB(
+                                                    99, 158, 158, 158),
+                                                spreadRadius: 0,
+                                                blurRadius: 10,
+                                                offset: Offset(0,
+                                                    2), // changes position of shadow
+                                              )
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          margin:
+                                              const EdgeInsets.only(left: 10.0,top: 10.0),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(14.0),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const SizedBox(width: 15.0),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          data.selectedTasks[index].taskName,
+                                                          style: const TextStyle(
+                                                          fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)
+                                                            
+                                                        ) ,
+                                                        Text(data.selectedTasks[index].taskDesc)
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                Checkbox(
+                                                  value: true,
+                                                  checkColor:Colors.red,
+                                                  activeColor:Colors.red,
+                                                  onChanged: (bool? value) {
+                                                    value = !value!;
+                                                  },
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          }
+                          ),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text("Older",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Color.fromARGB(132, 0, 0, 0))),
-                          ],
-                        ),
 
-                        Divider(
-                          color: Colors.grey.withOpacity(0.6),
-                          thickness: 1,
-                        ),
-                      ])),
-                    ),
+
+
+
+
+
+
+                          
+
+                        
+                          
+                    )
+                    
                   ],
                 ),
               ),

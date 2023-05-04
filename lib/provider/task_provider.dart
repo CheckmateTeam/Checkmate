@@ -1,12 +1,8 @@
-import 'dart:collection';
-import 'package:checkmate/Services/noti_service.dart';
 import 'package:checkmate/model/taskModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:uuid/uuid.dart';
 
 final kToday = DateTime.now();
@@ -17,7 +13,7 @@ int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }
 
-int x = 0;
+
 
 class CalendarModel extends ChangeNotifier {
   // User instance
@@ -210,7 +206,6 @@ class CalendarModel extends ChangeNotifier {
         )] ??
         [];
     await Future.delayed(Duration(milliseconds: 100));
-    NotificationService().cancel(task.notiId);
     notifyListeners();
   }
 

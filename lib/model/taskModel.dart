@@ -8,6 +8,7 @@ class Task {
   String notify;
   bool isDone;
   int notiId;
+  bool isRead;
   Task({
     this.taskId = '',
     required this.taskName,
@@ -17,6 +18,7 @@ class Task {
     required this.cycle,
     required this.notify,
     this.notiId = 0,
+    this.isRead = false,
     this.isDone = false,
   });
 }
