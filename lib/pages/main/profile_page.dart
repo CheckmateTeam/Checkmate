@@ -2,6 +2,7 @@ import 'package:checkmate/provider/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'point_shop_page.dart';
 
 import 'components/changeTheme.dart';
 import 'components/howToUsePointSheet.dart';
@@ -179,8 +180,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 menuList("Points shop", Icons.shopping_bag_outlined, false,
-                    Colors.black87, context, false, onTap: () {
-                  print("Points shop");
+                    Colors.black87, context, false, onTap: () async {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const PointShopPage()));
                 }),
                 menuList(
                     "How to points can be use?",

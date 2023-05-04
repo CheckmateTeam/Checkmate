@@ -53,5 +53,6 @@ flutter:
     - assets/boss/
     - assets/elements/
     - assets/audio/
-
+    - assets/items/
+    - assets/items/comingsoon.png
   uses-material-design: true
