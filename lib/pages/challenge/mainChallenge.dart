@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:flutter/services.dart';
 
+import '../home.dart';
 import 'button.dart';
 import 'dart:async';
 import 'scroll.dart';
@@ -210,10 +211,6 @@ class _GameState extends State<Game>
     return MediaQuery.of(context).size.height;
   }
 
-  double listHeight(BuildContext context) {
-    return width(context) >= 700 ? height(context) : height(context) / 2.8;
-  }
-
   void buyPowerUp(int index) {
     setState(() {
       if (coins >= list[index].coins) {
@@ -275,8 +272,8 @@ class _GameState extends State<Game>
                   fontSize: 14.0,
                   fontFamily: "Gameplay",
                   color: Colors.red,
-                  strokeColor: Colors.black,
-                  strokeWidth: 1.0,
+                  strokeColor: Colors.white,
+                  strokeWidth: 0,
                 ),
               ),
             ),
@@ -335,9 +332,7 @@ class _GameState extends State<Game>
       alignment: Alignment.topCenter,
       child: Container(
         color: Colors.transparent,
-        height: width(context) >= 700
-            ? height(context)
-            : height(context) - listHeight(context),
+        height: width(context) >= 700 ? height(context) : height(context),
         width: width(context) >= 700
             ? width(context) >= 700 && width(context) <= 900
                 ? 400
@@ -431,36 +426,36 @@ class _GameState extends State<Game>
                       ),
                       FancyButton(
                         child: Text(
-                          "LIFE:  ${damageBar.toInt().toString()}",
+                          "HP :  ${damageBar.toInt().toString()}",
                           style: Utils.textStyle(18.0),
                         ),
                         size: 18,
-                        color: Color(0xFFCA3034),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "COINS: ",
-                              style: Utils.textStyle(10.0),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: Text(
-                                coins.toString(),
-                                style: Utils.textStyle(10.0),
-                              ),
-                            ),
-                            Image.asset(
-                              "assets/elements/coin.png",
-                              height: 12.2,
-                            ),
-                            earnedCoins(),
-                          ],
-                        ),
-                      )
+                      // Padding(
+                      //   padding: const EdgeInsets.all(8.0),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: <Widget>[
+                      //       Text(
+                      //         "COINS : ",
+                      //         style: Utils.textStyle(10.0),
+                      //       ),
+                      //       Padding(
+                      //         padding: const EdgeInsets.only(left: 5.0),
+                      //         child: Text(
+                      //           coins.toString(),
+                      //           style: Utils.textStyle(10.0),
+                      //         ),
+                      //       ),
+                      //       Image.asset(
+                      //         "assets/elements/coin.png",
+                      //         height: 12.2,
+                      //       ),
+                      //       earnedCoins(),
+                      //     ],
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
@@ -582,13 +577,14 @@ class _GameState extends State<Game>
                 children: <Widget>[
                   FancyButton(
                     size: width(context) / 10,
-                    color: Color(0xFFCA3034),
+                    color: Theme.of(context).colorScheme.primary,
                     onPressed: () {
-                      // Navigator.of(context)
-                      //     .pushReplacement(InitRoute(Welcome()));
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Home()));
+                      // Navigator.of(context).pushReplacement(Home());
                     },
                     child: Text(
-                      "GAME OVER",
+                      "บอสยังชนะไม่ได้จะไปชนะใจเธอได้ยังไง",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
@@ -607,7 +603,7 @@ class _GameState extends State<Game>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 5),
                         child: Text(
-                          "SHARE SCORE",
+                          "SHARE TO HER",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
