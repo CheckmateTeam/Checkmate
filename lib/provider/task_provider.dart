@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:checkmate/model/taskModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -86,6 +88,8 @@ class CalendarModel extends ChangeNotifier {
 
       final taskIdKey = task['taskId'];
       final isDone = task['isDone'];
+      final isRead = task['isRead'];
+      final notiId = task['notiId'];
       _taskStatus[taskIdKey] = isDone;
     }
     _selectedDay = _focusedDay;
@@ -148,6 +152,7 @@ class CalendarModel extends ChangeNotifier {
   Future<void> addTask(Task task) async {
     await db.collection('user_task').add({
       'user_uid': user?.uid,
+      'notiId': Random().nextInt(10000000),
       'taskId': const Uuid().v4().toString(),
       'taskName': task.taskName,
       'taskDesc': task.taskDesc,
@@ -156,6 +161,7 @@ class CalendarModel extends ChangeNotifier {
       'cycle': task.cycle,
       'notify': task.notify,
       'isDone': task.isDone,
+      'isRead': task.isRead
     });
 
     notifyListeners();

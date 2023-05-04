@@ -109,87 +109,113 @@ class _NotificationPageState extends State<NotificationPage> {
                     
                     
                     Expanded(
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: data.selectedTasks.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Row(
-                                  children: [          
+                      child: Column (
+                        children:
+                        [
+                          ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: data.selectedTasks.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    Row(
+                                      children: [          
 
-                                    // Task tile here =>>
-                                    Expanded(
-                                      child: InkWell(
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 20.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Color.fromARGB(
-                                                    99, 158, 158, 158),
-                                                spreadRadius: 0,
-                                                blurRadius: 10,
-                                                offset: Offset(0,
-                                                    2), // changes position of shadow
-                                              )
-                                            ],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          margin:
-                                              const EdgeInsets.only(left: 10.0,top: 10.0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(14.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
+                                        // Task tile here =>>
+                                        Expanded(
+                                          child: InkWell(
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: 20.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    color: Color.fromARGB(
+                                                        99, 158, 158, 158),
+                                                    spreadRadius: 0,
+                                                    blurRadius: 10,
+                                                    offset: Offset(0,
+                                                        2), // changes position of shadow
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              margin:
+                                                  const EdgeInsets.only(left: 10.0,top: 10.0),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(14.0),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    const SizedBox(width: 15.0),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                    Row(
                                                       children: [
-                                                        Text(
-                                                          data.selectedTasks[index].taskName,
-                                                          style: const TextStyle(
-                                                          fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)
-                                                            
-                                                        ) ,
-                                                        Text(data.selectedTasks[index].taskDesc)
+                                                        const SizedBox(width: 15.0),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              data.selectedTasks[index].taskName,
+                                                              style: const TextStyle(
+                                                              fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)
+                                                                
+                                                            ) ,
+                                                            Text(data.selectedTasks[index].taskDesc)
+                                                          ],
+                                                        ),
                                                       ],
                                                     ),
+                                                    Checkbox(
+                                                      value: true,
+                                                      checkColor:Colors.red,
+                                                      activeColor:Colors.red,
+                                                      onChanged: (bool? value) {
+                                                        value = !value!;
+                                                      },
+                                                    )
                                                   ],
                                                 ),
-                                                Checkbox(
-                                                  value: true,
-                                                  checkColor:Colors.red,
-                                                  activeColor:Colors.red,
-                                                  onChanged: (bool? value) {
-                                                    value = !value!;
-                                                  },
-                                                )
-                                              ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ],
-                                ),
-                              ],
-                            );
-                          }
-                          ),
+                                );
+                              }
+                              ),
 
+                              const SizedBox(height: 20.0),
+
+
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: const [
+                                Text("Older",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Color.fromARGB(132, 0, 0, 0),
+                                  )
+                                )
+                              ]),
+
+
+                              Divider(
+                                color: Colors.grey.withOpacity(0.6),
+                                thickness: 1,
+                              ),
+                              
+                            ]
+                          )
 
 
 
