@@ -27,6 +27,8 @@ dependencies:
   intl: ^0.18.1
   uuid: ^3.0.7
   flutter_native_timezone: ^2.0.0
+  share: ^2.0.4
+  audioplayers: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -53,5 +55,6 @@ flutter:
     - assets/boss/
     - assets/elements/
     - assets/audio/
-
+    - assets/items/
+    - assets/items/comingsoon.png
   uses-material-design: true

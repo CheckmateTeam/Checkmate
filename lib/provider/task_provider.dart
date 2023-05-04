@@ -21,7 +21,6 @@ class CalendarModel extends ChangeNotifier {
   //Firestore instance
   FirebaseFirestore db = FirebaseFirestore.instance;
   List<Task> taskList = [];
-  
 
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
@@ -55,9 +54,6 @@ class CalendarModel extends ChangeNotifier {
   }
 
   Future<String> fetchTask() async {
-    print('fetching task');
-    // await clearAll();
-
     QuerySnapshot querySnapshot = await db
         .collection('user_task')
         .where('user_uid', isEqualTo: user?.uid)
@@ -165,15 +161,57 @@ class CalendarModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateDoneTask(String taskId) async {
+  void updateDoneTask(Task task) async {
     await db
         .collection('user_task')
-        .where('taskId', isEqualTo: taskId)
+        .where('taskId', isEqualTo: task.taskId)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs[0].reference
           .update({'isDone': !querySnapshot.docs[0]['isDone']});
     });
+    final keyDate = DateTime(
+      task.startDate.year,
+      task.startDate.month,
+      task.startDate.day,
+    );
+    final key = keyDate;
+    if (task.isDone == true) {
+      int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
+      _taskMap[key]!.remove(task);
+      _taskMap[key]!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: false));
+    } else {
+      int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
+      _taskMap[key]!.remove(task);
+      _taskMap[key]!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: true));
+    }
+    _selectedDay = _focusedDay;
+    _selectedTasks = _taskMap[DateTime(
+          _selectedDay!.year,
+          _selectedDay!.month,
+          _selectedDay!.day,
+        )] ??
+        [];
 
     notifyListeners();
   }

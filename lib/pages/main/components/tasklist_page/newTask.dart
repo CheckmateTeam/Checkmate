@@ -3,7 +3,6 @@
 import 'dart:math';
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
-import 'package:checkmate/Services/noti_service.dart';
 import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/pages/home.dart';
 import 'package:checkmate/pages/main/task_page.dart';
@@ -14,15 +13,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../services/noti_service.dart';
+
 class createTask extends StatefulWidget {
   const createTask({super.key});
 
   @override
   State<createTask> createState() => _createTaskState();
-  
 }
 
 class _createTaskState extends State<createTask> {
+  bool _validate = false;
   List<String> dropdownItems = [
     'Never',
     '5 mins before deadline',
@@ -64,8 +65,9 @@ class _createTaskState extends State<createTask> {
               const SizedBox(height: 5),
               TextField(
                 controller: taskName,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
+                  errorText: _validate ? 'Value Can\'t Be Empty' : null,
                 ),
               ),
               const SizedBox(height: 20),
@@ -89,6 +91,11 @@ class _createTaskState extends State<createTask> {
                               lastDate: DateTime(2050));
 
                           if (date != null) {
+                            if (date.isAfter(dateend)) {
+                              setState(() {
+                                dateend = date;
+                              });
+                            }
                             setState(() {
                               datestart = date;
                             });
@@ -171,6 +178,11 @@ class _createTaskState extends State<createTask> {
                               lastDate: DateTime(2050));
 
                           if (date != null) {
+                            if (dateend.isBefore(datestart)) {
+                              setState(() {
+                                datestart = date;
+                              });
+                            }
                             setState(() {
                               dateend = date;
                             });
@@ -312,8 +324,9 @@ class _createTaskState extends State<createTask> {
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
               TextField(
                 controller: taskDescription,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
+                  errorText: _validate ? 'Value Can\'t Be Empty' : null,
                 ),
               ),
             ],
@@ -327,6 +340,12 @@ class _createTaskState extends State<createTask> {
                       MaterialStateProperty.all<Color>(Colors.redAccent)),
               onPressed: () async {
                 int notiId = Random().nextInt(10000);
+                if (taskName.text.isEmpty || taskDescription.text.isEmpty) {
+                  setState(() {
+                    _validate = true;
+                  });
+                  return;
+                }
                 context.read<CalendarModel>().addTask(Task(
                     taskName: taskName.text,
                     taskDesc: taskDescription.text,
@@ -344,8 +363,14 @@ class _createTaskState extends State<createTask> {
                 Navigator.pop(context, true);
                 await Provider.of<CalendarModel>(context, listen: false)
                     .updateTask(DateTime.now());
-
-                    NotificationService().scheduledNotification(title:taskName.text,body: taskDescription.text ,month: datestart.month, day:datestart.day, hour: timestart.hour, minutes: timestart.minute, id:notiId);
+                NotificationService().scheduledNotification(
+                    title: taskName.text,
+                    body: taskDescription.text,
+                    month: datestart.month,
+                    day: datestart.day,
+                    hour: timestart.hour,
+                    minutes: timestart.minute,
+                    id: notiId);
               },
               child: const Text("Create",
                   style: TextStyle(
