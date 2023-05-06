@@ -51,6 +51,19 @@ class NotificationService {
   }
 
 
+  List<String> dropdownItems = [
+    'Never',
+    '5 mins before deadline',
+    '10 mins before deadline',
+    '15 mins before deadline',
+    '30 mins before deadline',
+    '1 hour before deadline',
+    '2 hours before deadline',
+    '1 day before deadline',
+    '2 days before deadline',
+    '1 week before deadline'
+  ];
+
   scheduledNotification({
     required String title,
     required String body,
@@ -59,8 +72,52 @@ class NotificationService {
     required int hour,
     required int minutes,
     required int id,
+    required String deadline
     
   }) async {
+
+    int x = dropdownItems.indexOf(deadline);
+
+    if(x == 0){}
+    else if(x == 1){minutes -= 5;}
+    else if(x == 2){minutes -= 10;}
+    else if(x == 3){minutes -= 15;}
+    else if(x == 4){minutes -= 30;}
+    else if(x == 5){hour -= 1;}
+    else if(x == 6){hour -= 2;}
+    else if(x == 7){day -= 1;}
+    else if(x == 8){day -= 2;}
+    else if(x == 9){day -= 7;}
+
+    if(minutes < 0){
+      minutes += 60;
+      hour -= 1;
+    }
+
+    if(hour < 0){
+      hour += 24;
+      day -= 1;
+    }
+
+    if(day <= 0){
+      if(month == 2 || month == 4 || month == 6 || month == 8 || month == 9 || month == 11 || month == 1){
+        day += 31;
+        month -= 1;
+      }
+      else if(month == 5 || month == 7 || month == 10 || month == 12){
+        day += 30;
+        month -= 1;
+      }
+      else{
+        day += 28;
+        month -= 1;
+      }
+    }
+
+
+
+
+
     await FlutterLocalNotificationsPlugin().zonedSchedule(
       
       id,

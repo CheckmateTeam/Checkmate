@@ -104,6 +104,7 @@ class CalendarModel extends ChangeNotifier {
     return 'success';
   }
 
+
   _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       _selectedDay = selectedDay;
@@ -148,6 +149,9 @@ class CalendarModel extends ChangeNotifier {
         )] ??
         [];
   }
+
+  
+
 
   Future<void> addTask(Task task) async {
     await db.collection('user_task').add({
