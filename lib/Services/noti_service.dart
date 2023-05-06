@@ -7,6 +7,10 @@ import 'package:timezone/timezone.dart' as tz;
 class NotificationService {
   String message = "No message.";
 
+ 
+
+  
+
   static Future<void> initNotification() async {
     _configureLocalTimeZone();
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -76,6 +80,7 @@ class NotificationService {
     
   }) async {
 
+
     int x = dropdownItems.indexOf(deadline);
 
     if(x == 0){}
@@ -112,10 +117,11 @@ class NotificationService {
         day += 28;
         month -= 1;
       }
-    }
 
 
 
+  
+    
 
 
     await FlutterLocalNotificationsPlugin().zonedSchedule(
@@ -144,8 +150,8 @@ class NotificationService {
     
   }
 
-  
 
+  
   
 
   cancelAll() async => await FlutterLocalNotificationsPlugin().cancelAll();
@@ -161,7 +167,7 @@ class NotificationService {
 
 
 
-
+}
 
 
 

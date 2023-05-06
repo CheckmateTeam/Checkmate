@@ -7,12 +7,14 @@ import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/pages/home.dart';
 import 'package:checkmate/pages/main/task_page.dart';
 import 'package:checkmate/provider/db.dart';
-import 'package:checkmate/provider/task_provider.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+
+import '../../../../provider/task_provider.dart';
 import '../../../../services/noti_service.dart';
 
 class createTask extends StatefulWidget {
@@ -355,7 +357,13 @@ class _createTaskState extends State<createTask> {
                         timeend.hour, timeend.minute),
                     cycle: cycle,
                     notify: dropdownValue,
-                    notiId: notiId));
+                    notiId: notiId,
+                    notiDate:await notiDate(
+                      datestart.month,
+                      datestart.day,
+                      timestart.hour, 
+                      timestart.minute, 
+                      dropdownValue)));
 
                 AnimatedSnackBar.material("Success! Your task has created",
                         type: AnimatedSnackBarType.success)
@@ -381,4 +389,8 @@ class _createTaskState extends State<createTask> {
       ),
     );
   }
+
+
+
+  
 }

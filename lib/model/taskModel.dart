@@ -9,6 +9,7 @@ class Task {
   bool isDone;
   int notiId;
   bool isRead;
+  DateTime notiDate;
   Task({
     this.taskId = '',
     required this.taskName,
@@ -20,5 +21,6 @@ class Task {
     this.notiId = 0,
     this.isRead = false,
     this.isDone = false,
+    required this.notiDate
   });
 }

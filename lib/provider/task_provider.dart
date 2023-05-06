@@ -70,6 +70,7 @@ class CalendarModel extends ChangeNotifier {
         endDate: (task['endDate'] as Timestamp).toDate(),
         cycle: task['cycle'],
         notify: task['notify'],
+        notiDate: task['notiDate']
       );
       final keyDate = DateTime(
         newTask.startDate.year,
@@ -102,6 +103,17 @@ class CalendarModel extends ChangeNotifier {
     await Future.delayed(Duration(milliseconds: 100));
     notifyListeners();
     return 'success';
+  }
+
+
+  Future<String> fetchNotiTask() async{
+    QuerySnapshot querySnapshot = await db
+    .collection('user_task')
+        .where('user_uid', isEqualTo: user?.uid)
+        .where('noti')
+        .orderBy('startDate')
+        .get();
+    return "1";
   }
 
 
@@ -166,6 +178,7 @@ class CalendarModel extends ChangeNotifier {
       'notify': task.notify,
       'isDone': task.isDone,
       'isRead': task.isRead
+      
     });
 
     notifyListeners();
@@ -199,7 +212,13 @@ class CalendarModel extends ChangeNotifier {
               endDate: task.endDate,
               cycle: task.cycle,
               notify: task.notify,
-              isDone: false));
+              isDone: false,
+              notiDate:await notiDate(
+                task.startDate.month,
+                task.startDate.day,
+                task.startDate.hour,
+                task.startDate.minute,
+                task.notify)));
     } else {
       int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
       _taskMap[key]!.remove(task);
@@ -213,7 +232,13 @@ class CalendarModel extends ChangeNotifier {
               endDate: task.endDate,
               cycle: task.cycle,
               notify: task.notify,
-              isDone: true));
+              isDone: true,
+              notiDate:await notiDate(
+                task.startDate.month,
+                task.startDate.day,
+                task.startDate.hour,
+                task.startDate.minute,
+                task.notify)));
     }
     _selectedDay = _focusedDay;
     _selectedTasks = _taskMap[DateTime(
@@ -298,3 +323,77 @@ class CalendarModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+Future<DateTime> notiDate(
+    int month, 
+    int day, 
+    int hour, 
+    int minutes, 
+    String deadline) async {
+
+
+    List<String> dropdownItems = [
+    'Never',
+    '5 mins before deadline',
+    '10 mins before deadline',
+    '15 mins before deadline',
+    '30 mins before deadline',
+    '1 hour before deadline',
+    '2 hours before deadline',
+    '1 day before deadline',
+    '2 days before deadline',
+    '1 week before deadline'
+  ];
+      
+    
+    int x = dropdownItems.indexOf(deadline);
+
+    if(x == 0){}
+    else if(x == 1){minutes -= 5;}
+    else if(x == 2){minutes -= 10;}
+    else if(x == 3){minutes -= 15;}
+    else if(x == 4){minutes -= 30;}
+    else if(x == 5){hour -= 1;}
+    else if(x == 6){hour -= 2;}
+    else if(x == 7){day -= 1;}
+    else if(x == 8){day -= 2;}
+    else if(x == 9){day -= 7;}
+
+    if(minutes < 0){
+      minutes += 60;
+      hour -= 1;
+    }
+
+    if(hour < 0){
+      hour += 24;
+      day -= 1;
+    }
+
+    if(day <= 0){
+      if(month == 2 || month == 4 || month == 6 || month == 8 || month == 9 || month == 11 || month == 1){
+        day += 31;
+        month -= 1;
+      }
+      else if(month == 5 || month == 7 || month == 10 || month == 12){
+        day += 30;
+        month -= 1;
+      }
+      else{
+        day += 28;
+        month -= 1;
+      }
+    }
+
+  
+
+    DateTime _notiDate = DateTime(
+      DateTime.now().year,
+      month,
+      day,
+      hour,
+      minutes,
+      );
+
+
+    return _notiDate;
+  }
