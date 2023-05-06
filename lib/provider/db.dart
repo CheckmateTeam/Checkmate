@@ -64,4 +64,22 @@ class Database extends ChangeNotifier {
     username = name;
     notifyListeners();
   }
+
+  void buyItem(int itemPrice) {
+    db
+        .collection('user_info')
+        .where('uid', isEqualTo: user?.uid)
+        .get() 
+        .then((QuerySnapshot querySnapshot) async {
+      int points = querySnapshot.docs[0]['points'];
+      if (points != null && points >= itemPrice){
+        final newPoints = points - itemPrice;
+        await db
+            .collection('user_info')
+            .doc(querySnapshot.docs[0].id)
+            .update({'points': newPoints});
+        notifyListeners();
+      }
+    });
+  }
 }

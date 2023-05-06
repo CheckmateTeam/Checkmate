@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'components/shop_page/shopItem.dart';
-import 'components/shop_page/itemListData.dart';
 
 class PointShopPage extends StatefulWidget {
   const PointShopPage({Key? key}) : super(key: key);
@@ -13,6 +12,9 @@ class PointShopPage extends StatefulWidget {
 }
 
 class _PointShopPageState extends State<PointShopPage> {
+  int _pointController = 0;
+  
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +28,10 @@ class _PointShopPageState extends State<PointShopPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    int currentPoint = int.parse(context.read<Database>().userPoints);
+    _pointController = currentPoint;
+
     return Scaffold(
         body: Column(children: [
       const Padding(
@@ -53,7 +59,7 @@ class _PointShopPageState extends State<PointShopPage> {
           textScaleFactor: 0.8,
         ),
       ),
-      Consumer<Database>(
+      Consumer<Database>(        
         builder: (context, db, child) => Text(
           "Current Points: ${db.userPoints}",
           style: const TextStyle(
@@ -98,13 +104,20 @@ class _PointShopPageState extends State<PointShopPage> {
               children: [
                 const Text("App Fetures"),
                 const Divider(),
-                Row(
-                  children: const [
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 10,
+                  children: const <Widget>[
                     shopItem(
                         itemName: "Random New Theme",
                         itemDescription: "Theme for you",
                         itemImage: "assets/items/gacha.png",
-                        itemPrice: 1000),
+                        itemPrice: 2000),
+                    shopItem(
+                        itemName: "Cycle feature",
+                        itemDescription: "Theme for you",
+                        itemImage: "assets/items/cycleTask.png",
+                        itemPrice: 100),
                   ],
                 ),
                 const Padding(padding: EdgeInsets.only(top: 30)),
@@ -118,13 +131,13 @@ class _PointShopPageState extends State<PointShopPage> {
                       itemName: "Hit Harder",
                       itemDescription: "Hit harder in challenges",
                       itemImage: "assets/items/atkUp.png",
-                      itemPrice: 100,
+                      itemPrice: 500,
                     ),
                     shopItem(
                       itemName: "Za Warudo",
                       itemDescription: "Add time in challenges",
                       itemImage: "assets/items/addTime.png",
-                      itemPrice: 500,
+                      itemPrice: 800,
                     ),
                   ],
                 ),

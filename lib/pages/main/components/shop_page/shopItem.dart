@@ -7,7 +7,6 @@ class shopItem extends StatefulWidget {
   final String itemName;
   final String? itemImage;
   final String? itemDescription;
-  final String? itemFunction;
   final int? itemPrice;
 
   const shopItem(
@@ -15,48 +14,143 @@ class shopItem extends StatefulWidget {
       required this.itemName,
       this.itemDescription,
       this.itemImage,
-      this.itemFunction,
       this.itemPrice});
   @override
   State<shopItem> createState() => _shopItemState();
 }
 
 class _shopItemState extends State<shopItem> {
+  int _currentPoint = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // ((event) {
+    //   var dataSnapshot = event.snapshot;
+    //   setState(() {
+    //     _currentPoint = dataSnapshot.value ?? 0;
+    //   });
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
+    int currentPoint = int.parse(context.read<Database>().userPoints);
+    _currentPoint = currentPoint;
     return GestureDetector(
-      onTap: (){
-        //functional code here
-        print("clicke");
+      onTap: () async {
+        //point transaction
+        if (widget.itemPrice != null && _currentPoint >= widget.itemPrice!) {
+          context.read<Database>().buyItem(widget.itemPrice!);
+          if (widget.itemName == "Random New Theme") {
+            // only for random theme
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      title: const Text("You have got"),
+                      content: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 150,
+                              child: Image.asset(
+                            "assets/theme/Ogtheme.png",
+                          )),
+                          const Text(
+                            "\n OG Theme",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ), //Theme name and color
+
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("OK"))
+                      ]);
+                });
+          } else {
+            // other items
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      title: const Text("Item Purchased!"),
+                      content: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 16, height: 1.5),
+                            children: <TextSpan>[
+                              TextSpan(text: "You have purchased"),
+                              TextSpan(
+                                  text: "\n ${widget.itemName} ",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                              TextSpan(
+                                  text: "\n for ${widget.itemPrice} points!"),
+                            ]),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(widget.itemPrice);
+                            },
+                            child: const Text("OK"))
+                      ]);
+                });
+          }
+        }
       },
-      child: Container(
-        height: 150,
-        width: 150,
-        decoration: BoxDecoration(
-          border: Border.all(color: Color.fromARGB(255, 197, 197, 197)),
-          borderRadius: BorderRadius.circular(40),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Image.asset(
-                widget.itemImage ?? "assets/items/comingsoon.png",
-                height: 50,
-                width: 50,
+      child: Stack(
+        children: [
+          Container(
+            height: 150,
+            width: 150,
+            decoration: BoxDecoration(
+              border: Border.all(color: Color.fromARGB(255, 197, 197, 197)),
+              borderRadius: BorderRadius.circular(40),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Image.asset(
+                    widget.itemImage ?? "assets/items/comingsoon.png",
+                    height: 50,
+                    width: 50,
+                  ),
+                ),
+                Text(
+                  widget.itemName,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                if (widget.itemPrice != null)
+                  Text(
+                    "${widget.itemPrice} Points",
+                  ),
+              ],
+            ),
+          ),
+          if (_currentPoint < widget.itemPrice! && widget.itemPrice != null)
+            Container(
+              height: 150,
+              width: 150,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.red),
+                borderRadius: BorderRadius.circular(40),
+                color: Colors.black.withOpacity(0.5),
+              ),
+              child: const Icon(
+                Icons.close,
+                color: Colors.red,
+                size: 100,
               ),
             ),
-            Text(
-              widget.itemName,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            if (widget.itemPrice != null)
-              Text(
-                "${widget.itemPrice} Points",
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
