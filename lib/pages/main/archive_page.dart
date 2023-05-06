@@ -1,12 +1,8 @@
-import 'package:checkmate/provider/archive_provider.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:checkmate/pages/main/components/archive_page/taskListAll.dart';
+import 'package:checkmate/pages/main/components/archive_page/taskListMonth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
 import 'components/archive_page/taskListWeek.dart';
+import 'components/archive_page/taskListYear.dart';
 
 class ArchivePage extends StatefulWidget {
   const ArchivePage({super.key});
@@ -75,17 +71,16 @@ class SelectWeek extends StatefulWidget {
 class _SelectWeekState extends State<SelectWeek> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   // ignore: constant_identifier_names
   static const List<Widget> mode_index = <Widget>[
     TaskListWeek(),
-    TaskListWeek(),
-    TaskListWeek(),
-    TaskListWeek()
+    TaskListMonth(),
+    TaskListYear(),
+    TaskListAll()
   ];
 
   @override

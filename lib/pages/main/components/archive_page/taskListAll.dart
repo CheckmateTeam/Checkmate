@@ -1,18 +1,18 @@
 import 'package:checkmate/provider/archive_provider.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class TaskListMonth extends StatefulWidget {
-  const TaskListMonth({super.key});
+class TaskListAll extends StatefulWidget {
+  const TaskListAll({super.key});
 
   @override
-  State<TaskListMonth> createState() => _TaskListMonthState();
+  State<TaskListAll> createState() => _TaskListAllState();
 }
 
-class _TaskListMonthState extends State<TaskListMonth> {
-  late Map<DateTime, int> barData;
+class _TaskListAllState extends State<TaskListAll> {
   late Future<String> _myFuture;
 
   @override
@@ -20,13 +20,12 @@ class _TaskListMonthState extends State<TaskListMonth> {
     // TODO: implement initState
     super.initState();
 
-    _myFuture =
-        Provider.of<ArchiveProvider>(context, listen: false).fetchMonth();
+    _myFuture = Provider.of<ArchiveProvider>(context, listen: false).fetchAll();
   }
 
+  @override
   Widget build(BuildContext context) {
-    final taskList = context.watch<ArchiveProvider>().taskList;
-    barData = context.watch<ArchiveProvider>().taskMap;
+    final data = context.watch<ArchiveProvider>();
     return FutureBuilder(
       future: _myFuture,
       builder: (context, snapshot) {
@@ -36,57 +35,95 @@ class _TaskListMonthState extends State<TaskListMonth> {
           );
         }
         return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 50),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [
-            //       Text(
-            //         taskList.length.toString() + " tasks",
-            //         style: TextStyle(
-            //           fontSize: 14,
-            //           fontWeight: FontWeight.w700,
-            //         ),
-            //       ),
-            //       // Text("01:20:00 hours",
-            //       //     style: TextStyle(
-            //       //       fontSize: 14,
-            //       //       fontWeight: FontWeight.w700,
-            //       //     )),
-            //       Text(barData.length.toString() + " days",
-            //           style: TextStyle(
-            //             fontSize: 14,
-            //             fontWeight: FontWeight.w700,
-            //           ))
-            //     ],
-            //   ),
-            // ),
-            const SizedBox(
-              height: 20,
-            ),
-            //Chart hereeee
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                    height: 100,
-                    width: MediaQuery.of(context).size.width - 30,
-                    child: BarChart(
-                      BarChartData(
-                        barTouchData: barTouchData,
-                        titlesData: titlesData,
-                        borderData: borderData,
-                        barGroups: barGroups,
-                        gridData: FlGridData(show: false),
-                        alignment: BarChartAlignment.spaceAround,
-                        maxY: 20,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Since ${DateFormat("y/M/d").format(data.firstTaskDate)} - Today",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "You have completed ${data.taskList.length} Tasks",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "with ${20} challenge streaks",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "within ${data.taskMap.length} days",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                    )),
-              ],
+                      Column(
+                        children: [
+                          Stack(alignment: Alignment.center, children: [
+                            Text("Goal"),
+                            SizedBox(
+                              width: 70,
+                              height: 70,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 10,
+                                value: 50 / 100,
+                                backgroundColor: Colors.grey.withOpacity(0.2),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor),
+                              ),
+                            ),
+                          ]),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "50%",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
-            //month
             Flexible(
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -95,20 +132,10 @@ class _TaskListMonthState extends State<TaskListMonth> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: [
-                      Row(children: [
-                        Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                                DateFormat('y').format(DateTime.now()) +
-                                    " " +
-                                    DateFormat('MMMM').format(DateTime.now()),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ))),
-                      ]),
+                      Row(children: []),
                       ListView.builder(
                           shrinkWrap: true,
-                          itemCount: taskList.length,
+                          itemCount: data.taskList.length,
                           itemBuilder: (context, index) {
                             return Column(
                               children: [
@@ -151,7 +178,7 @@ class _TaskListMonthState extends State<TaskListMonth> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  taskList[index].taskName,
+                                                  data.taskList[index].taskName,
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -160,16 +187,15 @@ class _TaskListMonthState extends State<TaskListMonth> {
                                                           TextDecoration.none),
                                                 ),
                                                 Text(
-                                                  taskList[index]
-                                                              .taskDesc
+                                                  data.taskList[index].taskDesc
                                                               .length >
                                                           15
-                                                      ? taskList[index]
+                                                      ? data.taskList[index]
                                                               .taskDesc
                                                               .substring(
                                                                   0, 15) +
                                                           "..."
-                                                      : taskList[index]
+                                                      : data.taskList[index]
                                                           .taskDesc,
                                                   style: TextStyle(
                                                       fontSize: 16,
@@ -182,7 +208,7 @@ class _TaskListMonthState extends State<TaskListMonth> {
                                         ),
                                         Text(
                                             DateFormat('MM/dd').format(
-                                                taskList[index].startDate),
+                                                data.taskList[index].startDate),
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 color: Colors.grey[600],
@@ -210,112 +236,6 @@ class _TaskListMonthState extends State<TaskListMonth> {
       },
     );
   }
-
-  //Chart setting
-  BarTouchData get barTouchData => BarTouchData(
-        enabled: false,
-        touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: Colors.transparent,
-          tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: 8,
-          getTooltipItem: (
-            BarChartGroupData group,
-            int groupIndex,
-            BarChartRodData rod,
-            int rodIndex,
-          ) {
-            return BarTooltipItem(
-              rod.toY.round().toString() == "0"
-                  ? ""
-                  : rod.toY.round().toString(),
-              const TextStyle(
-                color: Color.fromARGB(255, 77, 77, 77),
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            );
-          },
-        ),
-      );
-
-  Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    String text = '';
-    int day = value.toInt();
-    if (day % 6 == 0) {
-      text = day.toString();
-    } else {
-      text = '';
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 4,
-      child: Text(text, style: style),
-    );
-  }
-
-  FlTitlesData get titlesData => FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: getTitles,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      );
-
-  FlBorderData get borderData => FlBorderData(
-        show: false,
-      );
-
-  LinearGradient get _barsGradient => LinearGradient(
-        colors: [
-          Color.fromARGB(255, 235, 75, 0),
-          Color.fromARGB(255, 255, 129, 26),
-        ],
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-      );
-
-  List<BarChartGroupData> get barGroups => [
-        for (int i = 0; i < 31; i++)
-          BarChartGroupData(
-            x: i + 1,
-            barRods: [
-              BarChartRodData(
-                fromY: 0,
-                toY: barData[DateTime(
-                      DateTime.now().year,
-                      DateTime.now().month,
-                      i + 1,
-                    )]
-                        ?.toDouble() ??
-                    0,
-                gradient: _barsGradient,
-                backDrawRodData: BackgroundBarChartRodData(
-                  show: true,
-                  toY: 20,
-                  color: Colors.grey[200],
-                ),
-              ),
-            ],
-            showingTooltipIndicators: [0],
-          ),
-      ];
 }
 
 Widget Seperator() {

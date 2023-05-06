@@ -1,32 +1,34 @@
+// ignore_for_file: file_names
+
 import 'package:checkmate/provider/archive_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class TaskListWeek extends StatefulWidget {
-  const TaskListWeek({Key? key}) : super(key: key);
+class TaskListYear extends StatefulWidget {
+  const TaskListYear({super.key});
 
   @override
-  State<TaskListWeek> createState() => _TaskListWeekState();
+  State<TaskListYear> createState() => _TaskListYearState();
 }
 
-class _TaskListWeekState extends State<TaskListWeek> {
-  late Map<DateTime, int> barData;
+class _TaskListYearState extends State<TaskListYear> {
+  late Map<String, int> barData;
   late Future<String> _myFuture;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _myFuture =
-        Provider.of<ArchiveProvider>(context, listen: false).fetchWeek();
+        Provider.of<ArchiveProvider>(context, listen: false).fetchYear();
   }
 
   @override
   Widget build(BuildContext context) {
     final taskList = context.watch<ArchiveProvider>().taskList;
-    barData = context.watch<ArchiveProvider>().taskMap;
+    barData = context.watch<ArchiveProvider>().taskMapYear;
     return FutureBuilder(
       future: _myFuture,
       builder: (context, snapshot) {
@@ -38,31 +40,6 @@ class _TaskListWeekState extends State<TaskListWeek> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 50),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [
-            //       Text(
-            //         taskList.length.toString() + " tasks",
-            //         style: TextStyle(
-            //           fontSize: 14,
-            //           fontWeight: FontWeight.w700,
-            //         ),
-            //       ),
-            //       // Text("01:20:00 hours",
-            //       //     style: TextStyle(
-            //       //       fontSize: 14,
-            //       //       fontWeight: FontWeight.w700,
-            //       //     )),
-            //       Text(barData.length.toString() + " days",
-            //           style: TextStyle(
-            //             fontSize: 14,
-            //             fontWeight: FontWeight.w700,
-            //           ))
-            //     ],
-            //   ),
-            // ),
             const SizedBox(
               height: 20,
             ),
@@ -86,7 +63,7 @@ class _TaskListWeekState extends State<TaskListWeek> {
                     )),
               ],
             ),
-            //week
+            //month
             Flexible(
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -97,29 +74,18 @@ class _TaskListWeekState extends State<TaskListWeek> {
                     children: [
                       Row(children: [
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(DateFormat('MMMM').format(DateTime(
-                                  0,
-                                  DateTime.now()
-                                      .subtract(Duration(days: 7))
-                                      .month)) +
-                              " " +
-                              DateTime.now()
-                                  .subtract(Duration(days: 7))
-                                  .day
-                                  .toString() +
-                              " - " +
-                              DateFormat('MMMM').format(DateTime(
-                                  0,
-                                  DateTime.now()
-                                      .subtract(Duration(days: 1))
-                                      .month)) +
-                              " " +
-                              DateTime.now()
-                                  .subtract(Duration(days: 1))
-                                  .day
-                                  .toString()),
-                        ),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                                DateFormat('y').format(DateTime(
+                                      DateTime.now().year - 1,
+                                      DateTime.now().month,
+                                      DateTime.now().day,
+                                    )) +
+                                    " - " +
+                                    DateFormat('y').format(DateTime.now()),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ))),
                       ]),
                       ListView.builder(
                           shrinkWrap: true,
@@ -226,7 +192,7 @@ class _TaskListWeekState extends State<TaskListWeek> {
     );
   }
 
-//Chart setting
+  //Chart setting
   BarTouchData get barTouchData => BarTouchData(
         enabled: false,
         touchTooltipData: BarTouchTooltipData(
@@ -255,207 +221,18 @@ class _TaskListWeekState extends State<TaskListWeek> {
 
   Widget getTitles(double value, TitleMeta meta) {
     const style = TextStyle(
-      color: Colors.black,
+      color: Color.fromARGB(255, 44, 44, 44),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 13,
     );
     String text = '';
-    switch (value.toInt()) {
-      case 0:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 7)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-        break;
-      case 1:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 6)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-        break;
-      case 2:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 5)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-        break;
-      case 3:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 4)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-        break;
-      case 4:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 3)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-        break;
-      case 5:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 2)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
+    int day = value.toInt();
+    text = DateFormat('MMM').format(DateTime(
+      DateTime.now().year,
+      day,
+      DateTime.now().day,
+    ));
 
-        break;
-      case 6:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 1)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-
-        break;
-      default:
-        text = '';
-        break;
-    }
     return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 4,
@@ -497,29 +274,17 @@ class _TaskListWeekState extends State<TaskListWeek> {
       );
 
   List<BarChartGroupData> get barGroups => [
-        for (int i = 0; i < 7; i++)
+        for (int i = 1; i <= 12; i++)
           BarChartGroupData(
             x: i,
             barRods: [
               BarChartRodData(
-                toY: barData[DateTime(
-                          DateTime.now().subtract(Duration(days: 7 - i)).year,
-                          DateTime.now().subtract(Duration(days: 7 - i)).month,
-                          DateTime.now().subtract(Duration(days: 7 - i)).day,
-                        )] ==
-                        null
-                    ? 0
-                    : barData[DateTime(
-                        DateTime.now().subtract(Duration(days: 7 - i)).year,
-                        DateTime.now().subtract(Duration(days: 7 - i)).month,
-                        DateTime.now().subtract(Duration(days: 7 - i)).day,
-                      )]!
-                        .toDouble(),
+                fromY: 0,
+                toY: barData[i.toString()]?.toDouble() ?? 0,
                 gradient: _barsGradient,
-                width: 15,
                 backDrawRodData: BackgroundBarChartRodData(
                   show: true,
-                  toY: 25,
+                  toY: 20,
                   color: Colors.grey[200],
                 ),
               ),
