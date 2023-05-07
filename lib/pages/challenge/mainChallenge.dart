@@ -471,7 +471,7 @@ class _GameState extends State<Game>
       controller.stop();
     }
 
-    // controller = null;
+    //  controller = null;
     controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: durationBackup! + add!));
     controller.reverse(from: controller.value == 0.0 ? 1.0 : controller.value);
@@ -547,12 +547,10 @@ class _GameState extends State<Game>
       //   instance.stop();
       //   musicPlaying = false;
       // }
-
       // if (!musicPlaying) {
       //   musicPlaying = true;
       //   playGameOver();
       // }
-
       return Stack(
         children: <Widget>[
           Container(
