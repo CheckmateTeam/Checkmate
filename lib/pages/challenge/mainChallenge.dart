@@ -40,9 +40,6 @@ class _GameState extends State<Game>
   static const MethodChannel _channel = const MethodChannel('gamepad');
 
   static String skyAsset() => "assets/background/sky.png";
-
-  static String stageAsset() => "assets/background/front.png";
-
   static var multiplier = 1.0;
   static var damageDefault = 980.0;
   static var damageBar = damageDefault;
@@ -347,14 +344,6 @@ class _GameState extends State<Game>
                 fit: BoxFit.cover,
               ),
             ),
-            // Align(
-            //   child: Image.asset(
-            //     stageAsset(),
-            //     alignment: Alignment.bottomCenter,
-            //     fit: BoxFit.fitWidth,
-            //   ),
-            //   alignment: Alignment.bottomCenter,
-            // ),
             Align(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 80.0),
