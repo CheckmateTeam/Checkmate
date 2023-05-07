@@ -29,7 +29,7 @@ class _PointShopPageState extends State<PointShopPage> {
   @override
   Widget build(BuildContext context) {
 
-    int currentPoint = int.parse(context.read<Database>().userPoints);
+    int currentPoint = int.parse(context.watch<Database>().userPoints);
     _pointController = currentPoint;
 
     return Scaffold(
@@ -59,16 +59,20 @@ class _PointShopPageState extends State<PointShopPage> {
           textScaleFactor: 0.8,
         ),
       ),
-      Consumer<Database>(        
-        builder: (context, db, child) => Text(
-          "Current Points: ${db.userPoints}",
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.left,
+      Consumer<Database>(
+          builder: (context, db, child) {
+            final currentPoint = int.parse(db.userPoints);
+            _pointController = currentPoint;
+            return Text(
+              "Current Points: $_pointController",
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.left,
+            );
+          },
         ),
-      ),
       const Padding(
         padding: EdgeInsets.only(
           bottom: 10,
@@ -107,17 +111,19 @@ class _PointShopPageState extends State<PointShopPage> {
                 Wrap(
                   spacing: 8,
                   runSpacing: 10,
-                  children: const <Widget>[
+                  children: <Widget>[
                     shopItem(
                         itemName: "Random New Theme",
                         itemDescription: "Theme for you",
                         itemImage: "assets/items/gacha.png",
-                        itemPrice: 2000),
+                        itemPrice: 2000,
+                        currentPoint: _pointController,),
                     shopItem(
                         itemName: "Cycle feature",
                         itemDescription: "Theme for you",
                         itemImage: "assets/items/cycleTask.png",
-                        itemPrice: 100),
+                        itemPrice: 100,
+                        currentPoint: _pointController,),
                   ],
                 ),
                 const Padding(padding: EdgeInsets.only(top: 30)),
@@ -126,18 +132,20 @@ class _PointShopPageState extends State<PointShopPage> {
                 Wrap(
                   spacing: 8,
                   runSpacing: 10,
-                  children: const <Widget>[
+                  children: <Widget>[
                     shopItem(
                       itemName: "Hit Harder",
                       itemDescription: "Hit harder in challenges",
                       itemImage: "assets/items/atkUp.png",
                       itemPrice: 500,
+                      currentPoint: _pointController,
                     ),
                     shopItem(
                       itemName: "Za Warudo",
                       itemDescription: "Add time in challenges",
                       itemImage: "assets/items/addTime.png",
                       itemPrice: 800,
+                      currentPoint: _pointController,
                     ),
                   ],
                 ),
@@ -169,3 +177,11 @@ class _PointShopPageState extends State<PointShopPage> {
     ]));
   }
 }
+
+// Future<void> _pointUse(BuildContext context) async {
+//     final currentPoint = await Navigator.push(
+//       context,
+
+//       ,
+//     );
+//   }

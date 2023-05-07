@@ -8,13 +8,14 @@ class shopItem extends StatefulWidget {
   final String? itemImage;
   final String? itemDescription;
   final int? itemPrice;
+  final int currentPoint;
 
   const shopItem(
       {super.key,
       required this.itemName,
       this.itemDescription,
       this.itemImage,
-      this.itemPrice});
+      this.itemPrice, required this.currentPoint,});
   @override
   State<shopItem> createState() => _shopItemState();
 }
@@ -25,6 +26,7 @@ class _shopItemState extends State<shopItem> {
   @override
   void initState() {
     super.initState();
+    _currentPoint = int.parse(context.read<Database>().userPoints);
     // ((event) {
     //   var dataSnapshot = event.snapshot;
     //   setState(() {
@@ -35,13 +37,19 @@ class _shopItemState extends State<shopItem> {
 
   @override
   Widget build(BuildContext context) {
-    int currentPoint = int.parse(context.read<Database>().userPoints);
-    _currentPoint = currentPoint;
+
     return GestureDetector(
       onTap: () async {
         //point transaction
+        // _currentPoint = int.parse(context.watch<Database>().userPoints);
         if (widget.itemPrice != null && _currentPoint >= widget.itemPrice!) {
           context.read<Database>().buyItem(widget.itemPrice!);
+          print(_currentPoint);
+          _currentPoint = _currentPoint - widget.itemPrice!;
+          print(widget.itemName);
+          print(widget.itemPrice);
+          print(_currentPoint);
+          setState(() {});
           if (widget.itemName == "Random New Theme") {
             // only for random theme
             showDialog(
@@ -66,7 +74,7 @@ class _shopItemState extends State<shopItem> {
                       actions: [
                         TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(widget.itemPrice);
                             },
                             child: const Text("OK"))
                       ]);
@@ -102,6 +110,22 @@ class _shopItemState extends State<shopItem> {
                       ]);
                 });
           }
+        } else{
+          showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      title: const Text("Not enough points!"),
+                      content: const Text(
+                          "You do not have enough points to purchase this item!"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(widget.itemPrice);
+                            },
+                            child: const Text("OK"))
+                      ]);
+                });
         }
       },
       child: Stack(
