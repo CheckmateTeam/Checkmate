@@ -155,10 +155,11 @@ class _TaskListWeekState extends State<TaskListWeek> {
                                       children: [
                                         Row(
                                           children: [
-                                            const CircleAvatar(
+                                            CircleAvatar(
                                               child: Icon(
                                                   Icons.table_view_sharp,
-                                                  color: Colors.red),
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
                                             ),
                                             const SizedBox(width: 15.0),
                                             Column(
@@ -489,8 +490,8 @@ class _TaskListWeekState extends State<TaskListWeek> {
 
   LinearGradient get _barsGradient => LinearGradient(
         colors: [
-          Color.fromARGB(255, 235, 75, 0),
-          Color.fromARGB(255, 255, 129, 26),
+          Theme.of(context).primaryColor,
+          Theme.of(context).colorScheme.secondary,
         ],
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,

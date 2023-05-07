@@ -106,7 +106,7 @@ class _createTaskState extends State<createTask> {
                             Icon(
                               Icons.calendar_today,
                               size: 18,
-                              color: Colors.primaries[0],
+                              color: Theme.of(context).primaryColor,
                             ),
                             const SizedBox(width: 5),
                             Text(
@@ -114,7 +114,7 @@ class _createTaskState extends State<createTask> {
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.primaries[0])),
+                                    color: Theme.of(context).primaryColor)),
                           ],
                         ),
                       ),
@@ -193,7 +193,7 @@ class _createTaskState extends State<createTask> {
                             Icon(
                               Icons.calendar_today,
                               size: 18,
-                              color: Colors.primaries[0],
+                              color: Theme.of(context).primaryColor,
                             ),
                             const SizedBox(width: 5),
                             Text(
@@ -201,7 +201,7 @@ class _createTaskState extends State<createTask> {
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.primaries[0])),
+                                    color: Theme.of(context).primaryColor)),
                           ],
                         ),
                       ),
@@ -336,8 +336,8 @@ class _createTaskState extends State<createTask> {
               style: ButtonStyle(
                   minimumSize:
                       MaterialStateProperty.all<Size>(const Size(170, 40)),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.redAccent)),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Theme.of(context).primaryColor)),
               onPressed: () async {
                 int notiId = Random().nextInt(10000);
                 if (taskName.text.isEmpty || taskDescription.text.isEmpty) {

@@ -19,9 +19,9 @@ class _TablecalendarState extends State<Tablecalendar> {
       children: [
         TableCalendar<Task>(
           locale: Localizations.localeOf(context).languageCode,
-          calendarStyle: const CalendarStyle(
+          calendarStyle: CalendarStyle(
             markerDecoration: BoxDecoration(
-              color: Color.fromRGBO(241, 91, 91, 1),
+              color: Theme.of(context).primaryColor,
               shape: BoxShape.circle,
             ),
             selectedDecoration: BoxDecoration(
@@ -29,7 +29,7 @@ class _TablecalendarState extends State<Tablecalendar> {
               shape: BoxShape.circle,
             ),
             todayDecoration: BoxDecoration(
-              color: Color.fromRGBO(241, 91, 91, 1),
+              color: Theme.of(context).primaryColor,
               shape: BoxShape.circle,
             ),
             outsideDaysVisible: false,

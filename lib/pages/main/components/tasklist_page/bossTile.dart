@@ -29,7 +29,7 @@ class _BossTileState extends State<BossTile> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   icon: const Icon(Icons.warning_amber_rounded, size: 50),
-                  iconColor: Colors.red,
+                  iconColor: Theme.of(context).primaryColor,
                   title: const Text(
                     "You can only fight the boss on the current day",
                     style: TextStyle(
@@ -66,7 +66,7 @@ class _BossTileState extends State<BossTile> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     icon: const Icon(Icons.warning_amber_rounded, size: 50),
-                    iconColor: Colors.red,
+                    iconColor: Theme.of(context).primaryColor,
                     title: const Text(
                       "You need to complete at least one task to fight the boss",
                       style: TextStyle(
@@ -107,7 +107,7 @@ class _BossTileState extends State<BossTile> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       icon: const Icon(Icons.warning_amber_rounded, size: 50),
-                      iconColor: Colors.red,
+                      iconColor: Theme.of(context).primaryColor,
                       title: const Text(
                         "You need to complete all tasks to fight the boss",
                         style: TextStyle(
@@ -190,7 +190,7 @@ class _BossTileState extends State<BossTile> {
             const Image(image: AssetImage("assets/boss/boss.png")),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text("Current boss",
                     style: TextStyle(fontSize: 14, color: Colors.grey)),
                 Text("Ancient Wizard",
@@ -203,7 +203,8 @@ class _BossTileState extends State<BossTile> {
                   child: LinearProgressIndicator(
                     value: 1,
                     backgroundColor: Colors.grey,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).primaryColor),
                   ),
                 ),
                 Text("5000/5000")
@@ -212,7 +213,7 @@ class _BossTileState extends State<BossTile> {
             IconButton(
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all(Colors.primaries[0]),
+                      MaterialStateProperty.all(Theme.of(context).primaryColor),
                   shape: MaterialStateProperty.all(const CircleBorder()),
                 ),
                 onPressed: () {
@@ -223,7 +224,7 @@ class _BossTileState extends State<BossTile> {
                           return AlertDialog(
                             icon: const Icon(Icons.warning_amber_rounded,
                                 size: 50),
-                            iconColor: Colors.red,
+                            iconColor: Theme.of(context).primaryColor,
                             title: const Text(
                               "You can only fight the boss on the current day",
                               style: TextStyle(
@@ -261,7 +262,7 @@ class _BossTileState extends State<BossTile> {
                             return AlertDialog(
                               icon: const Icon(Icons.warning_amber_rounded,
                                   size: 50),
-                              iconColor: Colors.red,
+                              iconColor: Theme.of(context).primaryColor,
                               title: const Text(
                                 "You need to complete at least one task to fight the boss",
                                 style: TextStyle(
@@ -303,7 +304,7 @@ class _BossTileState extends State<BossTile> {
                               return AlertDialog(
                                 icon: const Icon(Icons.warning_amber_rounded,
                                     size: 50),
-                                iconColor: Colors.red,
+                                iconColor: Theme.of(context).primaryColor,
                                 title: const Text(
                                   "You need to complete all tasks to fight the boss",
                                   style: TextStyle(
