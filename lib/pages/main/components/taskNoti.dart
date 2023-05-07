@@ -1,4 +1,5 @@
-import 'package:checkmate/pages/main/components/taskSheet.dart';
+import 'package:checkmate/pages/main/components/tasklist_page/taskList.dart';
+import 'package:checkmate/pages/main/components/tasklist_page/taskSheet.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -13,7 +13,6 @@ class PointShopPage extends StatefulWidget {
 
 class _PointShopPageState extends State<PointShopPage> {
   int _pointController = 0;
-  
 
   @override
   void initState() {
@@ -28,7 +27,6 @@ class _PointShopPageState extends State<PointShopPage> {
 
   @override
   Widget build(BuildContext context) {
-
     int currentPoint = int.parse(context.watch<Database>().userPoints);
     _pointController = currentPoint;
 
@@ -60,19 +58,19 @@ class _PointShopPageState extends State<PointShopPage> {
         ),
       ),
       Consumer<Database>(
-          builder: (context, db, child) {
-            final currentPoint = int.parse(db.userPoints);
-            _pointController = currentPoint;
-            return Text(
-              "Current Points: $_pointController",
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.left,
-            );
-          },
-        ),
+        builder: (context, db, child) {
+          final currentPoint = int.parse(db.userPoints);
+          _pointController = currentPoint;
+          return Text(
+            "Current Points: $_pointController",
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.left,
+          );
+        },
+      ),
       const Padding(
         padding: EdgeInsets.only(
           bottom: 10,
@@ -113,17 +111,19 @@ class _PointShopPageState extends State<PointShopPage> {
                   runSpacing: 10,
                   children: <Widget>[
                     shopItem(
-                        itemName: "Random New Theme",
-                        itemDescription: "Theme for you",
-                        itemImage: "assets/items/gacha.png",
-                        itemPrice: 2000,
-                        currentPoint: _pointController,),
+                      itemName: "Random New Theme",
+                      itemDescription: "Theme for you",
+                      itemImage: "assets/items/gacha.png",
+                      itemPrice: 2000,
+                      currentPoint: _pointController,
+                    ),
                     shopItem(
-                        itemName: "Cycle feature",
-                        itemDescription: "Theme for you",
-                        itemImage: "assets/items/cycleTask.png",
-                        itemPrice: 100,
-                        currentPoint: _pointController,),
+                      itemName: "Cycle feature",
+                      itemDescription: "Theme for you",
+                      itemImage: "assets/items/cycleTask.png",
+                      itemPrice: 100,
+                      currentPoint: _pointController,
+                    ),
                   ],
                 ),
                 const Padding(padding: EdgeInsets.only(top: 30)),

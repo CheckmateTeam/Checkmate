@@ -10,12 +10,14 @@ class shopItem extends StatefulWidget {
   final int? itemPrice;
   final int currentPoint;
 
-  const shopItem(
-      {super.key,
-      required this.itemName,
-      this.itemDescription,
-      this.itemImage,
-      this.itemPrice, required this.currentPoint,});
+  const shopItem({
+    super.key,
+    required this.itemName,
+    this.itemDescription,
+    this.itemImage,
+    this.itemPrice,
+    required this.currentPoint,
+  });
   @override
   State<shopItem> createState() => _shopItemState();
 }
@@ -37,7 +39,6 @@ class _shopItemState extends State<shopItem> {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () async {
         //point transaction
@@ -60,10 +61,10 @@ class _shopItemState extends State<shopItem> {
                       content: Column(
                         children: [
                           CircleAvatar(
-                            radius: 150,
+                              radius: 150,
                               child: Image.asset(
-                            "assets/theme/Ogtheme.png",
-                          )),
+                                "assets/theme/Ogtheme.png",
+                              )),
                           const Text(
                             "\n OG Theme",
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -110,22 +111,22 @@ class _shopItemState extends State<shopItem> {
                       ]);
                 });
           }
-        } else{
+        } else {
           showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                      title: const Text("Not enough points!"),
-                      content: const Text(
-                          "You do not have enough points to purchase this item!"),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(widget.itemPrice);
-                            },
-                            child: const Text("OK"))
-                      ]);
-                });
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                    title: const Text("Not enough points!"),
+                    content: const Text(
+                        "You do not have enough points to purchase this item!"),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(widget.itemPrice);
+                          },
+                          child: const Text("OK"))
+                    ]);
+              });
         }
       },
       child: Stack(
