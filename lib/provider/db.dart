@@ -69,10 +69,10 @@ class Database extends ChangeNotifier {
     db
         .collection('user_info')
         .where('uid', isEqualTo: user?.uid)
-        .get() 
+        .get()
         .then((QuerySnapshot querySnapshot) async {
       int points = querySnapshot.docs[0]['points'];
-      if (points != null && points >= itemPrice){
+      if (points != null && points >= itemPrice) {
         final newPoints = points - itemPrice;
         await db
             .collection('user_info')

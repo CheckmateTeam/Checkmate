@@ -1,4 +1,5 @@
 import 'package:checkmate/provider/db.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -164,16 +165,37 @@ class _ProfilePageState extends State<ProfilePage> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Consumer<Database>(
-                            builder: (context, db, child) => Text(
-                              "Points: ${db.userPoints}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                          StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('user_info')
+                                .where('uid',
+                                    isEqualTo:
+                                        FirebaseAuth.instance.currentUser?.uid)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                final documents = snapshot.data!.docs;
+                                if (documents.isNotEmpty) {
+                                  final data = documents.first.data();
+                                  final points = data['points'] ?? 0;
+                                  return Text(
+                                    "Points: $points",
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  );
+                                }
+
+                                return const Text("No data");
+                              } else if (snapshot.hasError) {
+                                return Text("Error: ${snapshot.error}");
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            },
+                          )
                         ],
                       )
                     ],
@@ -181,7 +203,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 menuList("Points shop", Icons.shopping_bag_outlined, false,
                     Colors.black87, context, false, onTap: () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const PointShopPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PointShopPage()));
                 }),
                 menuList(
                     "How to points can be use?",

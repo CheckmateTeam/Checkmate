@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// ignore: camel_case_types
 class shopItem extends StatefulWidget {
   final String itemName;
   final String? itemImage;
@@ -22,35 +23,31 @@ class shopItem extends StatefulWidget {
   State<shopItem> createState() => _shopItemState();
 }
 
+// ignore: camel_case_types
 class _shopItemState extends State<shopItem> {
   int _currentPoint = 0;
 
   @override
   void initState() {
     super.initState();
-    _currentPoint = int.parse(context.read<Database>().userPoints);
-    // ((event) {
-    //   var dataSnapshot = event.snapshot;
-    //   setState(() {
-    //     _currentPoint = dataSnapshot.value ?? 0;
-    //   });
-    // });
+    // _currentPoint = widget.currentPoint;
+    final db = Provider.of<Database>(context, listen: false);
+    _currentPoint = int.parse(db.userPoints);
+    // _currentPoint = int.parse(context.read<Database>().userPoints);
+    // _currentPoint = int.parse(context.read<Database>().userPoints);
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        //point transaction
-        // _currentPoint = int.parse(context.watch<Database>().userPoints);
+        final db = Provider.of<Database>(context, listen: false);
         if (widget.itemPrice != null && _currentPoint >= widget.itemPrice!) {
-          context.read<Database>().buyItem(widget.itemPrice!);
-          print(_currentPoint);
-          _currentPoint = _currentPoint - widget.itemPrice!;
-          print(widget.itemName);
-          print(widget.itemPrice);
-          print(_currentPoint);
-          setState(() {});
+          // context.read<Database>().buyItem(widget.itemPrice!);
+          // _currentPoint = _currentPoint - widget.itemPrice!;
+          db.buyItem(widget.itemPrice!);
+          _currentPoint -= widget.itemPrice!;
+
           if (widget.itemName == "Random New Theme") {
             // only for random theme
             showDialog(

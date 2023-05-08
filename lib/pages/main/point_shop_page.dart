@@ -1,4 +1,5 @@
 import 'package:checkmate/provider/db.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -57,18 +58,28 @@ class _PointShopPageState extends State<PointShopPage> {
           textScaleFactor: 0.8,
         ),
       ),
-      Consumer<Database>(
-        builder: (context, db, child) {
-          final currentPoint = int.parse(db.userPoints);
-          _pointController = currentPoint;
-          return Text(
-            "Current Points: $_pointController",
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.left,
-          );
+      StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('user_info')
+            .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+            .snapshots()
+            .map((snapshot) => snapshot.docs[0]['points']),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            int currentPoint = snapshot.data;
+            return Text(
+              "Current Points: $currentPoint",
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.left,
+            );
+          } else if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          } else {
+            return const CircularProgressIndicator();
+          }
         },
       ),
       const Padding(
