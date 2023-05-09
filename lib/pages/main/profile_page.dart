@@ -182,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 menuList("Points shop", Icons.shopping_bag_outlined, false,
-                    Colors.black87, context, false, onTap: () async {
+                    Theme.of(context).secondaryHeaderColor, context, false, onTap: () async {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -192,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     "How to points can be use?",
                     Icons.question_mark_rounded,
                     false,
-                    Colors.black87,
+                    Theme.of(context).secondaryHeaderColor,
                     context,
                     false, onTap: () {
                   showModalBottomSheet<dynamic>(
@@ -201,14 +201,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       builder: (context) => const HowToUsePointSheet());
                 }),
                 menuList("Change theme", Icons.edit_outlined, false,
-                    Colors.black87, context, false, onTap: () {
+                    Theme.of(context).secondaryHeaderColor, context, false, onTap: () {
                   showModalBottomSheet<dynamic>(
                       isScrollControlled: true,
                       context: context,
                       builder: (context) => const ChangeTheme());
                 }),
                 menuList("Dark mode", Icons.dark_mode_outlined, true,
-                    Colors.black87, context, false,
+                    Theme.of(context).secondaryHeaderColor, context, false,
                     onTap: () {}),
                 menuList("Sign out", Icons.logout, false,
                     Theme.of(context).primaryColor, context, false, onTap: () {

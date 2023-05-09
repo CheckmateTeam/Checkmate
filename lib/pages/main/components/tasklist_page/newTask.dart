@@ -41,7 +41,7 @@ class _createTaskState extends State<createTask> {
   String cycle = 'none';
   String dropdownValue = 'Never';
   TextEditingController taskName = TextEditingController();
-  TextEditingController taskDescription = TextEditingController();
+  TextEditingController? taskDescription = TextEditingController();
   TimeOfDay timestart = TimeOfDay.now();
   TimeOfDay timeend = TimeOfDay.now();
   DateTime datestart = DateTime.now();
@@ -316,7 +316,7 @@ class _createTaskState extends State<createTask> {
                       Theme.of(context).primaryColor)),
               onPressed: () async {
                 int notiId = Random().nextInt(10000);
-                if (taskName.text.isEmpty || taskDescription.text.isEmpty) {
+                if (taskName.text.isEmpty) {
                   setState(() {
                     _validate = true;
                   });
@@ -324,7 +324,7 @@ class _createTaskState extends State<createTask> {
                 }
                 context.read<CalendarModel>().addTask(Task(
                     taskName: taskName.text,
-                    taskDesc: taskDescription.text,
+                    taskDesc: taskDescription!.text,
                     startDate: DateTime(datestart.year, datestart.month,
                         datestart.day, timestart.hour, timestart.minute),
                     endDate: DateTime(dateend.year, dateend.month, dateend.day,
@@ -347,7 +347,7 @@ class _createTaskState extends State<createTask> {
                     .updateTask(DateTime.now());
                 NotificationService().scheduledNotification(
                     title: taskName.text,
-                    body: taskDescription.text,
+                    body: taskDescription!.text,
                     month: datestart.month,
                     day: datestart.day,
                     hour: timestart.hour,
