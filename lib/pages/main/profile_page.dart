@@ -1,4 +1,6 @@
+import 'package:checkmate/main.dart';
 import 'package:checkmate/provider/db.dart';
+import 'package:checkmate/provider/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -126,14 +128,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     .hideCurrentSnackBar();
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
-                                                  const SnackBar(
+                                                  SnackBar(
                                                     content: Text(
                                                         "Username changed"),
                                                     behavior: SnackBarBehavior
                                                         .floating,
                                                     backgroundColor:
-                                                        Color.fromRGBO(
-                                                            241, 91, 91, 1),
+                                                        Theme.of(context)
+                                                            .primaryColor,
                                                     duration:
                                                         Duration(seconds: 2),
                                                   ),
@@ -146,9 +148,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         );
                                       });
                                 },
-                                child: const Icon(
+                                child: Icon(
                                   Icons.edit_outlined,
-                                  color: Color.fromARGB(255, 218, 110, 96),
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               )
                             ],
@@ -181,7 +183,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 menuList("Points shop", Icons.shopping_bag_outlined, false,
                     Colors.black87, context, false, onTap: () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const PointShopPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PointShopPage()));
                 }),
                 menuList(
                     "How to points can be use?",
@@ -203,11 +208,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       builder: (context) => const ChangeTheme());
                 }),
                 menuList("Dark mode", Icons.dark_mode_outlined, true,
-                    Colors.black87, context, false, onTap: () {
-                  print("Points shop");
-                }),
+                    Colors.black87, context, false,
+                    onTap: () {}),
                 menuList("Sign out", Icons.logout, false,
-                    Color.fromRGBO(241, 91, 91, 1), context, false, onTap: () {
+                    Theme.of(context).primaryColor, context, false, onTap: () {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -226,6 +230,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 FirebaseAuth.instance.signOut();
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const MainApp()));
                               },
                               child: const Text("Sign out"),
                             ),
@@ -281,10 +289,12 @@ Widget menuList(String title, IconData icon, bool isToggle, Color fontColor,
                     ],
                   ),
                   Switch(
-                      value: false,
-                      onChanged: (value) {},
+                      value: context.watch<ThemeProvider>().isDark,
+                      onChanged: (value) {
+                        context.read<ThemeProvider>().setIsDark(value);
+                      },
                       inactiveTrackColor: Color.fromARGB(255, 255, 255, 255),
-                      activeTrackColor: Color.fromARGB(255, 218, 110, 96),
+                      activeTrackColor: Theme.of(context).primaryColor,
                       activeColor: Color.fromARGB(255, 255, 255, 255)),
                 ],
               ),

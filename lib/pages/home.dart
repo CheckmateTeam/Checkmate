@@ -2,7 +2,9 @@ import 'package:checkmate/pages/main/archive_page.dart';
 import 'package:checkmate/pages/main/notification_page.dart';
 import 'package:checkmate/pages/main/profile_page.dart';
 import 'package:checkmate/pages/main/task_page.dart';
+import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'main/components/tasklist_page/newTask.dart';
 
@@ -51,7 +53,7 @@ class _HomeState extends State<Home> {
                 isScrollControlled: true,
                 builder: (context) => const createTask());
           },
-          backgroundColor: const Color.fromRGBO(241, 91, 91, 1),
+          backgroundColor: Theme.of(context).primaryColor,
           child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
@@ -68,7 +70,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ""),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromRGBO(241, 91, 91, 1),
+        selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
