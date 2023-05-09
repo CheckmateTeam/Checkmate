@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:flutter/services.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../home.dart';
 import 'button.dart';
 import 'dart:async';
@@ -43,6 +43,7 @@ class _GameState extends State<Game>
   static var multiplier = 1.0;
   static var damageDefault = 980.0;
   static var damageBar = damageDefault;
+
   static var damageUser = 30.0;
   static var addedDuration = 1000 * 10;
 
@@ -58,8 +59,6 @@ class _GameState extends State<Game>
 
   var xAxis = 0.0;
   var yAxis = 0.0;
-
-  var earnedCoin = false;
 
   late AudioPlayer hitPlayer;
   late AudioCache hitCache;
@@ -178,18 +177,14 @@ class _GameState extends State<Game>
             (bossIndex + 1 >= bosses.length) ? 1000 * 20 : 1000 * 10;
         bossIndex = (bossIndex + 1 >= bosses.length) ? 0 : ++bossIndex;
         damageBar = bosses[bossIndex].life.toDouble() * multiplier;
-        earnedCoin = true;
+
         onEarnTime.call();
+        print("Next Boss");
         // if (!Utils.isDesktop()) {
         //   coinCache.play(AssetSource('audio/coin.mp3'));
         // }
-        Future.delayed(const Duration(seconds: 1), () {
-          setState(() {
-            earnedCoin = false;
-          });
-        });
       } else {
-        damageBar = damageBar - damageUser;
+        damageBar = damageBar - damageUser * 100;
       }
     });
   }
@@ -229,26 +224,6 @@ class _GameState extends State<Game>
           width: 13,
           height: 13,
         ),
-      );
-    }
-  }
-
-  Widget earnedCoins() {
-    if (earnedCoin) {
-      return Padding(
-        padding: const EdgeInsets.only(left: 5.0),
-        child: Material(
-          color: Colors.transparent,
-          child: Text(
-            "+20",
-            style: Utils.textStyle(10.0, color: Colors.yellow),
-          ),
-        ),
-      );
-    } else {
-      return Container(
-        width: 0.0,
-        height: 0.0,
       );
     }
   }
@@ -421,30 +396,6 @@ class _GameState extends State<Game>
                           style: Utils.textStyle(18.0),
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.all(8.0),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: <Widget>[
-                      //       Text(
-                      //         "COINS : ",
-                      //         style: Utils.textStyle(10.0),
-                      //       ),
-                      //       Padding(
-                      //         padding: const EdgeInsets.only(left: 5.0),
-                      //         child: Text(
-                      //           coins.toString(),
-                      //           style: Utils.textStyle(10.0),
-                      //         ),
-                      //       ),
-                      //       Image.asset(
-                      //         "assets/elements/coin.png",
-                      //         height: 12.2,
-                      //       ),
-                      //       earnedCoins(),
-                      //     ],
-                      //   ),
-                      // )
                     ],
                   ),
                 ),
@@ -471,7 +422,7 @@ class _GameState extends State<Game>
       controller.stop();
     }
 
-    //  controller = null;
+    // controller = null;
     controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: durationBackup! + add!));
     controller.reverse(from: controller.value == 0.0 ? 1.0 : controller.value);
