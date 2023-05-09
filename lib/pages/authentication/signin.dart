@@ -33,10 +33,14 @@ class _SignInState extends State<SignIn> {
       UserCredential user = await _auth.signInWithCredential(credential);
       // ignore: use_build_context_synchronously
       final dbProvider = Provider.of<Database>(context, listen: false);
+      final taskprovider = Provider.of<CalendarModel>(context, listen: false);
       if (user.additionalUserInfo!.isNewUser) {
         dbProvider.addNewUser(user.user!.email!, user.user!.displayName!);
       } else {
         dbProvider.updateLogin();
+
+        taskprovider.clearAll();
+        taskprovider.fetchTask();
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
@@ -159,6 +163,7 @@ class _SignInState extends State<SignIn> {
                                       password: passwordController.text)
                                   .then((value) {
                                 context.read<Database>().updateLogin();
+                                context.read<CalendarModel>().clearAll();
                                 context.read<CalendarModel>().fetchTask();
                               }).catchError((e) => showDialog(
                                       context: context,

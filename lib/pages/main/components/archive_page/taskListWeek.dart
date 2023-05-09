@@ -155,10 +155,11 @@ class _TaskListWeekState extends State<TaskListWeek> {
                                       children: [
                                         Row(
                                           children: [
-                                            const CircleAvatar(
+                                            CircleAvatar(
                                               child: Icon(
                                                   Icons.table_view_sharp,
-                                                  color: Colors.red),
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
                                             ),
                                             const SizedBox(width: 15.0),
                                             Column(
@@ -240,10 +241,13 @@ class _TaskListWeekState extends State<TaskListWeek> {
             int rodIndex,
           ) {
             return BarTooltipItem(
-              rod.toY.round().toString(),
+              rod.toY.round().toString() == "0"
+                  ? ""
+                  : rod.toY.round().toString(),
               const TextStyle(
-                color: Colors.black,
+                color: Color.fromARGB(255, 77, 77, 77),
                 fontWeight: FontWeight.bold,
+                fontSize: 12,
               ),
             );
           },
@@ -486,168 +490,43 @@ class _TaskListWeekState extends State<TaskListWeek> {
 
   LinearGradient get _barsGradient => LinearGradient(
         colors: [
-          Color.fromARGB(255, 235, 75, 0),
-          Color.fromARGB(255, 255, 129, 26),
+          Theme.of(context).primaryColor,
+          Theme.of(context).colorScheme.secondary,
         ],
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
       );
 
   List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: barData[DateTime(
-                        DateTime.now().subtract(Duration(days: 7)).year,
-                        DateTime.now().subtract(Duration(days: 7)).month,
-                        DateTime.now().subtract(Duration(days: 7)).day,
-                      )] ==
-                      null
-                  ? 0
-                  : barData[DateTime(
-                      DateTime.now().subtract(Duration(days: 7)).year,
-                      DateTime.now().subtract(Duration(days: 7)).month,
-                      DateTime.now().subtract(Duration(days: 7)).day,
-                    )]!
-                      .toDouble(),
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: barData[DateTime(
-                        DateTime.now().subtract(Duration(days: 6)).year,
-                        DateTime.now().subtract(Duration(days: 6)).month,
-                        DateTime.now().subtract(Duration(days: 6)).day,
-                      )] ==
-                      null
-                  ? 0
-                  : barData[DateTime(
-                      DateTime.now().subtract(Duration(days: 6)).year,
-                      DateTime.now().subtract(Duration(days: 6)).month,
-                      DateTime.now().subtract(Duration(days: 6)).day,
-                    )]!
-                      .toDouble(),
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: barData[DateTime(
-                        DateTime.now().subtract(Duration(days: 5)).year,
-                        DateTime.now().subtract(Duration(days: 5)).month,
-                        DateTime.now().subtract(Duration(days: 5)).day,
-                      )] ==
-                      null
-                  ? 0
-                  : barData[DateTime(
-                      DateTime.now().subtract(Duration(days: 5)).year,
-                      DateTime.now().subtract(Duration(days: 5)).month,
-                      DateTime.now().subtract(Duration(days: 5)).day,
-                    )]!
-                      .toDouble(),
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: barData[DateTime(
-                        DateTime.now().subtract(Duration(days: 4)).year,
-                        DateTime.now().subtract(Duration(days: 4)).month,
-                        DateTime.now().subtract(Duration(days: 4)).day,
-                      )] ==
-                      null
-                  ? 0
-                  : barData[DateTime(
-                      DateTime.now().subtract(Duration(days: 4)).year,
-                      DateTime.now().subtract(Duration(days: 4)).month,
-                      DateTime.now().subtract(Duration(days: 4)).day,
-                    )]!
-                      .toDouble(),
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: barData[DateTime(
-                        DateTime.now().subtract(Duration(days: 3)).year,
-                        DateTime.now().subtract(Duration(days: 3)).month,
-                        DateTime.now().subtract(Duration(days: 3)).day,
-                      )] ==
-                      null
-                  ? 0
-                  : barData[DateTime(
-                      DateTime.now().subtract(Duration(days: 3)).year,
-                      DateTime.now().subtract(Duration(days: 3)).month,
-                      DateTime.now().subtract(Duration(days: 3)).day,
-                    )]!
-                      .toDouble(),
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: barData[DateTime(
-                        DateTime.now().subtract(Duration(days: 2)).year,
-                        DateTime.now().subtract(Duration(days: 2)).month,
-                        DateTime.now().subtract(Duration(days: 2)).day,
-                      )] ==
-                      null
-                  ? 0
-                  : barData[DateTime(
-                      DateTime.now().subtract(Duration(days: 2)).year,
-                      DateTime.now().subtract(Duration(days: 2)).month,
-                      DateTime.now().subtract(Duration(days: 2)).day,
-                    )]!
-                      .toDouble(),
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: barData[DateTime(
-                        DateTime.now().subtract(Duration(days: 1)).year,
-                        DateTime.now().subtract(Duration(days: 1)).month,
-                        DateTime.now().subtract(Duration(days: 1)).day,
-                      )] ==
-                      null
-                  ? 0
-                  : barData[DateTime(
-                      DateTime.now().subtract(Duration(days: 1)).year,
-                      DateTime.now().subtract(Duration(days: 1)).month,
-                      DateTime.now().subtract(Duration(days: 1)).day,
-                    )]!
-                      .toDouble(),
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
+        for (int i = 0; i < 7; i++)
+          BarChartGroupData(
+            x: i,
+            barRods: [
+              BarChartRodData(
+                toY: barData[DateTime(
+                          DateTime.now().subtract(Duration(days: 7 - i)).year,
+                          DateTime.now().subtract(Duration(days: 7 - i)).month,
+                          DateTime.now().subtract(Duration(days: 7 - i)).day,
+                        )] ==
+                        null
+                    ? 0
+                    : barData[DateTime(
+                        DateTime.now().subtract(Duration(days: 7 - i)).year,
+                        DateTime.now().subtract(Duration(days: 7 - i)).month,
+                        DateTime.now().subtract(Duration(days: 7 - i)).day,
+                      )]!
+                        .toDouble(),
+                gradient: _barsGradient,
+                width: 15,
+                backDrawRodData: BackgroundBarChartRodData(
+                  show: true,
+                  toY: 25,
+                  color: Colors.grey[200],
+                ),
+              ),
+            ],
+            showingTooltipIndicators: [0],
+          ),
       ];
 }
 

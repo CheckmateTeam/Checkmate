@@ -1,4 +1,6 @@
+import 'package:checkmate/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChangeTheme extends StatefulWidget {
   const ChangeTheme({super.key});
@@ -44,6 +46,19 @@ class _ThemeRadioState extends State<ThemeRadio> {
   Widget customRadioButton(Color color1, Color color2, int index) {
     return GestureDetector(
       onTap: () {
+        if (index == 1) {
+          Provider.of<ThemeProvider>(context, listen: false).setIsDark(false);
+          Provider.of<ThemeProvider>(context, listen: false).setColor("Yellow");
+        } else if (index == 2) {
+          Provider.of<ThemeProvider>(context, listen: false).setIsDark(false);
+          Provider.of<ThemeProvider>(context, listen: false).setColor("Purple");
+        } else if (index == 3) {
+          Provider.of<ThemeProvider>(context, listen: false).setIsDark(false);
+          Provider.of<ThemeProvider>(context, listen: false).setColor("Green");
+        } else if (index == 4) {
+          Provider.of<ThemeProvider>(context, listen: false).setIsDark(false);
+          Provider.of<ThemeProvider>(context, listen: false).setColor("Blue");
+        }
         setState(() {
           value = index;
         });
@@ -82,7 +97,7 @@ class _ThemeRadioState extends State<ThemeRadio> {
             const Color.fromARGB(255, 255, 0, 132), 2),
         customRadioButton(Colors.green, Colors.yellow, 3),
         customRadioButton(
-            Colors.blue, const Color.fromARGB(255, 174, 228, 252), 4)
+            Colors.blue, const Color.fromARGB(255, 174, 228, 252), 4),
       ],
     );
   }

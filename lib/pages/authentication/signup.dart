@@ -180,6 +180,9 @@ class _SignUpState extends State<SignUp> {
                                                             passwordController
                                                                 .text);
                                                     context
+                                                        .read<CalendarModel>()
+                                                        .clearAll();
+                                                    context
                                                         .read<Database>()
                                                         .init();
                                                     context
