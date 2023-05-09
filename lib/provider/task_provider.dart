@@ -321,10 +321,10 @@ class CalendarModel extends ChangeNotifier {
 }
 
 Future<DateTime> notiDate(
-    int month, 
-    int day, 
-    int hour, 
-    int minutes, 
+    int nmonth, 
+    int nday, 
+    int nhour, 
+    int nminutes, 
     String deadline) async {
 
 
@@ -344,55 +344,55 @@ Future<DateTime> notiDate(
     
     int x = dropdownItems.indexOf(deadline);
 
-    if(x == 0){minutes += 0;}
+    if(x == 0){nminutes += 0;}
 
     else{
-    if(x == 1){minutes -= 5;}
-    else if(x == 2){minutes -= 10;}
-    else if(x == 3){minutes -= 15;}
-    else if(x == 4){minutes -= 30;}
-    else if(x == 5){hour -= 1;}
-    else if(x == 6){hour -= 2;}
-    else if(x == 7){day -= 1;}
-    else if(x == 8){day -= 2;}
-    else if(x == 9){day -= 7;}
+    if(x == 1){nminutes -= 5;}
+    else if(x == 2){nminutes -= 10;}
+    else if(x == 3){nminutes -= 15;}
+    else if(x == 4){nminutes -= 30;}
+    else if(x == 5){nhour -= 1;}
+    else if(x == 6){nhour -= 2;}
+    else if(x == 7){nday -= 1;}
+    else if(x == 8){nday -= 2;}
+    else if(x == 9){nday -= 7;}
 
-    if(minutes < 0){
-      minutes += 60;
-      hour -= 1;
+    if(nminutes < 0){
+      nminutes += 60;
+      nhour -= 1;
     }
 
-    if(hour < 0){
-      hour += 24;
-      day -= 1;
+    if(nhour < 0){
+      nhour += 24;
+      nday -= 1;
     }
 
-    if(day <= 0){
-      if(month == 2 || month == 4 || month == 6 || month == 8 || month == 9 || month == 11 || month == 1){
-        day += 31;
-        month -= 1;
+    if(nday <= 0){
+      if(nmonth == 2 || nmonth == 4 || nmonth == 6 || nmonth == 8 || nmonth == 9 || nmonth == 11 || nmonth == 1){
+        nday += 31;
+        nmonth -= 1;
       }
-      else if(month == 5 || month == 7 || month == 10 || month == 12){
-        day += 30;
-        month -= 1;
+      else if(nmonth == 5 || nmonth == 7 || nmonth == 10 || nmonth == 12){
+        nday += 30;
+        nmonth -= 1;
       }
       else{
-        day += 28;
-        month -= 1;
+        nday += 28;
+        nmonth -= 1;
       }
     }
     }
-
+  
   
 
-    DateTime _notiDate = DateTime(
+    DateTime notiBF = DateTime(
       DateTime.now().year,
-      month,
-      day,
-      hour,
-      minutes,
+      nmonth,
+      nday,
+      nhour,
+      nminutes,
       );
 
 
-    return _notiDate;
+    return notiBF;
   }
