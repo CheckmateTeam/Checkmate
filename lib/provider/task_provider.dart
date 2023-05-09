@@ -44,6 +44,7 @@ class CalendarModel extends ChangeNotifier {
   get rangeEnd => _rangeEnd;
   get calendarFormat => _calendarFormat;
   get taskStatus => _taskStatus;
+  get clearAll => _clearAll;
 
   CalendarModel() {
     _selectedDay = _focusedDay;
@@ -53,6 +54,12 @@ class CalendarModel extends ChangeNotifier {
           DateTime.now().day,
         )] ??
         [];
+  }
+  void _clearAll() {
+    _taskMap.clear();
+    _taskStatus.clear();
+    _selectedTasks!.clear();
+    notifyListeners();
   }
 
   Future<String> fetchTask() async {
@@ -185,68 +192,55 @@ class CalendarModel extends ChangeNotifier {
   }
 
   void updateDoneTask(Task task) async {
-    await db
+    final QuerySnapshot querySnapshot = await db
         .collection('user_task')
         .where('taskId', isEqualTo: task.taskId)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs[0].reference
-          .update({'isDone': !querySnapshot.docs[0]['isDone']});
-    });
+        .get();
+    querySnapshot.docs[0].reference
+        .update({'isDone': !querySnapshot.docs[0]['isDone']});
     final keyDate = DateTime(
       task.startDate.year,
       task.startDate.month,
       task.startDate.day,
     );
     final key = keyDate;
-    if (task.isDone == true) {
-      int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
-      _taskMap[key]!.remove(task);
-      _taskMap[key]!.insert(
-          prevIndex,
-          Task(
-              taskId: task.taskId,
-              taskName: task.taskName,
-              taskDesc: task.taskDesc,
-              startDate: task.startDate,
-              endDate: task.endDate,
-              cycle: task.cycle,
-              notify: task.notify,
-              isDone: false,
-              notiDate:await notiDate(
-                task.startDate.month,
-                task.startDate.day,
-                task.startDate.hour,
-                task.startDate.minute,
-                task.notify)));
-    } else {
-      int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
-      _taskMap[key]!.remove(task);
-      _taskMap[key]!.insert(
-          prevIndex,
-          Task(
-              taskId: task.taskId,
-              taskName: task.taskName,
-              taskDesc: task.taskDesc,
-              startDate: task.startDate,
-              endDate: task.endDate,
-              cycle: task.cycle,
-              notify: task.notify,
-              isDone: true,
-              notiDate:await notiDate(
-                task.startDate.month,
-                task.startDate.day,
-                task.startDate.hour,
-                task.startDate.minute,
-                task.notify)));
-    }
-    _selectedDay = _focusedDay;
-    _selectedTasks = _taskMap[DateTime(
-          _selectedDay!.year,
-          _selectedDay!.month,
-          _selectedDay!.day,
-        )] ??
-        [];
+
+    int prevIndex = _selectedTasks!.indexWhere((t) => t.taskId == task.taskId);
+    _selectedTasks!.remove(task);
+
+    _selectedTasks!.insert(
+        prevIndex,
+        Task(
+            taskId: task.taskId,
+            taskName: task.taskName,
+            taskDesc: task.taskDesc,
+            startDate: task.startDate,
+            endDate: task.endDate,
+            cycle: task.cycle,
+            notify: task.notify,
+            isDone: !querySnapshot.docs[0]['isDone']));
+    // int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
+    // _taskMap[key]!.remove(task);
+    // _taskMap[key]!.insert(
+    //     prevIndex,
+    //     Task(
+    //         taskId: task.taskId,
+    //         taskName: task.taskName,
+    //         taskDesc: task.taskDesc,
+    //         startDate: task.startDate,
+    //         endDate: task.endDate,
+    //         cycle: task.cycle,
+    //         notify: task.notify,
+    //         isDone: !task.isDone));
+
+    // _selectedDay = _focusedDay;
+    // _selectedTasks = _taskMap[DateTime(
+    //       _selectedDay!.year,
+    //       _selectedDay!.month,
+    //       _selectedDay!.day,
+    //     )] ??
+    //     [];
+
 
     notifyListeners();
   }
