@@ -91,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 builder: (context, db, child) => Text(
                                   db.userName,
                                   style: const TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.center,
@@ -267,7 +267,7 @@ Widget menuList(String title, IconData icon, bool isToggle, Color fontColor,
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
