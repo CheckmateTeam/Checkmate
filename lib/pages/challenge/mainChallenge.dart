@@ -345,6 +345,7 @@ class _GameState extends State<Game>
               ),
             ),
             Align(
+              alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 80.0),
                 child: Image.asset(
@@ -355,9 +356,9 @@ class _GameState extends State<Game>
                   color: tap ? Color(0x80FFFFFF) : null,
                 ),
               ),
-              alignment: Alignment.bottomCenter,
             ),
             Align(
+              alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: EdgeInsets.only(bottom: 50.0),
                 child: Image.asset(
@@ -367,7 +368,6 @@ class _GameState extends State<Game>
                   alignment: Alignment.bottomCenter,
                 ),
               ),
-              alignment: Alignment.bottomCenter,
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: 10.0),
@@ -383,25 +383,25 @@ class _GameState extends State<Game>
                               top: 10, bottom: 20, right: 15),
                           child: Stack(children: <Widget>[
                             FancyButton(
+                              size: 20,
+                              color: Color(0xFFEFF3ED),
                               child: Text(
                                 "      $timerString",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 20,
                                   color: Colors.black87,
                                   fontFamily: "Gameplay",
                                 ),
                               ),
-                              size: 20,
-                              color: Color(0xFFEFF3ED),
                             ),
                             FancyButton(
-                              child: Icon(
+                              size: 20,
+                              color: clockColor,
+                              child: const Icon(
                                 Icons.watch_later,
                                 color: Colors.black54,
                                 size: 20,
                               ),
-                              size: 20,
-                              color: clockColor,
                             ),
                           ]),
                         ),
@@ -409,17 +409,17 @@ class _GameState extends State<Game>
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
-                          bosses[bossIndex].name + "  LV" + level.toString(),
+                          "${bosses[bossIndex].name}  LV$level",
                           style: Utils.textStyle(15.0),
                         ),
                       ),
                       FancyButton(
+                        size: 18,
+                        color: Theme.of(context).colorScheme.primary,
                         child: Text(
                           "HP :  ${damageBar.toInt().toString()}",
                           style: Utils.textStyle(18.0),
                         ),
-                        size: 18,
-                        color: Theme.of(context).colorScheme.primary,
                       ),
                       // Padding(
                       //   padding: const EdgeInsets.all(8.0),
