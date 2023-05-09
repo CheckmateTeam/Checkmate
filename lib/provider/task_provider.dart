@@ -78,6 +78,7 @@ class CalendarModel extends ChangeNotifier {
         cycle: task['cycle'],
         notify: task['notify'],
         notiDate: (task['notiDate'] as Timestamp).toDate(),
+        
       );
       final keyDate = DateTime(
         newTask.startDate.year,
@@ -184,8 +185,8 @@ class CalendarModel extends ChangeNotifier {
       'cycle': task.cycle,
       'notify': task.notify,
       'isDone': task.isDone,
-      'isRead': task.isRead
-      
+      'isRead': task.isRead,
+      'notiDate': task.notiDate
     });
 
     notifyListeners();
@@ -343,8 +344,10 @@ Future<DateTime> notiDate(
     
     int x = dropdownItems.indexOf(deadline);
 
-    if(x == 0){}
-    else if(x == 1){minutes -= 5;}
+    if(x == 0){minutes += 0;}
+
+    else{
+    if(x == 1){minutes -= 5;}
     else if(x == 2){minutes -= 10;}
     else if(x == 3){minutes -= 15;}
     else if(x == 4){minutes -= 30;}
@@ -377,6 +380,7 @@ Future<DateTime> notiDate(
         day += 28;
         month -= 1;
       }
+    }
     }
 
   
