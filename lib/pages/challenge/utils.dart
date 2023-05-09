@@ -2,7 +2,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'powerups.dart';
+
 import 'bosses.dart';
 import 'dart:math';
 
@@ -44,17 +44,6 @@ class Utils {
   static int hexToInt({required String color, double lum = 0.0}) {
     var value = "0xFF${Utils.colorTest(color, lum ?? 0)}";
     return int.parse(value);
-  }
-
-  static List<PowerUps> getPowerUps() {
-    var list = <PowerUps>[];
-    list.add(PowerUps("Master Sword", 2.15, false, 50));
-    list.add(PowerUps("Lengendary Sword", 2.45, false, 180));
-    list.add(PowerUps("Keyblade", 3.75, false, 300));
-    list.add(PowerUps("Lightsaber", 4.95, false, 520));
-    list.add(PowerUps("Buster Sword", 6.15, false, 1700));
-    list.add(PowerUps("Soul Edge", 8.65, false, 2400));
-    return list;
   }
 
   static List<Bosses> getBosses() {

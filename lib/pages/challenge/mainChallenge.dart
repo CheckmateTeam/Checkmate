@@ -8,7 +8,7 @@ import 'button.dart';
 import 'dart:async';
 import 'scroll.dart';
 import 'utils.dart';
-import 'powerups.dart';
+
 import 'route.dart';
 import 'gamepad.dart';
 
@@ -47,7 +47,6 @@ class _GameState extends State<Game>
   static var damageUser = 30.0;
   static var addedDuration = 1000 * 10;
 
-  var list = Utils.getPowerUps();
   var coins = 0;
 
   var bosses = Utils.getBosses();
@@ -65,9 +64,6 @@ class _GameState extends State<Game>
 
   late AudioPlayer coinPlayer;
   late AudioCache coinCache;
-
-  // static AudioCache musicCache = AudioCache(prefix: "audio/");
-  // static AudioPlayer instance;
 
   var musicPlaying = false;
 
@@ -93,15 +89,7 @@ class _GameState extends State<Game>
       duration: Duration(milliseconds: duration),
     );
 
-    // if (!Utils.isDesktop()) {
-    //   initPlayer();
-    //   if (!musicPlaying) {
-    //     musicPlaying = true;
-    //     playMusic();
-    //   }
-    // }
-
-    initClock(add: 0);
+    // initClock(add: 0);
     onEarnTime = () {
       initClock(add: addedDuration);
     };
@@ -134,31 +122,8 @@ class _GameState extends State<Game>
       }
     });
   }
-  // void initPlayer() {
-  //   hitPlayer = AudioPlayer();
-  //   hitCache = AudioCache(fixedPlayer: hitPlayer);
-
-  //   coinPlayer = AudioPlayer();
-  //   coinCache = AudioCache(fixedPlayer: coinPlayer);
-  // }
-
-  // void playMusic() async {
-  //   // musicCache = AudioCache(prefix: "audio/");
-  //   instance = await musicCache.loop("bgmusic.mp3");
-  //   await instance.setVolume(0.5);
-  // }
-
-  // void playGameOver() async {
-  //   // musicCache = AudioCache(prefix: "audio/");
-  //   instance = await musicCache.loop("game_over.mp3");
-  //   await instance.setVolume(0.5);
-  // }
 
   void damage(TapDownDetails? details) {
-    // if (!Utils.isDesktop()) {
-    //   hitPlayer.pause();
-    //   hitCache.play('audio/sword.mp3');
-    // }
     setState(() {
       if (details != null) {
         xAxis = details.globalPosition.dx - 40.0;
@@ -201,16 +166,6 @@ class _GameState extends State<Game>
 
   double height(BuildContext context) {
     return MediaQuery.of(context).size.height;
-  }
-
-  void buyPowerUp(int index) {
-    setState(() {
-      if (coins >= list[index].coins) {
-        coins = coins - list[index].coins;
-        list[index].bought = true;
-        damageUser = damageUser * list[index].multiplier;
-      }
-    });
   }
 
   Widget coinVisibility(bool bought) {
@@ -271,18 +226,6 @@ class _GameState extends State<Game>
     Share.share(
         "Tap Hero: I survive until ${bosses[bossIndex].name} LV$level! Now is your turn!");
   }
-
-  // void switchMusic() {
-  //   if (!Utils.isDesktop()) {
-  //     if (musicPlaying && instance != null) {
-  //       instance.pause();
-  //       musicPlaying = false;
-  //     } else {
-  //       playMusic();
-  //       musicPlaying = true;
-  //     }
-  //   }
-  // }
 
   Widget gameEngine(BuildContext context) {
     return width(context) >= 700
@@ -466,42 +409,8 @@ class _GameState extends State<Game>
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    // if (!Utils.isDesktop()) {
-    //   if (state == AppLifecycleState.inactive && instance != null) {
-    //     if (musicPlaying) {
-    //       instance.stop();
-    //       musicPlaying = false;
-    //     }
-    //   } else if (state == AppLifecycleState.resumed) {
-    //     if (!gameOver) {
-    //       if (!musicPlaying) {
-    //         musicPlaying = true;
-    //         playMusic();
-    //       }
-    //     } else {
-    //       if (!musicPlaying) {
-    //         musicPlaying = true;
-    //         playGameOver();
-    //       }
-    //     }
-    //   }
-    // }
-  }
-
   Widget showGameOver() {
     if (gameOver) {
-      // if (musicPlaying && instance != null) {
-      //   instance.stop();
-      //   musicPlaying = false;
-      // }
-      // if (!musicPlaying) {
-      //   musicPlaying = true;
-      //   playGameOver();
-      // }
       return Stack(
         children: <Widget>[
           Container(
