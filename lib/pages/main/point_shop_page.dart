@@ -79,7 +79,6 @@ class _PointShopPageState extends State<PointShopPage> {
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.left,
-                        textScaleFactor: 0.8,
                       ),
                     ),
                     Consumer<Database>(
@@ -96,6 +95,7 @@ class _PointShopPageState extends State<PointShopPage> {
                     const Text("App Fetures"),
                     const Divider(),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
                         shopItem(
                             itemName: "Random New Theme",
@@ -103,18 +103,20 @@ class _PointShopPageState extends State<PointShopPage> {
                             itemImage: "assets/items/gacha.png"),
                       ],
                     ),
+                    const Padding(padding: EdgeInsets.only(top: 30)),
                     const Text("Challenge Upgrade"),
                     const Divider(),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
                         shopItem(
-                            itemName: "Hit Harder",
-                            itemDescription: "Hit harder in challenges",
-                            ),
+                          itemName: "Hit Harder",
+                          itemDescription: "Hit harder in challenges",
+                        ),
                         shopItem(
-                            itemName: "Za Warudo",
-                            itemDescription: "Add time in challenges",
-                            ),
+                          itemName: "Za Warudo",
+                          itemDescription: "Add time in challenges",
+                        ),
                       ],
                     ),
                   ],
