@@ -352,8 +352,7 @@ class _createTaskState extends State<createTask> {
                     day: datestart.day,
                     hour: timestart.hour,
                     minutes: timestart.minute,
-                    id: notiId, 
-                    deadline: dropdownValue);
+                    id: notiId);
               },
               child: const Text("Create",
                   style: TextStyle(

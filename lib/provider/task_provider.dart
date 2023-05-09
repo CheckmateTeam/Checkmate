@@ -77,7 +77,7 @@ class CalendarModel extends ChangeNotifier {
         endDate: (task['endDate'] as Timestamp).toDate(),
         cycle: task['cycle'],
         notify: task['notify'],
-        notiDate: (task['notiDate'] as Timestamp).toDate(),
+        notiDate: task['notiDate']
       );
       final keyDate = DateTime(
         newTask.startDate.year,
@@ -218,8 +218,7 @@ class CalendarModel extends ChangeNotifier {
             endDate: task.endDate,
             cycle: task.cycle,
             notify: task.notify,
-            isDone: !querySnapshot.docs[0]['isDone'], 
-            notiDate: task.notiDate));
+            isDone: !querySnapshot.docs[0]['isDone']));
     // int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
     // _taskMap[key]!.remove(task);
     // _taskMap[key]!.insert(
