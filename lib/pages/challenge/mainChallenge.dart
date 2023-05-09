@@ -1,9 +1,14 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../provider/db.dart';
 import '../home.dart';
+
 import 'button.dart';
 import 'dart:async';
 import 'scroll.dart';
@@ -44,7 +49,7 @@ class _GameState extends State<Game>
   static var damageDefault = 980.0;
   static var damageBar = damageDefault;
 
-  static var damageUser = 30.0;
+  // static var damageUser = 30.0;
   static var addedDuration = 1000 * 10;
 
   var coins = 0;
@@ -71,7 +76,7 @@ class _GameState extends State<Game>
 
   var gameOver = false;
 
-  Color clockColor = Color(0xFF67AC5B);
+  Color clockColor = const Color(0xFF67AC5B);
 
   var _gamepadConnected = false;
 
@@ -123,35 +128,38 @@ class _GameState extends State<Game>
     });
   }
 
-  void damage(TapDownDetails? details) {
+  void damage(TapDownDetails? details) async {
     setState(() {
       if (details != null) {
         xAxis = details.globalPosition.dx - 40.0;
         yAxis = details.globalPosition.dy - 80.0;
       }
-
       tap = true;
+    });
 
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser?.uid;
+    final userDocRef = db.collection('user_info').doc(user);
+
+    final userDoc = await userDocRef.get();
+    if (userDoc.exists) {
+      final userDamage = userDoc.data()?['UserDamage'] ?? 0;
+      print(userDoc.data());
+
+      // Calculate damage
+      final damageUser = userDamage ?? 0;
       if (damageBar - damageUser <= 0) {
         damageBar = damageBar - damageUser;
-        coins = coins + 20;
-        multiplier =
-            (bossIndex + 1 >= bosses.length) ? multiplier * 1.25 : multiplier;
-        level = (bossIndex + 1 >= bosses.length) ? ++level : level;
-        addedDuration =
-            (bossIndex + 1 >= bosses.length) ? 1000 * 20 : 1000 * 10;
-        bossIndex = (bossIndex + 1 >= bosses.length) ? 0 : ++bossIndex;
-        damageBar = bosses[bossIndex].life.toDouble() * multiplier;
 
         onEarnTime.call();
         print("Next Boss");
-        // if (!Utils.isDesktop()) {
-        //   coinCache.play(AssetSource('audio/coin.mp3'));
-        // }
       } else {
-        damageBar = damageBar - damageUser * 100;
+        damageBar = damageBar - damageUser;
+        print("GotDamage");
       }
-    });
+    } else {
+      print('User document does not exist');
+    }
   }
 
   void hide(TapUpDetails? details) {
@@ -195,7 +203,7 @@ class _GameState extends State<Game>
               child: Material(
                 color: Colors.transparent,
                 child: StrokeText(
-                  "-${damageUser.toInt().toString()}",
+                  "-",
                   fontSize: 14.0,
                   fontFamily: "Gameplay",
                   color: Colors.red,

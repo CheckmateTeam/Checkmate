@@ -102,7 +102,7 @@ class _shopItemState extends State<shopItem> {
                       actions: [
                         TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop(widget.itemPrice);
+                              Navigator.of(context).pop();
                             },
                             child: const Text("OK"))
                       ]);
