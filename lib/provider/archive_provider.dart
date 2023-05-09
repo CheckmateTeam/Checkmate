@@ -200,7 +200,8 @@ class ArchiveProvider extends ChangeNotifier {
           endDate: task['endDate'].toDate(),
           isDone: task['isDone'],
           cycle: task['cycle'],
-          notify: task['notify'],
+          notify: task['notify'], 
+          notiDate: task['notiDate'],
         ));
       }
       if (isSameDay(DateTime.now(), _firstTaskDate)) {
