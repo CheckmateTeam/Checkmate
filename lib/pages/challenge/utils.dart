@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'powerups.dart';
 import 'bosses.dart';
 import 'dart:math';
@@ -114,7 +114,7 @@ class StrokeText extends StatelessWidget {
           text,
           style: TextStyle(
             fontSize: fontSize,
-            fontFamily: fontFamily,
+            fontFamily: GoogleFonts.nunito().fontFamily,
             color: color,
           ),
         ),
@@ -122,7 +122,7 @@ class StrokeText extends StatelessWidget {
           text,
           style: TextStyle(
             fontSize: fontSize,
-            fontFamily: fontFamily,
+            fontFamily: GoogleFonts.nunito().fontFamily,
             foreground: Paint()
               ..strokeWidth = strokeWidth
               ..color = strokeColor

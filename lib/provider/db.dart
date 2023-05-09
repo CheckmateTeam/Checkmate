@@ -45,6 +45,8 @@ class Database extends ChangeNotifier {
       'lastLogin': DateTime.now(),
       'points': 0,
       'cycle': 'none',
+      'BossHp': 500,
+      'UserDamage': 30,
     });
     notifyListeners();
   }
