@@ -5,6 +5,7 @@ import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/pages/main/components/tasklist_page/taskSheet.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class TaskList extends StatefulWidget {
@@ -58,7 +59,8 @@ class _TaskListState extends State<TaskList> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "${data.selectedTasks[index].startDate.hour}:${data.selectedTasks[index].startDate.minute.toString().length == 1 ? "0${data.selectedTasks[index].startDate.minute}" : data.selectedTasks[index].startDate.minute}",
+                                          DateFormat.jm().format(data
+                                              .selectedTasks[index].startDate),
                                           style: const TextStyle(
                                               fontSize: 14, color: Colors.grey),
                                         ),
@@ -68,7 +70,8 @@ class _TaskListState extends State<TaskList> {
                                               fontSize: 27, color: Colors.grey),
                                         ),
                                         Text(
-                                          "${data.selectedTasks[index].endDate.hour}:${data.selectedTasks[index].endDate.minute.toString().length == 1 ? "0${data.selectedTasks[index].endDate.minute}" : data.selectedTasks[index].endDate.minute}",
+                                          DateFormat.jm().format(data
+                                              .selectedTasks[index].endDate),
                                           style: const TextStyle(
                                               fontSize: 14, color: Colors.grey),
                                         ),

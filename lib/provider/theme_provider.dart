@@ -40,7 +40,8 @@ class ThemeProvider extends ChangeNotifier {
             secondary: const Color.fromARGB(255, 247, 201, 0),
           ),
           fontFamily: GoogleFonts.nunito().fontFamily,
-          textTheme: GoogleFonts.nunitoTextTheme())
+          textTheme: Typography.whiteCupertino,
+        )
       : _themeColor == 'Default'
           ? ThemeData(
               useMaterial3: true,
