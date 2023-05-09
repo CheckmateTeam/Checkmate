@@ -56,7 +56,7 @@ class ArchiveProvider extends ChangeNotifier {
           isDone: task['isDone'],
           cycle: task['cycle'],
           notify: task['notify'],
-          notiDate: task['notiDate']
+          notiDate: task['notiDate'].toDate()
         ));
       }
     }
@@ -112,7 +112,7 @@ class ArchiveProvider extends ChangeNotifier {
           isDone: task['isDone'],
           cycle: task['cycle'],
           notify: task['notify'],
-          notiDate: task['notiDate']
+          notiDate: task['notiDate'].toDate()
         ));
       }
     }
@@ -161,7 +161,7 @@ class ArchiveProvider extends ChangeNotifier {
           isDone: task['isDone'],
           cycle: task['cycle'],
           notify: task['notify'],
-          notiDate: task['notiDate']
+          notiDate: task['notiDate'].toDate()
         ));
       }
     }
@@ -201,7 +201,7 @@ class ArchiveProvider extends ChangeNotifier {
           isDone: task['isDone'],
           cycle: task['cycle'],
           notify: task['notify'], 
-          notiDate: task['notiDate'],
+          notiDate: task['notiDate'].toDate(),
         ));
       }
       if (isSameDay(DateTime.now(), _firstTaskDate)) {
