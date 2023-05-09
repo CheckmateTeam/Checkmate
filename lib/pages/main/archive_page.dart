@@ -23,11 +23,11 @@ class _ArchivePageState extends State<ArchivePage> {
       body: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: 25, horizontal: 0),
+            padding: EdgeInsets.only(top: 25, bottom: 5),
             child: Text(
               "Archive",
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 26,
                 fontWeight: FontWeight.w900,
               ),
               textAlign: TextAlign.center,
