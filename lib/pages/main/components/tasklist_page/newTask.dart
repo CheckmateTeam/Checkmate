@@ -108,7 +108,7 @@ class _createTaskState extends State<createTask> {
                             Icon(
                               Icons.calendar_today,
                               size: 18,
-                              color: Colors.primaries[0],
+                              color: Theme.of(context).primaryColor,
                             ),
                             const SizedBox(width: 5),
                             Text(
@@ -116,7 +116,7 @@ class _createTaskState extends State<createTask> {
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.primaries[0])),
+                                    color: Theme.of(context).primaryColor)),
                           ],
                         ),
                       ),
@@ -139,21 +139,8 @@ class _createTaskState extends State<createTask> {
                                 color: Colors.grey[300],
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              child: Text("${timestart.hour}",
-                                  style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            const Text(" : ",
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text("${timestart.minute}",
+                              child: Text(
+                                  "${DateFormat.jm().format(DateTime(0, 0, 0, timestart.hour, timestart.minute))}",
                                   style: const TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold)),
@@ -195,7 +182,7 @@ class _createTaskState extends State<createTask> {
                             Icon(
                               Icons.calendar_today,
                               size: 18,
-                              color: Colors.primaries[0],
+                              color: Theme.of(context).primaryColor,
                             ),
                             const SizedBox(width: 5),
                             Text(
@@ -203,7 +190,7 @@ class _createTaskState extends State<createTask> {
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.primaries[0])),
+                                    color: Theme.of(context).primaryColor)),
                           ],
                         ),
                       ),
@@ -226,21 +213,8 @@ class _createTaskState extends State<createTask> {
                                 color: Colors.grey[300],
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              child: Text("${timeend.hour}",
-                                  style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            const Text(" : ",
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text("${timeend.minute}",
+                              child: Text(
+                                  "${DateFormat.jm().format(DateTime(0, 0, 0, timeend.hour, timeend.minute))}",
                                   style: const TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold)),
@@ -338,8 +312,8 @@ class _createTaskState extends State<createTask> {
               style: ButtonStyle(
                   minimumSize:
                       MaterialStateProperty.all<Size>(const Size(170, 40)),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.redAccent)),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Theme.of(context).primaryColor)),
               onPressed: () async {
                 int notiId = Random().nextInt(10000);
                 if (taskName.text.isEmpty || taskDescription.text.isEmpty) {

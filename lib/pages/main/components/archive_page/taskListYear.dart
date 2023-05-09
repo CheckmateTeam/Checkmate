@@ -1,32 +1,34 @@
+// ignore_for_file: file_names
+
 import 'package:checkmate/provider/archive_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class TaskListMonth extends StatefulWidget {
-  const TaskListMonth({super.key});
+class TaskListYear extends StatefulWidget {
+  const TaskListYear({super.key});
 
   @override
-  State<TaskListMonth> createState() => _TaskListMonthState();
+  State<TaskListYear> createState() => _TaskListYearState();
 }
 
-class _TaskListMonthState extends State<TaskListMonth> {
-  late Map<DateTime, int> barData;
+class _TaskListYearState extends State<TaskListYear> {
+  late Map<String, int> barData;
   late Future<String> _myFuture;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _myFuture =
-        Provider.of<ArchiveProvider>(context, listen: false).fetchMonth();
+        Provider.of<ArchiveProvider>(context, listen: false).fetchYear();
   }
 
+  @override
   Widget build(BuildContext context) {
     final taskList = context.watch<ArchiveProvider>().taskList;
-    barData = context.watch<ArchiveProvider>().taskMap;
+    barData = context.watch<ArchiveProvider>().taskMapYear;
     return FutureBuilder(
       future: _myFuture,
       builder: (context, snapshot) {
@@ -38,31 +40,6 @@ class _TaskListMonthState extends State<TaskListMonth> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 50),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [
-            //       Text(
-            //         taskList.length.toString() + " tasks",
-            //         style: TextStyle(
-            //           fontSize: 14,
-            //           fontWeight: FontWeight.w700,
-            //         ),
-            //       ),
-            //       // Text("01:20:00 hours",
-            //       //     style: TextStyle(
-            //       //       fontSize: 14,
-            //       //       fontWeight: FontWeight.w700,
-            //       //     )),
-            //       Text(barData.length.toString() + " days",
-            //           style: TextStyle(
-            //             fontSize: 14,
-            //             fontWeight: FontWeight.w700,
-            //           ))
-            //     ],
-            //   ),
-            // ),
             const SizedBox(
               height: 20,
             ),
@@ -99,9 +76,13 @@ class _TaskListMonthState extends State<TaskListMonth> {
                         Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: Text(
-                                DateFormat('y').format(DateTime.now()) +
-                                    " " +
-                                    DateFormat('MMMM').format(DateTime.now()),
+                                DateFormat('y').format(DateTime(
+                                      DateTime.now().year - 1,
+                                      DateTime.now().month,
+                                      DateTime.now().day,
+                                    )) +
+                                    " - " +
+                                    DateFormat('y').format(DateTime.now()),
                                 style: TextStyle(
                                   fontSize: 16,
                                 ))),
@@ -241,17 +222,18 @@ class _TaskListMonthState extends State<TaskListMonth> {
 
   Widget getTitles(double value, TitleMeta meta) {
     const style = TextStyle(
-      color: Colors.black,
+      color: Color.fromARGB(255, 44, 44, 44),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 13,
     );
     String text = '';
     int day = value.toInt();
-    if (day % 6 == 0) {
-      text = day.toString();
-    } else {
-      text = '';
-    }
+    text = DateFormat('MMM').format(DateTime(
+      DateTime.now().year,
+      day,
+      DateTime.now().day,
+    ));
+
     return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 4,
@@ -293,19 +275,13 @@ class _TaskListMonthState extends State<TaskListMonth> {
       );
 
   List<BarChartGroupData> get barGroups => [
-        for (int i = 0; i < 31; i++)
+        for (int i = 1; i <= 12; i++)
           BarChartGroupData(
-            x: i + 1,
+            x: i,
             barRods: [
               BarChartRodData(
                 fromY: 0,
-                toY: barData[DateTime(
-                      DateTime.now().year,
-                      DateTime.now().month,
-                      i + 1,
-                    )]
-                        ?.toDouble() ??
-                    0,
+                toY: barData[i.toString()]?.toDouble() ?? 0,
                 gradient: _barsGradient,
                 backDrawRodData: BackgroundBarChartRodData(
                   show: true,

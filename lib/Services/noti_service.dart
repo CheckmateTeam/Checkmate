@@ -3,7 +3,9 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+
 import '../provider/task_provider.dart';
+
 
 
 class NotificationService {
@@ -30,11 +32,9 @@ class NotificationService {
     );
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-    
   }
 
-  tz.TZDateTime _convertTime(int month, int day,int hour, int minutes) {
+  tz.TZDateTime _convertTime(int month, int day, int hour, int minutes) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduleDate = tz.TZDateTime(
       tz.local,
@@ -57,7 +57,6 @@ class NotificationService {
   }
 
 
-  
   scheduledNotification({
     required String title,
     required String body,
@@ -67,59 +66,35 @@ class NotificationService {
     required int minutes,
     required int id,
     required String deadline
-    
+
   }) async {
 
 
     DateTime _notiDate = notiDate(month,day,hour,minutes,deadline) as DateTime;
     
     await FlutterLocalNotificationsPlugin().zonedSchedule(
-      
       id,
       title,
       body,
+
       _convertTime(_notiDate.month,_notiDate.day,_notiDate.hour, _notiDate.minute),
+
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'your channel id',
-          'your channel name',
-          channelDescription: 'your channel description',
-          importance: Importance.max,
-          priority: Priority.high,
-          ticker: 'ticker'
-        ),
-      
+            'your channel id', 'your channel name',
+            channelDescription: 'your channel description',
+            importance: Importance.max,
+            priority: Priority.high,
+            ticker: 'ticker'),
       ),
       androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
       payload: 'It could be anything you pass',
     );
-    
-    
   }
-
-
-  
-  
 
   cancelAll() async => await FlutterLocalNotificationsPlugin().cancelAll();
   cancel(id) async => await FlutterLocalNotificationsPlugin().cancel(id);
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

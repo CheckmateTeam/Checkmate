@@ -2,6 +2,8 @@ import 'package:checkmate/Services/noti_service.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
+
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -82,7 +84,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text("Today",
                             style: TextStyle(
                                 fontSize: 14,
@@ -90,8 +92,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         Text("Mask as all read",
                             style: TextStyle(
                                 fontSize: 14,
-                                color: Color.fromARGB(255, 255, 0, 0))
-                                ),
+                                color: Theme.of(context).primaryColor)),
                       ],
                     ),
 
