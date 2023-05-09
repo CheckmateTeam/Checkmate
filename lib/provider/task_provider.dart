@@ -1,12 +1,10 @@
-import 'dart:collection';
-import 'package:checkmate/Services/noti_service.dart';
+import 'dart:math';
+
 import 'package:checkmate/model/taskModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:uuid/uuid.dart';
 
 final kToday = DateTime.now();
@@ -17,7 +15,7 @@ int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }
 
-int x = 0;
+
 
 class CalendarModel extends ChangeNotifier {
   // User instance
@@ -79,6 +77,7 @@ class CalendarModel extends ChangeNotifier {
         endDate: (task['endDate'] as Timestamp).toDate(),
         cycle: task['cycle'],
         notify: task['notify'],
+        notiDate: task['notiDate']
       );
       final keyDate = DateTime(
         newTask.startDate.year,
@@ -97,6 +96,8 @@ class CalendarModel extends ChangeNotifier {
 
       final taskIdKey = task['taskId'];
       final isDone = task['isDone'];
+      final isRead = task['isRead'];
+      final notiId = task['notiId'];
       _taskStatus[taskIdKey] = isDone;
     }
     _selectedDay = _focusedDay;
@@ -110,6 +111,18 @@ class CalendarModel extends ChangeNotifier {
     notifyListeners();
     return 'success';
   }
+
+
+  Future<String> fetchNotiTask() async{
+    QuerySnapshot querySnapshot = await db
+    .collection('user_task')
+        .where('user_uid', isEqualTo: user?.uid)
+        .where('noti')
+        .orderBy('startDate')
+        .get();
+    return "1";
+  }
+
 
   _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
@@ -156,9 +169,13 @@ class CalendarModel extends ChangeNotifier {
         [];
   }
 
+  
+
+
   Future<void> addTask(Task task) async {
     await db.collection('user_task').add({
       'user_uid': user?.uid,
+      'notiId': Random().nextInt(10000000),
       'taskId': const Uuid().v4().toString(),
       'taskName': task.taskName,
       'taskDesc': task.taskDesc,
@@ -167,6 +184,8 @@ class CalendarModel extends ChangeNotifier {
       'cycle': task.cycle,
       'notify': task.notify,
       'isDone': task.isDone,
+      'isRead': task.isRead
+      
     });
 
     notifyListeners();
@@ -222,6 +241,7 @@ class CalendarModel extends ChangeNotifier {
     //     )] ??
     //     [];
 
+
     notifyListeners();
   }
 
@@ -253,7 +273,6 @@ class CalendarModel extends ChangeNotifier {
         )] ??
         [];
     await Future.delayed(Duration(milliseconds: 100));
-    NotificationService().cancel(task.notiId);
     notifyListeners();
   }
 
@@ -298,3 +317,77 @@ class CalendarModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+Future<DateTime> notiDate(
+    int month, 
+    int day, 
+    int hour, 
+    int minutes, 
+    String deadline) async {
+
+
+    List<String> dropdownItems = [
+    'Never',
+    '5 mins before deadline',
+    '10 mins before deadline',
+    '15 mins before deadline',
+    '30 mins before deadline',
+    '1 hour before deadline',
+    '2 hours before deadline',
+    '1 day before deadline',
+    '2 days before deadline',
+    '1 week before deadline'
+  ];
+      
+    
+    int x = dropdownItems.indexOf(deadline);
+
+    if(x == 0){}
+    else if(x == 1){minutes -= 5;}
+    else if(x == 2){minutes -= 10;}
+    else if(x == 3){minutes -= 15;}
+    else if(x == 4){minutes -= 30;}
+    else if(x == 5){hour -= 1;}
+    else if(x == 6){hour -= 2;}
+    else if(x == 7){day -= 1;}
+    else if(x == 8){day -= 2;}
+    else if(x == 9){day -= 7;}
+
+    if(minutes < 0){
+      minutes += 60;
+      hour -= 1;
+    }
+
+    if(hour < 0){
+      hour += 24;
+      day -= 1;
+    }
+
+    if(day <= 0){
+      if(month == 2 || month == 4 || month == 6 || month == 8 || month == 9 || month == 11 || month == 1){
+        day += 31;
+        month -= 1;
+      }
+      else if(month == 5 || month == 7 || month == 10 || month == 12){
+        day += 30;
+        month -= 1;
+      }
+      else{
+        day += 28;
+        month -= 1;
+      }
+    }
+
+  
+
+    DateTime _notiDate = DateTime(
+      DateTime.now().year,
+      month,
+      day,
+      hour,
+      minutes,
+      );
+
+
+    return _notiDate;
+  }

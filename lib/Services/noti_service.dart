@@ -3,8 +3,17 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+
+import '../provider/task_provider.dart';
+
+
+
 class NotificationService {
   String message = "No message.";
+
+ 
+
+  
 
   static Future<void> initNotification() async {
     _configureLocalTimeZone();
@@ -47,6 +56,7 @@ class NotificationService {
     tz.setLocalLocation(tz.getLocation(timeZone));
   }
 
+
   scheduledNotification({
     required String title,
     required String body,
@@ -55,12 +65,20 @@ class NotificationService {
     required int hour,
     required int minutes,
     required int id,
+    required String deadline
+
   }) async {
+
+
+    DateTime _notiDate = notiDate(month,day,hour,minutes,deadline) as DateTime;
+    
     await FlutterLocalNotificationsPlugin().zonedSchedule(
       id,
       title,
       body,
-      _convertTime(month, day, hour, minutes),
+
+      _convertTime(_notiDate.month,_notiDate.day,_notiDate.hour, _notiDate.minute),
+
       const NotificationDetails(
         android: AndroidNotificationDetails(
             'your channel id', 'your channel name',

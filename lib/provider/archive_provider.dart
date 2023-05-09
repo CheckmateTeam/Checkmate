@@ -56,6 +56,7 @@ class ArchiveProvider extends ChangeNotifier {
           isDone: task['isDone'],
           cycle: task['cycle'],
           notify: task['notify'],
+          notiDate: task['notiDate']
         ));
       }
     }
@@ -111,6 +112,7 @@ class ArchiveProvider extends ChangeNotifier {
           isDone: task['isDone'],
           cycle: task['cycle'],
           notify: task['notify'],
+          notiDate: task['notiDate']
         ));
       }
     }
@@ -159,6 +161,7 @@ class ArchiveProvider extends ChangeNotifier {
           isDone: task['isDone'],
           cycle: task['cycle'],
           notify: task['notify'],
+          notiDate: task['notiDate']
         ));
       }
     }
