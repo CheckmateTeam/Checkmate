@@ -43,6 +43,29 @@ class ThemeRadio extends StatefulWidget {
 
 class _ThemeRadioState extends State<ThemeRadio> {
   int value = 1; //Current theme
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (Provider.of<ThemeProvider>(context, listen: false).themeColor ==
+        "Default") {
+      value = 0;
+    } else if (Provider.of<ThemeProvider>(context, listen: false).themeColor ==
+        "Yellow") {
+      value = 1;
+    } else if (Provider.of<ThemeProvider>(context, listen: false).themeColor ==
+        "Purple") {
+      value = 2;
+    } else if (Provider.of<ThemeProvider>(context, listen: false).themeColor ==
+        "Green") {
+      value = 3;
+    } else if (Provider.of<ThemeProvider>(context, listen: false).themeColor ==
+        "Blue") {
+      value = 4;
+    }
+  }
+
   Widget customRadioButton(Color color1, Color color2, int index) {
     return GestureDetector(
       onTap: () {

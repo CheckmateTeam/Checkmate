@@ -1,9 +1,9 @@
+import 'package:checkmate/Services/noti_service.dart';
 import 'package:checkmate/pages/authentication/signin.dart';
 import 'package:checkmate/pages/home.dart';
 import 'package:checkmate/provider/archive_provider.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
-import 'package:checkmate/services/noti_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';

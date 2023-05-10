@@ -13,9 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-
+import '../../../../Services/noti_service.dart';
 import '../../../../provider/task_provider.dart';
-import '../../../../services/noti_service.dart';
 
 class createTask extends StatefulWidget {
   const createTask({super.key});
@@ -332,12 +331,8 @@ class _createTaskState extends State<createTask> {
                     cycle: cycle,
                     notify: dropdownValue,
                     notiId: notiId,
-                    notiDate:await notiDate(
-                      datestart.month,
-                      datestart.day,
-                      timestart.hour, 
-                      timestart.minute, 
-                      dropdownValue)));
+                    notiDate: await notiDate(datestart.month, datestart.day,
+                        timestart.hour, timestart.minute, dropdownValue)));
 
                 AnimatedSnackBar.material("Success! Your task has created",
                         type: AnimatedSnackBarType.success)
@@ -352,7 +347,7 @@ class _createTaskState extends State<createTask> {
                     day: datestart.day,
                     hour: timestart.hour,
                     minutes: timestart.minute,
-                    id: notiId, 
+                    id: notiId,
                     deadline: dropdownValue);
               },
               child: const Text("Create",
@@ -364,8 +359,4 @@ class _createTaskState extends State<createTask> {
       ),
     );
   }
-
-
-
-  
 }

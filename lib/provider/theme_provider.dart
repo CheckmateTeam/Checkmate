@@ -13,7 +13,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   bool get isDark => storage.getItem('isDark') ?? false;
-
+  String get themeColor => storage.getItem('themeColor') ?? 'Default';
   void setIsDark(bool value) {
     if (value == false) {
       storage.setItem('themeColor', 'Default');
@@ -40,10 +40,10 @@ class ThemeProvider extends ChangeNotifier {
             secondary: const Color.fromARGB(255, 247, 201, 0),
           ),
           fontFamily: GoogleFonts.nunito().fontFamily,
-          textTheme: Typography.whiteCupertino, 
+          textTheme: Typography.whiteCupertino,
           primaryColor: const Color.fromRGBO(241, 91, 91, 1), //adding by boom
           secondaryHeaderColor: Colors.white //adding by boom
-        )
+          )
       : _themeColor == 'Default'
           ? ThemeData(
               useMaterial3: true,
@@ -101,7 +101,8 @@ class ThemeProvider extends ChangeNotifier {
                                   secondary:
                                       const Color.fromARGB(255, 255, 0, 132)),
                               fontFamily: GoogleFonts.nunito().fontFamily,
-                              secondaryHeaderColor: Colors.black, //adding by boom
+                              secondaryHeaderColor:
+                                  Colors.black, //adding by boom
                               textTheme: GoogleFonts.nunitoTextTheme())
                           : ThemeData(
                               useMaterial3: true,
@@ -113,7 +114,8 @@ class ThemeProvider extends ChangeNotifier {
                                     const Color.fromARGB(255, 252, 154, 27),
                               ),
                               fontFamily: GoogleFonts.nunito().fontFamily,
-                              secondaryHeaderColor: Colors.black, //adding by boom
+                              secondaryHeaderColor:
+                                  Colors.black, //adding by boom
                               textTheme: GoogleFonts.nunitoTextTheme());
   void toggleTheme() {
     storage.setItem('isDark', !_isDark);

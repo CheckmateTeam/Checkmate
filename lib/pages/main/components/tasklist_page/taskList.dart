@@ -157,7 +157,9 @@ class _TaskListState extends State<TaskList> {
                                                                   ? TextDecoration
                                                                       .lineThrough
                                                                   : TextDecoration
-                                                                      .none),
+                                                                      .none,
+                                                              color: Colors
+                                                                  .black87),
                                                         ),
                                                         Text(
                                                           data
@@ -179,15 +181,20 @@ class _TaskListState extends State<TaskList> {
                                                                       index]
                                                                   .taskDesc,
                                                           style: TextStyle(
-                                                              fontSize: 16,
-                                                              decoration: data.taskStatus[data
-                                                                      .selectedTasks[
-                                                                          index]
-                                                                      .taskId]
-                                                                  ? TextDecoration
-                                                                      .lineThrough
-                                                                  : TextDecoration
-                                                                      .none),
+                                                            fontSize: 16,
+                                                            decoration: data
+                                                                        .taskStatus[
+                                                                    data
+                                                                        .selectedTasks[
+                                                                            index]
+                                                                        .taskId]
+                                                                ? TextDecoration
+                                                                    .lineThrough
+                                                                : TextDecoration
+                                                                    .none,
+                                                            color:
+                                                                Colors.black54,
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
