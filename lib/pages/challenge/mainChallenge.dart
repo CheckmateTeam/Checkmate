@@ -192,8 +192,8 @@ class _GameState extends State<Game>
   Widget hitBox() {
     if (tap) {
       wayY = Random().nextInt(100);
-      positionX = Random().nextDouble()* 450;
-      positionY = (Random().nextDouble()* 150)+110;
+      positionX = Random().nextDouble() * 450;
+      positionY = (Random().nextDouble() * 150) + 110;
       return Positioned(
         top: yAxis,
         left: xAxis,
@@ -275,8 +275,14 @@ class _GameState extends State<Game>
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: tap
-                    ?  EdgeInsets.only(bottom: positionX, right: wayY%2 == 1 ? positionY : 0 , left: wayY%2 == 1 ? 0 : positionY)
-                    :  EdgeInsets.only(bottom: positionX, right: wayY%2 == 1 ? positionY : 0 , left: wayY%2 == 1 ? 0 : positionY),
+                    ? EdgeInsets.only(
+                        bottom: positionX,
+                        right: wayY % 2 == 1 ? positionY : 0,
+                        left: wayY % 2 == 1 ? 0 : positionY)
+                    : EdgeInsets.only(
+                        bottom: positionX,
+                        right: wayY % 2 == 1 ? positionY : 0,
+                        left: wayY % 2 == 1 ? 0 : positionY),
                 child: Image.asset(
                   bosses[bossIndex].asset,
                   height:
@@ -351,12 +357,15 @@ class _GameState extends State<Game>
                             child: LinearProgressIndicator(
                               value: BossHp.toInt() / 500000,
                               backgroundColor: Color(0xFFEFF3ED),
-                              valueColor: BossHp.toInt() < 500000
-                                  ? AlwaysStoppedAnimation<Color>(Colors.green)
-                                  : BossHp.toInt() < 250000
-                                      ? AlwaysStoppedAnimation<Color>(
-                                          Colors.yellow)
-                                      : AlwaysStoppedAnimation<Color>(
+                              valueColor: BossHp.toInt() >= 250000 &&
+                                      BossHp.toInt() <= 500000
+                                  ? const AlwaysStoppedAnimation<Color>(
+                                      Colors.green)
+                                  : BossHp.toInt() >= 100000 &&
+                                          BossHp.toInt() < 250000
+                                      ? const AlwaysStoppedAnimation<Color>(
+                                          Color.fromARGB(255, 221, 181, 36))
+                                      : const AlwaysStoppedAnimation<Color>(
                                           Colors.red),
                             ),
                           ),
