@@ -55,6 +55,9 @@ class _GameState extends State<Game>
   static var addedDuration = 1000 * 10;
 
   var coins = 0;
+  var positionX = 0.0;
+  var positionY = 0.0;
+  var wayY = 0;
 
   var bosses = Utils.getBosses();
   var bossIndex = 0;
@@ -188,6 +191,9 @@ class _GameState extends State<Game>
 
   Widget hitBox() {
     if (tap) {
+      wayY = Random().nextInt(100);
+      positionX = Random().nextDouble()* 450;
+      positionY = (Random().nextDouble()* 150)+110;
       return Positioned(
         top: yAxis,
         left: xAxis,
@@ -269,8 +275,8 @@ class _GameState extends State<Game>
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: tap
-                    ? const EdgeInsets.only(bottom: 150, right: 200)
-                    : const EdgeInsets.only(bottom: 350, right: 200),
+                    ?  EdgeInsets.only(bottom: positionX, right: wayY%2 == 1 ? positionY : 0 , left: wayY%2 == 1 ? 0 : positionY)
+                    :  EdgeInsets.only(bottom: positionX, right: wayY%2 == 1 ? positionY : 0 , left: wayY%2 == 1 ? 0 : positionY),
                 child: Image.asset(
                   bosses[bossIndex].asset,
                   height:
