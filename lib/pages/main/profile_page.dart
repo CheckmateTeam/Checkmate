@@ -1,4 +1,5 @@
 import 'package:checkmate/main.dart';
+import 'package:checkmate/pages/home.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -140,6 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         Duration(seconds: 2),
                                                   ),
                                                 );
+
                                                 Navigator.of(context).pop();
                                               },
                                               child: const Text("Save"),
@@ -181,8 +183,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
-                menuList("Points shop", Icons.shopping_bag_outlined, false,
-                    Theme.of(context).secondaryHeaderColor, context, false, onTap: () async {
+                menuList(
+                    "Points shop",
+                    Icons.shopping_bag_outlined,
+                    false,
+                    Theme.of(context).secondaryHeaderColor,
+                    context,
+                    false, onTap: () async {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -200,8 +207,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       context: context,
                       builder: (context) => const HowToUsePointSheet());
                 }),
-                menuList("Change theme", Icons.edit_outlined, false,
-                    Theme.of(context).secondaryHeaderColor, context, false, onTap: () {
+                menuList(
+                    "Change theme",
+                    Icons.edit_outlined,
+                    false,
+                    Theme.of(context).secondaryHeaderColor,
+                    context,
+                    false, onTap: () {
                   showModalBottomSheet<dynamic>(
                       isScrollControlled: true,
                       context: context,
@@ -292,6 +304,12 @@ Widget menuList(String title, IconData icon, bool isToggle, Color fontColor,
                       value: context.watch<ThemeProvider>().isDark,
                       onChanged: (value) {
                         context.read<ThemeProvider>().setIsDark(value);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Home(
+                                      sindex: 4,
+                                    )));
                       },
                       inactiveTrackColor: Color.fromARGB(255, 255, 255, 255),
                       activeTrackColor: Theme.of(context).primaryColor,

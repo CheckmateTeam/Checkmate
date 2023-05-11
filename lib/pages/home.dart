@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 import 'main/components/tasklist_page/newTask.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final int sindex;
+  const Home({super.key, required this.sindex});
 
   @override
   State<Home> createState() => _HomeState();
@@ -20,6 +21,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.sindex;
   }
 
   // ignore: constant_identifier_names
