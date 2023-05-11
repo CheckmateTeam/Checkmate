@@ -20,9 +20,7 @@ class Utils {
     String values = "";
     matches.toList()[0].group(1)?.runes.forEach((int rune) {
       var character = String.fromCharCode(rune);
-      if (character != null) {
-        values += character;
-      }
+      values += character;
     });
     if (values.length < 6) {
       values =
@@ -35,28 +33,22 @@ class Utils {
       var string =
           min(max(0, parse! + (parse * lum)), 255).round().toRadixString(16);
 
-      rgb += ("00" + string).substring(string.length);
+      rgb += ("00$string").substring(string.length);
     }
 
     return rgb.toUpperCase();
   }
 
   static int hexToInt({required String color, double lum = 0.0}) {
-    var value = "0xFF${Utils.colorTest(color, lum ?? 0)}";
+    var value = "0xFF${Utils.colorTest(color, lum)}";
     return int.parse(value);
   }
 
   static List<Bosses> getBosses() {
     var list = <Bosses>[];
-    list.add(Bosses("Reaper", 250, "assets/boss/boss.png"));
+    list.add(Bosses("Reaper", 500000, "assets/boss/boss.png"));
     list.add(Bosses("Your EX", 99999, "assets/boss/boss.png"));
-    list.add(Bosses("Tombster", 1120, "assets/boss/boss_three.png"));
-    list.add(Bosses("Glidestone", 2260, "assets/boss/boss_four.png"));
-    list.add(Bosses("Smocka", 2900, "assets/boss/boss_five.png"));
-    list.add(Bosses("Clowntorch", 4100, "assets/boss/boss_six.png"));
-    list.add(Bosses("Marsattack", 5380, "assets/boss/boss_seven.png"));
-    list.add(Bosses("Unknown", 7000, "assets/boss/boss_eight.png"));
-    list.add(Bosses("ExArthur", 10000, "assets/boss/boss_nine.png"));
+
     return list;
   }
 

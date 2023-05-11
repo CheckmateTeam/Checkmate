@@ -8,10 +8,12 @@ class Database extends ChangeNotifier {
   String points = 'fetching...';
   String cycle = 'fetching...';
   int userDamage = 0;
+  int bossHp = 0;
 
   Database() {
     init();
   }
+
   Future<void> init() async {
     await db
         .collection('user_info')
@@ -23,6 +25,7 @@ class Database extends ChangeNotifier {
       points = querySnapshot.docs[0]['points'].toString();
       cycle = querySnapshot.docs[0]['cycle'].toString();
       userDamage = querySnapshot.docs[0]['UserDamage'];
+      bossHp = querySnapshot.docs[0]['BossHp'];
     });
 
     notifyListeners();
@@ -33,11 +36,14 @@ class Database extends ChangeNotifier {
 
   //Firestore instance
   FirebaseFirestore db = FirebaseFirestore.instance;
+
   String get userName => username;
   String get userEmail => email;
   String get userPoints => points;
   String get userCycle => cycle;
   int get userDamageget => userDamage;
+  int get bossHpGet => bossHp;
+
   //DB FUNCTION
   Future<void> addNewUser(String email, String name) async {
     await db.collection('user_info').add({

@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,10 +14,9 @@ import '../home.dart';
 
 import 'button.dart';
 import 'dart:async';
-import 'scroll.dart';
+
 import 'utils.dart';
 
-import 'route.dart';
 import 'gamepad.dart';
 
 class MainChallenge extends StatefulWidget {
@@ -46,8 +48,8 @@ class _GameState extends State<Game>
 
   static String skyAsset() => "assets/background/sky.png";
   static var multiplier = 1.0;
-  static var damageDefault = 980.0;
-  static var damageBar = damageDefault;
+  static var damageDefault = 500000.0;
+  static var BossHp = damageDefault;
 
   // static var damageUser = 30.0;
   static var addedDuration = 1000 * 10;
@@ -89,6 +91,7 @@ class _GameState extends State<Game>
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    Provider.of<Database>(context, listen: false).init();
     controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: duration),
@@ -98,7 +101,7 @@ class _GameState extends State<Game>
     onEarnTime = () {
       initClock(add: addedDuration);
     };
-    damageBar = bosses[bossIndex].life.toDouble() * multiplier;
+    // BossHp = bosses[bossIndex].life.toDouble() * multiplier;
 
     GamePad.isGamePadConnected.then((connected) {
       setState(() {
@@ -136,29 +139,21 @@ class _GameState extends State<Game>
       }
       tap = true;
     });
-
     FirebaseFirestore db = FirebaseFirestore.instance;
-    final user = FirebaseAuth.instance.currentUser?.uid;
-    final userDocRef = db.collection('user_info').doc(user);
 
-    final userDoc = await userDocRef.get();
-    if (userDoc.exists) {
-      final userDamage = userDoc.data()?['UserDamage'] ?? 0;
-      print(userDoc.data());
+    final userDoc = await db
+        .collection('user_info')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    final userDamage = userDoc.docs[0].data()['UserDamage'] ?? 0;
 
-      // Calculate damage
-      final damageUser = userDamage ?? 0;
-      if (damageBar - damageUser <= 0) {
-        damageBar = damageBar - damageUser;
-
-        onEarnTime.call();
-        print("Next Boss");
-      } else {
-        damageBar = damageBar - damageUser;
-        print("GotDamage");
-      }
+    // Calculate damage
+    final damageUser = userDamage ?? 0;
+    if (BossHp - damageUser <= 0) {
+      BossHp = BossHp - damageUser;
+      onEarnTime.call();
     } else {
-      print('User document does not exist');
+      BossHp = BossHp - damageUser;
     }
   }
 
@@ -198,12 +193,12 @@ class _GameState extends State<Game>
         left: xAxis,
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
               child: Material(
                 color: Colors.transparent,
                 child: StrokeText(
-                  "-",
+                  "Hit!",
                   fontSize: 14.0,
                   fontFamily: "Gameplay",
                   color: Colors.red,
@@ -273,7 +268,9 @@ class _GameState extends State<Game>
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 80.0),
+                padding: tap
+                    ? const EdgeInsets.only(bottom: 150, right: 200)
+                    : const EdgeInsets.only(bottom: 350, right: 200),
                 child: Image.asset(
                   bosses[bossIndex].asset,
                   height:
@@ -296,7 +293,7 @@ class _GameState extends State<Game>
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 10.0),
+              margin: const EdgeInsets.symmetric(vertical: 10.0),
               child: SafeArea(
                 child: Align(
                   alignment: Alignment.topCenter,
@@ -312,7 +309,7 @@ class _GameState extends State<Game>
                               size: 20,
                               color: Color(0xFFEFF3ED),
                               child: Text(
-                                "      $timerString",
+                                "     $timerString",
                                 style: const TextStyle(
                                   fontSize: 20,
                                   color: Colors.black87,
@@ -332,20 +329,43 @@ class _GameState extends State<Game>
                           ]),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Text(
-                          "${bosses[bossIndex].name}  LV$level",
-                          style: Utils.textStyle(15.0),
-                        ),
-                      ),
-                      FancyButton(
-                        size: 18,
-                        color: Theme.of(context).colorScheme.primary,
-                        child: Text(
-                          "HP :  ${damageBar.toInt().toString()}",
-                          style: Utils.textStyle(18.0),
-                        ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            bosses[bossIndex].name,
+                            style: const TextStyle(
+                                fontSize: 20,
+                                color: Color(0xFFEFF3ED),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            height: 10,
+                            child: LinearProgressIndicator(
+                              value: BossHp.toInt() / 500000,
+                              backgroundColor: Color(0xFFEFF3ED),
+                              valueColor: BossHp.toInt() < 500000
+                                  ? AlwaysStoppedAnimation<Color>(Colors.green)
+                                  : BossHp.toInt() < 250000
+                                      ? AlwaysStoppedAnimation<Color>(
+                                          Colors.yellow)
+                                      : AlwaysStoppedAnimation<Color>(
+                                          Colors.red),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            child: Text(
+                              "${BossHp.toInt().toString()} / 500000",
+                              style: const TextStyle(
+                                fontSize: 15,
+                                color: Color(0xFFEFF3ED),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ],
                   ),
