@@ -419,15 +419,15 @@ class _GameState extends State<Game>
         Duration duration = controller.duration! * controller.value;
 
         if (duration.inSeconds >= 0 && (duration.inSeconds % 60) > 20) {
-          clockColor = Color(0xFF67AC5B);
+          clockColor = const Color(0xFF67AC5B);
         }
 
         if (duration.inSeconds == 0 && (duration.inSeconds % 60) < 20) {
-          clockColor = Color(0xFFED6337);
+          clockColor = const Color(0xFFED6337);
         }
 
         if (duration.inSeconds == 0 && (duration.inSeconds % 60) < 10) {
-          clockColor = Color(0xFFCA3034);
+          clockColor = const Color(0xFFCA3034);
         }
       });
     });
