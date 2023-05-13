@@ -144,20 +144,21 @@ class _GameState extends State<Game>
       tap = true;
     });
     FirebaseFirestore db = FirebaseFirestore.instance;
-    final bossRef = db.collection('user_info').doc('BossHp');
+
     final userDoc = await db
         .collection('user_info')
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get();
     final userDamage = userDoc.docs[0].data()['UserDamage'] ?? 0;
-
-    // Calculate damage
+    // final bossRef = db.collection('user_info').doc('BossHp');
+    // // Calculate damage
+    // print(bossRef);
     final damageUser = userDamage ?? 0;
     if (BossHp - damageUser <= 0) {
       BossHp = BossHp - damageUser;
     } else {
       BossHp = BossHp - damageUser;
-      await bossRef.update({'BossHp': BossHp});
+      // await userDamage.update({'BossHp': BossHp});
     }
   }
 
