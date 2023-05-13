@@ -99,7 +99,7 @@ class _GameState extends State<Game>
       vsync: this,
       duration: Duration(milliseconds: duration),
     );
-
+    onEarnTime.call(); // add time when game start
     // initClock(add: 0);
     onEarnTime = () {
       initClock(add: addedDuration);
@@ -154,7 +154,6 @@ class _GameState extends State<Game>
     final damageUser = userDamage ?? 0;
     if (BossHp - damageUser <= 0) {
       BossHp = BossHp - damageUser;
-      onEarnTime.call();
     } else {
       BossHp = BossHp - damageUser;
     }
