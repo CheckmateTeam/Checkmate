@@ -99,8 +99,8 @@ class _GameState extends State<Game>
       vsync: this,
       duration: Duration(milliseconds: duration),
     );
-    onEarnTime.call(); // add time when game start
-    // initClock(add: 0);
+    // onEarnTime.call(); // add time when game start
+    initClock(add: 10);
     onEarnTime = () {
       initClock(add: addedDuration);
     };
