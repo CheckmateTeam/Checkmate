@@ -143,7 +143,7 @@ class _GameState extends State<Game>
       tap = true;
     });
     FirebaseFirestore db = FirebaseFirestore.instance;
-
+    final bossRef = db.collection('user_info').doc('BossHp');
     final userDoc = await db
         .collection('user_info')
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
@@ -156,6 +156,7 @@ class _GameState extends State<Game>
       BossHp = BossHp - damageUser;
     } else {
       BossHp = BossHp - damageUser;
+      await bossRef.update({'BossHp': BossHp});
     }
   }
 
