@@ -100,10 +100,11 @@ class _GameState extends State<Game>
       duration: Duration(milliseconds: duration),
     );
     // onEarnTime.call(); // add time when game start
-    initClock(add: 10);
+    // initClock(add: 10);
     onEarnTime = () {
       initClock(add: addedDuration);
     };
+    onEarnTime.call();
     // BossHp = bosses[bossIndex].life.toDouble() * multiplier;
 
     GamePad.isGamePadConnected.then((connected) {
