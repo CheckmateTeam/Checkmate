@@ -14,12 +14,13 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   final NotificationService noti = NotificationService();
-
+  late Future<String> _myFuture;
 
   @override
   void initState() {
-    NotificationService.initNotification();
     super.initState();
+    NotificationService.initNotification();
+    _myFuture = Provider.of<CalendarModel>(context, listen: false).fetchNotiTask();
   }
 
   @override
@@ -77,11 +78,11 @@ class _NotificationPageState extends State<NotificationPage> {
 
 
 
-              child: Padding(
+              child: ListView(
+                
                 padding:
                     const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-                child: Column(
-                  children: [
+                children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -113,8 +114,9 @@ class _NotificationPageState extends State<NotificationPage> {
                         children:
                         [
                           ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: data.selectedTasks.length,
+                              itemCount: data.todayNoti.length,
                               itemBuilder: (context, index) {
                                 return Column(
                                   children: [
@@ -162,12 +164,12 @@ class _NotificationPageState extends State<NotificationPage> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                              data.selectedTasks[index].taskName,
+                                                              data.todayNoti[index].taskName,
                                                               style: const TextStyle(
                                                               fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)
                                                                 
                                                             ) ,
-                                                            Text(data.selectedTasks[index].taskDesc)
+                                                            Text(data.todayNoti[index].taskDesc)
                                                           ],
                                                         ),
                                                       ],
@@ -216,13 +218,10 @@ class _NotificationPageState extends State<NotificationPage> {
                               
 
 
-
-
-
-
-                              ListView.builder(
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: data.selectedTasks.length,
+                              itemCount: data.olderNoti.length,
                               itemBuilder: (context, index) {
                                 return Column(
                                   children: [
@@ -270,12 +269,12 @@ class _NotificationPageState extends State<NotificationPage> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                              data.selectedTasks[index].taskName,
+                                                              data.olderNoti[index].taskName,
                                                               style: const TextStyle(
                                                               fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)
                                                                 
                                                             ) ,
-                                                            Text(data.selectedTasks[index].taskDesc)
+                                                            Text(data.olderNoti[index].taskDesc)
                                                           ],
                                                         ),
                                                       ],
@@ -300,6 +299,10 @@ class _NotificationPageState extends State<NotificationPage> {
                                 );
                               }
                               ),
+
+
+
+                              
                             ]
                           )
 
@@ -315,13 +318,18 @@ class _NotificationPageState extends State<NotificationPage> {
                           
                     )
                     
-                  ],
-                ),
-              ),
+                  
+        ]),
             ),
           ),
         ],
       ),
     );
   }
+  
+  Widget notiList(){
+    return Container();
+  }
 }
+
+

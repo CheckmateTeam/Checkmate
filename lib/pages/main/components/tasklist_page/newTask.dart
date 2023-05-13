@@ -332,7 +332,7 @@ class _createTaskState extends State<createTask> {
                     cycle: cycle,
                     notify: dropdownValue,
                     notiId: notiId,
-                    notiDate:await notiDate(
+                    notiDate:await convert_notiDate(
                       datestart.month,
                       datestart.day,
                       timestart.hour, 
