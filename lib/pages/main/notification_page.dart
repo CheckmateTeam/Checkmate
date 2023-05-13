@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
 
@@ -20,7 +19,8 @@ class _NotificationPageState extends State<NotificationPage> {
   void initState() {
     super.initState();
     NotificationService.initNotification();
-    _myFuture = Provider.of<CalendarModel>(context, listen: false).fetchNotiTask();
+    _myFuture =
+        Provider.of<CalendarModel>(context, listen: false).fetchNotiTask();
   }
 
   @override
@@ -31,7 +31,7 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     final data = context.watch<CalendarModel>();
-    
+
     return Scaffold(
       body: Column(
         children: [
@@ -49,10 +49,6 @@ class _NotificationPageState extends State<NotificationPage> {
               textAlign: TextAlign.center,
             ),
           ),
-
-
-
-
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -74,15 +70,15 @@ class _NotificationPageState extends State<NotificationPage> {
                   ),
                 ],
               ),
-
-
-
-
-              child: ListView(
-                
-                padding:
-                    const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+              child: Column(
                 children: [
+                  SizedBox(height: 20.0), 
+                  Expanded(child:
+                  Container(
+                    child:ListView(
+                  padding:
+                      const EdgeInsets.all(20.0),
+                  children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -96,240 +92,214 @@ class _NotificationPageState extends State<NotificationPage> {
                                 color: Theme.of(context).primaryColor)),
                       ],
                     ),
-
-
-
-
                     Divider(
                       color: Colors.grey.withOpacity(0.6),
                       thickness: 1,
                     ),
-                    
-                    
-                    
-                    
-                    
                     Expanded(
-                      child: Column (
-                        children:
-                        [
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: data.todayNoti.length,
-                              itemBuilder: (context, index) {
-                                return Column(
+                        child: Column(children: [
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: data.todayNoti.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Row(
                                   children: [
-                                    Row(
-                                      children: [          
-
-                                        // Task tile here =>>
-                                        Expanded(
-                                          child: InkWell(
-                                            child: Container(
-                                              padding: const EdgeInsets.symmetric(
-                                                  vertical: 20.0),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        99, 158, 158, 158),
-                                                    spreadRadius: 0,
-                                                    blurRadius: 10,
-                                                    offset: Offset(0,
-                                                        2), // changes position of shadow
-                                                  )
-                                                ],
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              margin:
-                                                  const EdgeInsets.only(left: 10.0,top: 10.0),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(14.0),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                    // Task tile here =>>
+                                    Expanded(
+                                      child: InkWell(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: Color.fromARGB(
+                                                    99, 158, 158, 158),
+                                                spreadRadius: 0,
+                                                blurRadius: 10,
+                                                offset: Offset(0,
+                                                    2), // changes position of shadow
+                                              )
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          margin: const EdgeInsets.only(
+                                              left: 10.0, top: 10.0),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(14.0),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
                                                   children: [
-                                                    Row(
+                                                    const SizedBox(width: 15.0),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
-                                                        const SizedBox(width: 15.0),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              data.todayNoti[index].taskName,
-                                                              style: const TextStyle(
-                                                              fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)
-                                                                
-                                                            ) ,
-                                                            Text(data.todayNoti[index].taskDesc)
-                                                          ],
-                                                        ),
+                                                        Text(
+                                                            data
+                                                                .todayNoti[
+                                                                    index]
+                                                                .taskName,
+                                                            style: const TextStyle(
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700)),
+                                                        Text(data
+                                                            .todayNoti[index]
+                                                            .taskDesc)
                                                       ],
                                                     ),
-                                                    Checkbox(
-                                                      value: true,
-                                                      checkColor:Colors.red,
-                                                      activeColor:Colors.red,
-                                                      onChanged: (bool? value) {
-                                                        value = !value!;
-                                                      },
-                                                    )
                                                   ],
                                                 ),
-                                              ),
+                                                Checkbox(
+                                                  value: true,
+                                                  checkColor: Colors.red,
+                                                  activeColor: Colors.red,
+                                                  onChanged: (bool? value) {
+                                                    value = !value!;
+                                                  },
+                                                )
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ],
-                                );
-                              }
-                              ),
-
-                              const SizedBox(height: 20.0),
-
-
-
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
-                                Text("Older",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Color.fromARGB(132, 0, 0, 0),
-                                  )
-                                )
-                              ]),
-
-
-                              Divider(
-                                color: Colors.grey.withOpacity(0.6),
-                                thickness: 1,
-                              ),
-                              
-
-
-                            ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: data.olderNoti.length,
-                              itemBuilder: (context, index) {
-                                return Column(
+                                ),
+                              ],
+                            );
+                          }),
+                      const SizedBox(height: 20.0),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: const [
+                            Text("Older",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Color.fromARGB(132, 0, 0, 0),
+                                ))
+                          ]),
+                      Divider(
+                        color: Colors.grey.withOpacity(0.6),
+                        thickness: 1,
+                      ),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: data.olderNoti.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Row(
                                   children: [
-                                    Row(
-                                      children: [          
-
-                                        // Task tile here =>>
-                                        Expanded(
-                                          child: InkWell(
-                                            child: Container(
-                                              padding: const EdgeInsets.symmetric(
-                                                  vertical: 20.0),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        99, 158, 158, 158),
-                                                    spreadRadius: 0,
-                                                    blurRadius: 10,
-                                                    offset: Offset(0,
-                                                        2), // changes position of shadow
-                                                  )
-                                                ],
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              margin:
-                                                  const EdgeInsets.only(left: 10.0,top: 10.0),
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(14.0),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                    // Task tile here =>>
+                                    Expanded(
+                                      child: InkWell(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: Color.fromARGB(
+                                                    99, 158, 158, 158),
+                                                spreadRadius: 0,
+                                                blurRadius: 10,
+                                                offset: Offset(0,
+                                                    2), // changes position of shadow
+                                              )
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          margin: const EdgeInsets.only(
+                                              left: 10.0, top: 10.0),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(14.0),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
                                                   children: [
-                                                    Row(
+                                                    const SizedBox(width: 15.0),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
-                                                        const SizedBox(width: 15.0),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              data.olderNoti[index].taskName,
-                                                              style: const TextStyle(
-                                                              fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)
-                                                                
-                                                            ) ,
-                                                            Text(data.olderNoti[index].taskDesc)
-                                                          ],
-                                                        ),
+                                                        Text(
+                                                            data
+                                                                .olderNoti[
+                                                                    index]
+                                                                .taskName,
+                                                            style: const TextStyle(
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700)),
+                                                        Text(data
+                                                            .olderNoti[index]
+                                                            .taskDesc)
                                                       ],
                                                     ),
-                                                    Checkbox(
-                                                      value: true,
-                                                      checkColor:Colors.red,
-                                                      activeColor:Colors.red,
-                                                      onChanged: (bool? value) {
-                                                        value = !value!;
-                                                      },
-                                                    )
                                                   ],
                                                 ),
-                                              ),
+                                                Checkbox(
+                                                  value: true,
+                                                  checkColor: Colors.red,
+                                                  activeColor: Colors.red,
+                                                  onChanged: (bool? value) {
+                                                    value = !value!;
+                                                  },
+                                                )
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ],
-                                );
-                              }
-                              ),
-
-
-
-                              
-                            ]
-                          )
-
-
-
-
-
-
-
-                          
-
-                        
-                          
-                    )
-                    
-                  
-        ]),
+                                ),
+                              ],
+                            );
+                          }),
+                    ]))
+                  ]),
+                  )
+              )
+                  ]
+                  )
             ),
           ),
         ],
       ),
     );
   }
-  
-  Widget notiList(){
+
+  Widget notiList() {
     return Container();
   }
 }
-
-
