@@ -51,7 +51,7 @@ class _TaskListPageState extends State<TaskListPage> {
                 ],
               ),
               child: Column(
-                children: [
+                children: const [
                   BossTile(),
                   SizedBox(height: 20),
                   TaskList(),

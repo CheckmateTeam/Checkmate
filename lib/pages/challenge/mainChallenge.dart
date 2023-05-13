@@ -174,21 +174,6 @@ class _GameState extends State<Game>
     return MediaQuery.of(context).size.height;
   }
 
-  Widget coinVisibility(bool bought) {
-    if (bought) {
-      return Container();
-    } else {
-      return Padding(
-        padding: const EdgeInsets.only(right: 4.0),
-        child: Image.asset(
-          "assets/elements/coin.png",
-          width: 13,
-          height: 13,
-        ),
-      );
-    }
-  }
-
   Widget hitBox() {
     if (tap) {
       wayY = Random().nextInt(100);
@@ -295,7 +280,7 @@ class _GameState extends State<Game>
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.only(bottom: 50.0),
+                padding: const EdgeInsets.only(bottom: 50.0),
                 child: Image.asset(
                   hero(),
                   height: width(context) / 6 < 160 ? width(context) / 6 : 160,
@@ -315,13 +300,13 @@ class _GameState extends State<Game>
                         alignment: Alignment.topRight,
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              top: 10, bottom: 20, right: 15),
+                              top: 10, bottom: 20, right: 160),
                           child: Stack(children: <Widget>[
                             FancyButton(
                               size: 20,
-                              color: Color(0xFFEFF3ED),
+                              color: const Color(0xFFEFF3ED),
                               child: Text(
-                                "     $timerString",
+                                timerString,
                                 style: const TextStyle(
                                   fontSize: 20,
                                   color: Colors.black87,
@@ -329,15 +314,15 @@ class _GameState extends State<Game>
                                 ),
                               ),
                             ),
-                            FancyButton(
-                              size: 20,
-                              color: clockColor,
-                              child: const Icon(
-                                Icons.watch_later,
-                                color: Colors.black54,
-                                size: 20,
-                              ),
-                            ),
+                            // FancyButton(
+                            //   size: 20,
+                            //   color: clockColor,
+                            //   child: const Icon(
+                            //     Icons.watch_later,
+                            //     color: Colors.black54,
+                            //     size: 20,
+                            //   ),
+                            // ),
                           ]),
                         ),
                       ),

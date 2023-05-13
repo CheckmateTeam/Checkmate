@@ -1,5 +1,8 @@
 import 'package:checkmate/pages/challenge/mainChallenge.dart';
+import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -179,25 +182,69 @@ class BossTile extends StatelessWidget {
             const Image(image: AssetImage("assets/boss/boss.png")),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text("Current boss",
-                    style: TextStyle(fontSize: 14, color: Colors.grey)),
-                Text("Reaper",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold)),
-                SizedBox(
-                  width: 100,
-                  child: LinearProgressIndicator(
-                    value: 0.5,
-                    backgroundColor: Colors.grey,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                  ),
+              children: [
+                const Text(
+                  "Current boss",
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
-                Text("250/300")
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('user_info')
+                      .where('uid',
+                          isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const CircularProgressIndicator();
+                    }
+                    final bossName = "Reaper";
+                    final progressValue =
+                        snapshot.data!.docs.first.data()['BossHp'] as int? ?? 0;
+                    final maxProgressValue = 500000;
+                    final progressPercent = progressValue / maxProgressValue;
+                    return Column(
+                      children: [
+                        Text(
+                          bossName,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: LinearProgressIndicator(
+                            value: progressPercent,
+                            backgroundColor: Colors.grey,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.red),
+                          ),
+                        ),
+                        Text("$progressValue/$maxProgressValue"),
+                      ],
+                    );
+                  },
+                ),
               ],
             ),
+
+            //     Text("Reaper",
+            //         style: TextStyle(
+            //             fontSize: 20,
+            //             color: Colors.black,
+            //             fontWeight: FontWeight.bold)),
+            //     SizedBox(
+            //       width: 100,
+            //       child: LinearProgressIndicator(
+            //         value: 0.5,
+            //         backgroundColor: Colors.grey,
+            //         valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+            //       ),
+            //     ),
+            //     Text("250/300")
+            //   ],
+            // ),
             IconButton(
                 style: ButtonStyle(
                   backgroundColor:
