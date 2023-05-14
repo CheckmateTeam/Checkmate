@@ -147,13 +147,6 @@ class _GameState extends State<Game>
         .get();
     final userDamage = userDoc.docs[0].data()['UserDamage'] ?? 0;
     final damageUser = userDamage ?? 0;
-
-    // final bossDoc = await db
-    //     .collection('boss_info')
-    //     .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-    //     .get();
-    // BossHp = userDoc.docs[0].data()['BossHp'] ?? 0;
-
     if (BossHp - damageUser <= 0) {
       BossHp = BossHp - damageUser;
     } else {
