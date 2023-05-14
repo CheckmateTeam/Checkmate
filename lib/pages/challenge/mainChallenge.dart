@@ -49,7 +49,7 @@ class _GameState extends State<Game>
   static String skyAsset() => "assets/background/sky.png";
   // static var damageDefault = 500000.0;
   // static var BossHp = damageDefault;
-  static var addedDuration = 1000 * 50;
+  static var addedDuration = 1000 * 20;
 
   var coins = 0;
   var positionX = 0.0;
@@ -376,10 +376,10 @@ class _GameState extends State<Game>
                                   );
                                 }
                                 final database = context.watch<Database>();
-                                final bossHp = database.bossHp;
+                                final bossHp = snapshot.data;
 
                                 return Text(
-                                  "${bossHp.toInt().toString()} / 500000",
+                                  "${snapshot.data!.docs.first.data()['BossHp']} / 500000",
                                   style: const TextStyle(
                                     fontSize: 15,
                                     color: Color(0xFFEFF3ED),
