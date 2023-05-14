@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:checkmate/pages/main/task_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -150,12 +151,13 @@ class _GameState extends State<Game>
     querySnapshot.docs.forEach((doc) async {
       if (doc.data()['BossHp'] - damageUser <= 0) {
         // await doc.reference.update({'bossHp': 0});
-        await doc.reference
-            .update({'BossHp': doc.data()['BossHp'] - damageUser});
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const TaskListPage()));
+        // await doc.reference
+        //     .update({'BossHp': doc.data()['BossHp'] - damageUser});
       } else {
         await doc.reference
             .update({'BossHp': doc.data()['BossHp'] - damageUser});
-        print(doc.data()['BossHp'] - damageUser);
       }
     });
   }
