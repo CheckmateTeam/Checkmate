@@ -47,11 +47,8 @@ class _GameState extends State<Game>
   static const MethodChannel _channel = const MethodChannel('gamepad');
 
   static String skyAsset() => "assets/background/sky.png";
-  static var multiplier = 1.0;
   static var damageDefault = 500000.0;
   static var BossHp = damageDefault;
-
-  // static var damageUser = 30.0;
   static var addedDuration = 1000 * 10;
 
   var coins = 0;
@@ -105,7 +102,6 @@ class _GameState extends State<Game>
       initClock(add: addedDuration);
     };
     onEarnTime.call();
-    // BossHp = bosses[bossIndex].life.toDouble() * multiplier;
 
     GamePad.isGamePadConnected.then((connected) {
       setState(() {
@@ -150,15 +146,18 @@ class _GameState extends State<Game>
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get();
     final userDamage = userDoc.docs[0].data()['UserDamage'] ?? 0;
-    // final bossRef = db.collection('user_info').doc('BossHp');
-    // // Calculate damage
-    // print(bossRef);
     final damageUser = userDamage ?? 0;
+
+    final bossDoc = await db
+        .collection('boss_info')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    BossHp = userDoc.docs[0].data()['BossHp'] ?? 0;
+
     if (BossHp - damageUser <= 0) {
       BossHp = BossHp - damageUser;
     } else {
       BossHp = BossHp - damageUser;
-      // await userDamage.update({'BossHp': BossHp});
     }
   }
 
@@ -316,15 +315,6 @@ class _GameState extends State<Game>
                                 ),
                               ),
                             ),
-                            // FancyButton(
-                            //   size: 20,
-                            //   color: clockColor,
-                            //   child: const Icon(
-                            //     Icons.watch_later,
-                            //     color: Colors.black54,
-                            //     size: 20,
-                            //   ),
-                            // ),
                           ]),
                         ),
                       ),
