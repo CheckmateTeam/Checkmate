@@ -325,30 +325,67 @@ class _GameState extends State<Game>
                           SizedBox(
                             width: 100,
                             height: 10,
-                            child: LinearProgressIndicator(
-                              value: BossHp.toInt() / 500000,
-                              backgroundColor: Color(0xFFEFF3ED),
-                              valueColor: BossHp.toInt() >= 250000 &&
-                                      BossHp.toInt() <= 500000
-                                  ? const AlwaysStoppedAnimation<Color>(
-                                      Colors.green)
-                                  : BossHp.toInt() >= 100000 &&
-                                          BossHp.toInt() < 250000
+                            child: StreamBuilder<DocumentSnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('user_info')
+                                  .doc(FirebaseAuth.instance.currentUser?.uid)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const LinearProgressIndicator(
+                                    backgroundColor: Color(0xFFEFF3ED),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.grey),
+                                  );
+                                }
+                                final database = context.watch<Database>();
+                                final bossHp = database.bossHp;
+
+                                return LinearProgressIndicator(
+                                  value: bossHp.toInt() / 500000,
+                                  backgroundColor: Color(0xFFEFF3ED),
+                                  valueColor: bossHp >= 250000 &&
+                                          bossHp <= 500000
                                       ? const AlwaysStoppedAnimation<Color>(
-                                          Color.fromARGB(255, 221, 181, 36))
-                                      : const AlwaysStoppedAnimation<Color>(
-                                          Colors.red),
+                                          Colors.green)
+                                      : bossHp >= 100000 && bossHp < 250000
+                                          ? const AlwaysStoppedAnimation<Color>(
+                                              Color.fromARGB(255, 221, 181, 36))
+                                          : const AlwaysStoppedAnimation<Color>(
+                                              Colors.red),
+                                );
+                              },
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
-                            child: Text(
-                              "${BossHp.toInt().toString()} / 500000",
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: Color(0xFFEFF3ED),
-                              ),
+                            child: StreamBuilder<DocumentSnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('user_info')
+                                  .doc(FirebaseAuth.instance.currentUser?.uid)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Text(
+                                    "Loading...",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Color(0xFFEFF3ED),
+                                    ),
+                                  );
+                                }
+                                final database = context.watch<Database>();
+                                final bossHp = database.bossHp;
+
+                                return Text(
+                                  "${bossHp.toInt().toString()} / 500000",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xFFEFF3ED),
+                                  ),
+                                );
+                              },
                             ),
                           )
                         ],
