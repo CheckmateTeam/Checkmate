@@ -336,8 +336,9 @@ class _GameState extends State<Game>
                                         Colors.grey),
                                   );
                                 }
-                                final database = context.watch<Database>();
-                                final bossHp = database.bossHp;
+                                final bossHp = snapshot.data!.docs.first
+                                        .data()['BossHp'] as int? ??
+                                    0;
 
                                 return LinearProgressIndicator(
                                   value: bossHp.toInt() / 500000,
@@ -375,11 +376,12 @@ class _GameState extends State<Game>
                                     ),
                                   );
                                 }
-                                final database = context.watch<Database>();
-                                final bossHp = snapshot.data;
+                                final bossHp = snapshot.data!.docs.first
+                                        .data()['BossHp'] as int? ??
+                                    0;
 
                                 return Text(
-                                  "${snapshot.data!.docs.first.data()['BossHp']} / 500000",
+                                  "$bossHp / 500000",
                                   style: const TextStyle(
                                     fontSize: 15,
                                     color: Color(0xFFEFF3ED),
