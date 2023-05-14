@@ -148,8 +148,10 @@ class _GameState extends State<Game>
 
     querySnapshot.docs.forEach((doc) async {
       if (doc.data()['BossHp'] - damageUser <= 0) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const TaskListPage()));
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => const TaskListPage()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const Home()));
         await doc.reference.update({'BossHp': 0});
       } else {
         await doc.reference
@@ -254,27 +256,6 @@ class _GameState extends State<Game>
                 fit: BoxFit.cover,
               ),
             ),
-            // Align(
-            //   alignment: Alignment.bottomCenter,
-            //   child: Padding(
-            //     padding: tap
-            //         ? EdgeInsets.only(
-            //             bottom: positionX,
-            //             right: wayY % 2 == 1 ? positionY : 0,
-            //             left: wayY % 2 == 1 ? 0 : positionY)
-            //         : EdgeInsets.only(
-            //             bottom: positionX,
-            //             right: wayY % 2 == 1 ? positionY : 0,
-            //             left: wayY % 2 == 1 ? 0 : positionY),
-            //     child: Image.asset(
-            //       bosses[bossIndex].asset,
-            //       height:
-            //           width(context) / 2.5 < 380 ? width(context) / 2.5 : 380,
-            //       fit: BoxFit.fill,
-            //       color: tap ? Color(0x80FFFFFF) : null,
-            //     ),
-            //   ),
-            // ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
