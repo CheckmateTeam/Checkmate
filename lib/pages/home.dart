@@ -2,6 +2,7 @@ import 'package:checkmate/pages/main/archive_page.dart';
 import 'package:checkmate/pages/main/notification_page.dart';
 import 'package:checkmate/pages/main/profile_page.dart';
 import 'package:checkmate/pages/main/task_page.dart';
+import 'package:checkmate/pages/tutorial/tutorial_page.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,9 +29,7 @@ class _HomeState extends State<Home> {
   static const List<Widget> screen_index = <Widget>[
     TaskListPage(),
     ArchivePage(),
-    Text(
-      'Add todo',
-    ),
+    TaskListPage(),
     NotificationPage(),
     ProfilePage()
   ];
