@@ -142,13 +142,22 @@ class _GameState extends State<Game>
 
     final userDamage = database.userDamage;
     final damageUser = userDamage ?? 0;
-    if (database.bossHp - damageUser <= 0) {
-      // database.bossHp = 0;
-      database.bossHp = database.bossHp - damageUser;
-    } else {
-      database.bossHp = database.bossHp - damageUser;
-      print(database.bossHp);
-    }
+    final userCollection = FirebaseFirestore.instance.collection('user_info');
+    final querySnapshot = await userCollection
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get();
+
+    querySnapshot.docs.forEach((doc) async {
+      if (doc.data()['BossHp'] - damageUser <= 0) {
+        // await doc.reference.update({'bossHp': 0});
+        await doc.reference
+            .update({'BossHp': doc.data()['BossHp'] - damageUser});
+      } else {
+        await doc.reference
+            .update({'BossHp': doc.data()['BossHp'] - damageUser});
+        print(doc.data()['BossHp'] - damageUser);
+      }
+    });
   }
 
   void hide(TapUpDetails? details) {
