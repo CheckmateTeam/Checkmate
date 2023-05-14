@@ -45,11 +45,9 @@ class _GameState extends State<Game>
   int duration = 1000 * 30;
   int? durationBackup;
   final Database database = Database();
-  static const MethodChannel _channel = const MethodChannel('gamepad');
-
+  static const MethodChannel _channel = MethodChannel('gamepad');
+  final GlobalKey _bossKey = GlobalKey();
   static String skyAsset() => "assets/background/sky.png";
-  // static var damageDefault = 500000.0;
-  // static var BossHp = damageDefault;
   static var addedDuration = 1000 * 20;
 
   var coins = 0;
@@ -153,8 +151,6 @@ class _GameState extends State<Game>
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const TaskListPage()));
         await doc.reference.update({'BossHp': 0});
-        // await doc.reference
-        //     .update({'BossHp': doc.data()['BossHp'] - damageUser});
       } else {
         await doc.reference
             .update({'BossHp': doc.data()['BossHp'] - damageUser});
@@ -187,12 +183,12 @@ class _GameState extends State<Game>
         child: Column(
           children: <Widget>[
             const Padding(
-              padding: EdgeInsets.only(bottom: 20.0),
+              padding: EdgeInsets.only(bottom: 15.0),
               child: Material(
                 color: Colors.transparent,
                 child: StrokeText(
                   "Hit!",
-                  fontSize: 14.0,
+                  fontSize: 10.0,
                   fontFamily: "Gameplay",
                   color: Colors.red,
                   strokeColor: Colors.white,
@@ -258,27 +254,27 @@ class _GameState extends State<Game>
                 fit: BoxFit.cover,
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: tap
-                    ? EdgeInsets.only(
-                        bottom: positionX,
-                        right: wayY % 2 == 1 ? positionY : 0,
-                        left: wayY % 2 == 1 ? 0 : positionY)
-                    : EdgeInsets.only(
-                        bottom: positionX,
-                        right: wayY % 2 == 1 ? positionY : 0,
-                        left: wayY % 2 == 1 ? 0 : positionY),
-                child: Image.asset(
-                  bosses[bossIndex].asset,
-                  height:
-                      width(context) / 2.5 < 380 ? width(context) / 2.5 : 380,
-                  fit: BoxFit.fill,
-                  color: tap ? Color(0x80FFFFFF) : null,
-                ),
-              ),
-            ),
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: Padding(
+            //     padding: tap
+            //         ? EdgeInsets.only(
+            //             bottom: positionX,
+            //             right: wayY % 2 == 1 ? positionY : 0,
+            //             left: wayY % 2 == 1 ? 0 : positionY)
+            //         : EdgeInsets.only(
+            //             bottom: positionX,
+            //             right: wayY % 2 == 1 ? positionY : 0,
+            //             left: wayY % 2 == 1 ? 0 : positionY),
+            //     child: Image.asset(
+            //       bosses[bossIndex].asset,
+            //       height:
+            //           width(context) / 2.5 < 380 ? width(context) / 2.5 : 380,
+            //       fit: BoxFit.fill,
+            //       color: tap ? Color(0x80FFFFFF) : null,
+            //     ),
+            //   ),
+            // ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
@@ -412,6 +408,37 @@ class _GameState extends State<Game>
               onTapDown: (TapDownDetails details) => damage(details),
               onTapUp: (TapUpDetails details) => hide(null),
               onTapCancel: () => hide(null),
+              onTap: () {
+                setState(() {
+                  tap = true;
+                });
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  setState(() {
+                    tap = false;
+                  });
+                });
+              },
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: tap
+                      ? EdgeInsets.only(
+                          bottom: positionX,
+                          right: wayY % 2 == 1 ? positionY : 0,
+                          left: wayY % 2 == 1 ? 0 : positionY)
+                      : EdgeInsets.only(
+                          bottom: positionX,
+                          right: wayY % 2 == 1 ? positionY : 0,
+                          left: wayY % 2 == 1 ? 0 : positionY),
+                  child: Image.asset(
+                    bosses[bossIndex].asset,
+                    height:
+                        width(context) / 2.5 < 380 ? width(context) / 2.5 : 380,
+                    fit: BoxFit.fill,
+                    color: tap ? const Color(0x80FFFFFF) : null,
+                  ),
+                ),
+              ),
             ),
             _gamepadConnected ? Container() : hitBox(),
           ],
