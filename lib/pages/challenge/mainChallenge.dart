@@ -148,16 +148,17 @@ class _GameState extends State<Game>
     final userDamage = userDoc.docs[0].data()['UserDamage'] ?? 0;
     final damageUser = userDamage ?? 0;
 
-    final bossDoc = await db
-        .collection('boss_info')
-        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .get();
-    BossHp = userDoc.docs[0].data()['BossHp'] ?? 0;
+    // final bossDoc = await db
+    //     .collection('boss_info')
+    //     .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+    //     .get();
+    // BossHp = userDoc.docs[0].data()['BossHp'] ?? 0;
 
     if (BossHp - damageUser <= 0) {
       BossHp = BossHp - damageUser;
     } else {
       BossHp = BossHp - damageUser;
+      print(BossHp);
     }
   }
 
@@ -419,12 +420,6 @@ class _GameState extends State<Game>
 
   @override
   void dispose() {
-    // if (!Utils.isDesktop()) {
-    //   if (musicPlaying && instance != null) {
-    //     instance.stop();
-    //     musicPlaying = false;
-    //   }
-    // }
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
