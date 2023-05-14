@@ -43,13 +43,13 @@ class _GameState extends State<Game>
   late AnimationController controller;
   int duration = 1000 * 30;
   int? durationBackup;
-
+  final Database database = Database();
   static const MethodChannel _channel = const MethodChannel('gamepad');
 
   static String skyAsset() => "assets/background/sky.png";
-  static var damageDefault = 500000.0;
-  static var BossHp = damageDefault;
-  static var addedDuration = 1000 * 10;
+  // static var damageDefault = 500000.0;
+  // static var BossHp = damageDefault;
+  static var addedDuration = 1000 * 50;
 
   var coins = 0;
   var positionX = 0.0;
@@ -139,19 +139,15 @@ class _GameState extends State<Game>
       }
       tap = true;
     });
-    FirebaseFirestore db = FirebaseFirestore.instance;
 
-    final userDoc = await db
-        .collection('user_info')
-        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .get();
-    final userDamage = userDoc.docs[0].data()['UserDamage'] ?? 0;
+    final userDamage = database.userDamage;
     final damageUser = userDamage ?? 0;
-    if (BossHp - damageUser <= 0) {
-      BossHp = BossHp - damageUser;
+    if (database.bossHp - damageUser <= 0) {
+      // database.bossHp = 0;
+      database.bossHp = database.bossHp - damageUser;
     } else {
-      BossHp = BossHp - damageUser;
-      print(BossHp);
+      database.bossHp = database.bossHp - damageUser;
+      print(database.bossHp);
     }
   }
 
@@ -325,10 +321,12 @@ class _GameState extends State<Game>
                           SizedBox(
                             width: 100,
                             height: 10,
-                            child: StreamBuilder<DocumentSnapshot>(
+                            child: StreamBuilder(
                               stream: FirebaseFirestore.instance
                                   .collection('user_info')
-                                  .doc(FirebaseAuth.instance.currentUser?.uid)
+                                  .where('uid',
+                                      isEqualTo: FirebaseAuth
+                                          .instance.currentUser?.uid)
                                   .snapshots(),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
@@ -360,10 +358,12 @@ class _GameState extends State<Game>
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
-                            child: StreamBuilder<DocumentSnapshot>(
+                            child: StreamBuilder(
                               stream: FirebaseFirestore.instance
                                   .collection('user_info')
-                                  .doc(FirebaseAuth.instance.currentUser?.uid)
+                                  .where('uid',
+                                      isEqualTo: FirebaseAuth
+                                          .instance.currentUser?.uid)
                                   .snapshots(),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
