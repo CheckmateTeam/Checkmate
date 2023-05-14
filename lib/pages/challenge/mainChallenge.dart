@@ -150,9 +150,9 @@ class _GameState extends State<Game>
 
     querySnapshot.docs.forEach((doc) async {
       if (doc.data()['BossHp'] - damageUser <= 0) {
-        // await doc.reference.update({'bossHp': 0});
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const TaskListPage()));
+        await doc.reference.update({'BossHp': 0});
         // await doc.reference
         //     .update({'BossHp': doc.data()['BossHp'] - damageUser});
       } else {
