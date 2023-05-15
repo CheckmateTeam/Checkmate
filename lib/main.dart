@@ -71,7 +71,9 @@ class _MainAppState extends State<MainApp> {
                           body: SignIn(),
                         );
                       } else {
-                        return const Home();
+                        return const Home(
+                          sindex: 0,
+                        );
                       }
                     } else {
                       return const CircularProgressIndicator();

@@ -1,4 +1,5 @@
 import 'package:checkmate/pages/authentication/signup.dart';
+import 'package:checkmate/pages/tutorial/tutorial_page.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,9 +34,15 @@ class _SignInState extends State<SignIn> {
       UserCredential user = await _auth.signInWithCredential(credential);
       // ignore: use_build_context_synchronously
       final dbProvider = Provider.of<Database>(context, listen: false);
+      // ignore: use_build_context_synchronously
       final taskprovider = Provider.of<CalendarModel>(context, listen: false);
       if (user.additionalUserInfo!.isNewUser) {
         dbProvider.addNewUser(user.user!.email!, user.user!.displayName!);
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TutorialPage()),
+        );
       } else {
         dbProvider.updateLogin();
 

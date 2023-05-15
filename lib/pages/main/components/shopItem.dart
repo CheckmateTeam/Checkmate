@@ -65,7 +65,8 @@ class _shopItemState extends State<shopItem> {
                       ),
                       Text(
                         widget.itemName,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                     ],
                   ),
