@@ -1,4 +1,5 @@
 import 'package:checkmate/Services/noti_service.dart';
+import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,8 @@ class _NotificationPageState extends State<NotificationPage> {
               textAlign: TextAlign.center,
             ),
           ),
+
+          
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -97,95 +100,19 @@ class _NotificationPageState extends State<NotificationPage> {
                       thickness: 1,
                     ),
                     Expanded(
-                        child: Column(children: [
-                      ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: data.todayNoti.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    // Task tile here =>>
-                                    Expanded(
-                                      child: InkWell(
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 20.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Color.fromARGB(
-                                                    99, 158, 158, 158),
-                                                spreadRadius: 0,
-                                                blurRadius: 10,
-                                                offset: Offset(0,
-                                                    2), // changes position of shadow
-                                              )
-                                            ],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          margin: const EdgeInsets.only(
-                                              left: 10.0, top: 10.0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(14.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    const SizedBox(width: 15.0),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                            data
-                                                                .todayNoti[
-                                                                    index]
-                                                                .taskName,
-                                                            style: const TextStyle(
-                                                                fontSize: 18,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                        Text(data
-                                                            .todayNoti[index]
-                                                            .taskDesc)
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                                Checkbox(
-                                                  value: true,
-                                                  checkColor: Colors.red,
-                                                  activeColor: Colors.red,
-                                                  onChanged: (bool? value) {
-                                                    value = !value!;
-                                                  },
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          }),
+                        child: Column(
+                          children: [
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: data.todayNoti.length,
+                              itemBuilder: (context, index) {
+                                return notiList(data.todayNoti[index]);
+                            }),
+
                       const SizedBox(height: 20.0),
+
+
                       Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: const [
@@ -194,98 +121,22 @@ class _NotificationPageState extends State<NotificationPage> {
                                   fontSize: 14,
                                   color: Color.fromARGB(132, 0, 0, 0),
                                 ))
-                          ]),
+                      ]),
+
+
                       Divider(
                         color: Colors.grey.withOpacity(0.6),
                         thickness: 1,
                       ),
+
+
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: data.olderNoti.length,
                           itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    // Task tile here =>>
-                                    Expanded(
-                                      child: InkWell(
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 20.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Color.fromARGB(
-                                                    99, 158, 158, 158),
-                                                spreadRadius: 0,
-                                                blurRadius: 10,
-                                                offset: Offset(0,
-                                                    2), // changes position of shadow
-                                              )
-                                            ],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          margin: const EdgeInsets.only(
-                                              left: 10.0, top: 10.0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(14.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    const SizedBox(width: 15.0),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                            data
-                                                                .olderNoti[
-                                                                    index]
-                                                                .taskName,
-                                                            style: const TextStyle(
-                                                                fontSize: 18,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                        Text(data
-                                                            .olderNoti[index]
-                                                            .taskDesc)
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                                Checkbox(
-                                                  value: true,
-                                                  checkColor: Colors.red,
-                                                  activeColor: Colors.red,
-                                                  onChanged: (bool? value) {
-                                                    value = !value!;
-                                                  },
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          }),
+                            return notiList(data.olderNoti[index]);
+                      }),
                     ]))
                   ]),
                   )
@@ -299,7 +150,64 @@ class _NotificationPageState extends State<NotificationPage> {
     );
   }
 
-  Widget notiList() {
-    return Container();
+  Widget notiList(Task task) {
+    return Expanded(
+      child: InkWell(
+        onTap: (){
+          setState(() {
+            task.isRead == true;
+          });
+        },
+
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+          vertical: 20.0),
+          decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(
+              color: Color.fromARGB(99, 158, 158, 158),
+              spreadRadius: 0,
+              blurRadius: 10,
+              offset: Offset(0,2), // changes position of shadow
+            )
+          ],
+          borderRadius:BorderRadius.circular(10)),
+          margin: const EdgeInsets.only(left: 10.0, top: 10.0),
+          child: Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: Row(
+              crossAxisAlignment:CrossAxisAlignment.center,
+              mainAxisAlignment:MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(width: 15.0),
+                    Column(
+                      crossAxisAlignment:CrossAxisAlignment.start,
+                      children: [
+                        Text(task.taskName,
+                        style: const TextStyle(
+                        fontSize: 18,
+                        color:  Colors.black,
+                        fontWeight:FontWeight.w700)),
+                        Text(task.taskDesc)
+                      ],
+                    ),
+                  ],
+                ),
+                Checkbox(
+                  value: true,
+                  checkColor: Colors.red,
+                  activeColor: Colors.red,
+                  onChanged: (bool? value) {
+                    value = !value!;
+                  },
+                )
+              ],
+            ),
+          ),
+        ),
+      ));
   }
 }
