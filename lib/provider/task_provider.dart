@@ -15,8 +15,6 @@ int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }
 
-
-
 class CalendarModel extends ChangeNotifier {
   // User instance
   User? get user => FirebaseAuth.instance.currentUser;
@@ -78,7 +76,6 @@ class CalendarModel extends ChangeNotifier {
         cycle: task['cycle'],
         notify: task['notify'],
         notiDate: (task['notiDate'] as Timestamp).toDate(),
-        
       );
       final keyDate = DateTime(
         newTask.startDate.year,
@@ -93,6 +90,60 @@ class CalendarModel extends ChangeNotifier {
         }
       } else {
         _taskMap[key] = [newTask];
+      }
+
+      //cycle check
+      if (newTask.cycle == "daily") {
+        DateTime nextDate = newTask.startDate.add(Duration(days: 1));
+        while (nextDate.isBefore(newTask.endDate)) {
+          final key = DateTime(
+            nextDate.year,
+            nextDate.month,
+            nextDate.day,
+          );
+          if (_taskMap.containsKey(key)) {
+            if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+              _taskMap[key]!.add(newTask);
+            }
+          } else {
+            _taskMap[key] = [newTask];
+          }
+          nextDate = nextDate.add(Duration(days: 1));
+        }
+      } else if (newTask.cycle == "weekly") {
+        DateTime nextDate = newTask.startDate.add(Duration(days: 7));
+        while (nextDate.isBefore(newTask.endDate)) {
+          final key = DateTime(
+            nextDate.year,
+            nextDate.month,
+            nextDate.day,
+          );
+          if (_taskMap.containsKey(key)) {
+            if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+              _taskMap[key]!.add(newTask);
+            }
+          } else {
+            _taskMap[key] = [newTask];
+          }
+          nextDate = nextDate.add(Duration(days: 7));
+        }
+      } else if (newTask.cycle == "monthly") {
+        DateTime nextDate = newTask.startDate.add(Duration(days: 30));
+        while (nextDate.isBefore(newTask.endDate)) {
+          final key = DateTime(
+            nextDate.year,
+            nextDate.month,
+            nextDate.day,
+          );
+          if (_taskMap.containsKey(key)) {
+            if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+              _taskMap[key]!.add(newTask);
+            }
+          } else {
+            _taskMap[key] = [newTask];
+          }
+          nextDate = nextDate.add(Duration(days: 30));
+        }
       }
 
       final taskIdKey = task['taskId'];
@@ -113,17 +164,15 @@ class CalendarModel extends ChangeNotifier {
     return 'success';
   }
 
-
-  Future<String> fetchNotiTask() async{
+  Future<String> fetchNotiTask() async {
     QuerySnapshot querySnapshot = await db
-    .collection('user_task')
+        .collection('user_task')
         .where('user_uid', isEqualTo: user?.uid)
         .where('noti')
         .orderBy('startDate')
         .get();
     return "1";
   }
-
 
   _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
@@ -169,9 +218,6 @@ class CalendarModel extends ChangeNotifier {
         )] ??
         [];
   }
-
-  
-
 
   Future<void> addTask(Task task) async {
     await db.collection('user_task').add({
@@ -219,7 +265,7 @@ class CalendarModel extends ChangeNotifier {
             endDate: task.endDate,
             cycle: task.cycle,
             notify: task.notify,
-            isDone: !querySnapshot.docs[0]['isDone'], 
+            isDone: !querySnapshot.docs[0]['isDone'],
             notiDate: task.notiDate));
     // int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
     // _taskMap[key]!.remove(task);
@@ -242,7 +288,6 @@ class CalendarModel extends ChangeNotifier {
     //       _selectedDay!.day,
     //     )] ??
     //     [];
-
 
     notifyListeners();
   }
@@ -321,14 +366,8 @@ class CalendarModel extends ChangeNotifier {
 }
 
 Future<DateTime> notiDate(
-    int nmonth, 
-    int nday, 
-    int nhour, 
-    int nminutes, 
-    String deadline) async {
-
-
-    List<String> dropdownItems = [
+    int nmonth, int nday, int nhour, int nminutes, String deadline) async {
+  List<String> dropdownItems = [
     'Never',
     '5 mins before deadline',
     '10 mins before deadline',
@@ -340,59 +379,69 @@ Future<DateTime> notiDate(
     '2 days before deadline',
     '1 week before deadline'
   ];
-      
-    
-    int x = dropdownItems.indexOf(deadline);
 
-    if(x == 0){nminutes += 0;}
+  int x = dropdownItems.indexOf(deadline);
 
-    else{
-    if(x == 1){nminutes -= 5;}
-    else if(x == 2){nminutes -= 10;}
-    else if(x == 3){nminutes -= 15;}
-    else if(x == 4){nminutes -= 30;}
-    else if(x == 5){nhour -= 1;}
-    else if(x == 6){nhour -= 2;}
-    else if(x == 7){nday -= 1;}
-    else if(x == 8){nday -= 2;}
-    else if(x == 9){nday -= 7;}
+  if (x == 0) {
+    nminutes += 0;
+  } else {
+    if (x == 1) {
+      nminutes -= 5;
+    } else if (x == 2) {
+      nminutes -= 10;
+    } else if (x == 3) {
+      nminutes -= 15;
+    } else if (x == 4) {
+      nminutes -= 30;
+    } else if (x == 5) {
+      nhour -= 1;
+    } else if (x == 6) {
+      nhour -= 2;
+    } else if (x == 7) {
+      nday -= 1;
+    } else if (x == 8) {
+      nday -= 2;
+    } else if (x == 9) {
+      nday -= 7;
+    }
 
-    if(nminutes < 0){
+    if (nminutes < 0) {
       nminutes += 60;
       nhour -= 1;
     }
 
-    if(nhour < 0){
+    if (nhour < 0) {
       nhour += 24;
       nday -= 1;
     }
 
-    if(nday <= 0){
-      if(nmonth == 2 || nmonth == 4 || nmonth == 6 || nmonth == 8 || nmonth == 9 || nmonth == 11 || nmonth == 1){
+    if (nday <= 0) {
+      if (nmonth == 2 ||
+          nmonth == 4 ||
+          nmonth == 6 ||
+          nmonth == 8 ||
+          nmonth == 9 ||
+          nmonth == 11 ||
+          nmonth == 1) {
         nday += 31;
         nmonth -= 1;
-      }
-      else if(nmonth == 5 || nmonth == 7 || nmonth == 10 || nmonth == 12){
+      } else if (nmonth == 5 || nmonth == 7 || nmonth == 10 || nmonth == 12) {
         nday += 30;
         nmonth -= 1;
-      }
-      else{
+      } else {
         nday += 28;
         nmonth -= 1;
       }
     }
-    }
-  
-  
-
-    DateTime notiBF = DateTime(
-      DateTime.now().year,
-      nmonth,
-      nday,
-      nhour,
-      nminutes,
-      );
-
-
-    return notiBF;
   }
+
+  DateTime notiBF = DateTime(
+    DateTime.now().year,
+    nmonth,
+    nday,
+    nhour,
+    nminutes,
+  );
+
+  return notiBF;
+}
