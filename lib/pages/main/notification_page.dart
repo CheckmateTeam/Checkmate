@@ -61,7 +61,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   topRight: Radius.circular(30),
                 ),
                 border: Border.all(
-                  color: Colors.grey.withOpacity(0.2),
+                  color:  Colors.grey.withOpacity(0.2),
                   width: 1,
                 ),
                 boxShadow: [
@@ -89,7 +89,7 @@ class _NotificationPageState extends State<NotificationPage> {
                             style: TextStyle(
                                 fontSize: 14,
                                 color: Color.fromARGB(132, 0, 0, 0))),
-                        Text("Mask as all read",
+                        Text("Mark as all read",
                             style: TextStyle(
                                 fontSize: 14,
                                 color: Theme.of(context).primaryColor)),
@@ -107,7 +107,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               shrinkWrap: true,
                               itemCount: data.todayNoti.length,
                               itemBuilder: (context, index) {
-                                return notiList(data.todayNoti[index]);
+                                return notiList(data.todayNoti[index], data);
                             }),
 
                       const SizedBox(height: 20.0),
@@ -135,7 +135,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           shrinkWrap: true,
                           itemCount: data.olderNoti.length,
                           itemBuilder: (context, index) {
-                            return notiList(data.olderNoti[index]);
+                            return notiList(data.olderNoti[index] , data);
                       }),
                     ]))
                   ]),
@@ -150,13 +150,29 @@ class _NotificationPageState extends State<NotificationPage> {
     );
   }
 
-  Widget notiList(Task task) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Widget notiList(Task task , CalendarModel data) {
     return Expanded(
       child: InkWell(
         onTap: (){
-          setState(() {
-            task.isRead == true;
-          });
+          data.updateReadTask(task);
         },
 
         child: Container(
@@ -164,18 +180,18 @@ class _NotificationPageState extends State<NotificationPage> {
           vertical: 20.0),
           decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: Color.fromARGB(99, 158, 158, 158),
-              spreadRadius: 0,
-              blurRadius: 10,
-              offset: Offset(0,2), // changes position of shadow
+              color: task.isRead ? Color.fromARGB(0, 158, 158, 158) : Color.fromARGB(99, 158, 158, 158),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0,0), // changes position of shadow
             )
           ],
           borderRadius:BorderRadius.circular(10)),
-          margin: const EdgeInsets.only(left: 10.0, top: 10.0),
+          margin: const EdgeInsets.only( top: 15.0),
           child: Padding(
-            padding: const EdgeInsets.all(14.0),
+            padding: const EdgeInsets.only(right: 14.0,),
             child: Row(
               crossAxisAlignment:CrossAxisAlignment.center,
               mainAxisAlignment:MainAxisAlignment.spaceBetween,
@@ -187,19 +203,26 @@ class _NotificationPageState extends State<NotificationPage> {
                       crossAxisAlignment:CrossAxisAlignment.start,
                       children: [
                         Text(task.taskName,
-                        style: const TextStyle(
-                        fontSize: 18,
-                        color:  Colors.black,
+                        style: TextStyle(
+                        fontSize: 20,
+                        color: task.isRead ? Colors.grey : Colors.black,
                         fontWeight:FontWeight.w700)),
-                        Text(task.taskDesc)
+                        
+                        
+                        Text(task.taskDesc,
+                        style: TextStyle(
+                        fontSize: 16,
+                        color: task.isRead ? Colors.grey : Colors.black,
+                        ))
                       ],
                     ),
                   ],
                 ),
                 Checkbox(
-                  value: true,
+                  value: !task.isRead,
                   checkColor: Colors.red,
                   activeColor: Colors.red,
+                  side: BorderSide(width: 2,color: Colors.grey),
                   onChanged: (bool? value) {
                     value = !value!;
                   },
