@@ -7,7 +7,7 @@ class Database extends ChangeNotifier {
   String email = 'fetching...';
   String points = 'fetching...';
   String cycle = 'fetching...';
-
+  String goal = 'fetching...';
   Database() {
     init();
   }
@@ -21,6 +21,7 @@ class Database extends ChangeNotifier {
       email = querySnapshot.docs[0]['email'];
       points = querySnapshot.docs[0]['points'].toString();
       cycle = querySnapshot.docs[0]['cycle'].toString();
+      goal = querySnapshot.docs[0]['goal'].toString();
     });
 
     notifyListeners();
@@ -35,6 +36,8 @@ class Database extends ChangeNotifier {
   String get userEmail => email;
   String get userPoints => points;
   String get userCycle => cycle;
+  String get userGoal => goal;
+
   //DB FUNCTION
   Future<void> addNewUser(String email, String name) async {
     await db.collection('user_info').add({
