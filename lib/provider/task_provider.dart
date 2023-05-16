@@ -379,9 +379,11 @@ class CalendarModel extends ChangeNotifier {
 
       int prevIndex = todayNoti!.indexWhere((t) => t.taskId == task.taskId);
 
-    
-
       todayNoti!.remove(task);
+
+      querySnapshot.docs[x].reference
+        .update({'isRead': true});
+      
 
       todayNoti!.insert(
           prevIndex,
@@ -394,11 +396,9 @@ class CalendarModel extends ChangeNotifier {
               cycle: task.cycle,
               notify: task.notify,
               isDone: task.isDone, 
-              isRead: !querySnapshot.docs[0]['isRead'],
+              isRead: true,
               notiDate: task.notiDate));
       
-      querySnapshot.docs[x].reference
-        .update({'isRead': true});
       x+=1;
 
     }
@@ -406,6 +406,10 @@ class CalendarModel extends ChangeNotifier {
     for(var task in olderNoti){
       int prevIndex = olderNoti!.indexWhere((t) => t.taskId == task.taskId);
       olderNoti!.remove(task);
+
+      querySnapshot.docs[x].reference
+        .update({'isRead': true});
+      
 
       olderNoti!.insert(
           prevIndex,
@@ -418,13 +422,9 @@ class CalendarModel extends ChangeNotifier {
               cycle: task.cycle,
               notify: task.notify,
               isDone: task.isDone, 
-              isRead: !querySnapshot.docs[0]['isRead'],
+              isRead: true,
               notiDate: task.notiDate));
-      
-      querySnapshot.docs[x].reference
-        .update({'isRead': true});
       x+=1;
-    
     }
     
     x = 0;
