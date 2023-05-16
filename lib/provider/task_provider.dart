@@ -370,14 +370,17 @@ class CalendarModel extends ChangeNotifier {
     final QuerySnapshot querySnapshot = await db
         .collection('user_task')
         .where('user_uid', isEqualTo: user?.uid)
+        .orderBy('notiDate')
         .get();
 
-    querySnapshot.docs[0].reference
-        .update({'isRead': !querySnapshot.docs[0]['isRead']});
+    var x = 0;
 
     for(var task in todayNoti ){
 
       int prevIndex = todayNoti!.indexWhere((t) => t.taskId == task.taskId);
+
+    
+
       todayNoti!.remove(task);
 
       todayNoti!.insert(
@@ -393,6 +396,10 @@ class CalendarModel extends ChangeNotifier {
               isDone: task.isDone, 
               isRead: !querySnapshot.docs[0]['isRead'],
               notiDate: task.notiDate));
+      
+      querySnapshot.docs[x].reference
+        .update({'isRead': true});
+      x+=1;
 
     }
 
@@ -413,8 +420,14 @@ class CalendarModel extends ChangeNotifier {
               isDone: task.isDone, 
               isRead: !querySnapshot.docs[0]['isRead'],
               notiDate: task.notiDate));
+      
+      querySnapshot.docs[x].reference
+        .update({'isRead': true});
+      x+=1;
     
     }
+    
+    x = 0;
 
     notifyListeners();
   }

@@ -228,7 +228,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   activeColor: Colors.red,
                   side: BorderSide(width: 2,color: Colors.grey),
                   onChanged: (bool? value) {
-                    value = !value!;
+                    data.updateReadTask(task);
                   },
                 )
               ],
