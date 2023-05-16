@@ -115,29 +115,7 @@ class _PointShopPageState extends State<PointShopPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("App Fetures"),
-                const Divider(),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 10,
-                  children: <Widget>[
-                    shopItem(
-                      itemName: "Random New Theme",
-                      itemDescription: "Theme for you",
-                      itemImage: "assets/items/gacha.png",
-                      itemPrice: 2000,
-                      currentPoint: _pointController,
-                    ),
-                    shopItem(
-                      itemName: "Cycle feature",
-                      itemDescription: "Theme for you",
-                      itemImage: "assets/items/cycleTask.png",
-                      itemPrice: 100,
-                      currentPoint: _pointController,
-                    ),
-                  ],
-                ),
-                const Padding(padding: EdgeInsets.only(top: 30)),
+                // const Padding(padding: EdgeInsets.only(top: 10)),
                 const Text("Challenge Upgrade"),
                 const Divider(),
                 Wrap(

@@ -13,6 +13,8 @@ class BossTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final taskData = context.watch<CalendarModel>();
+    final db = Provider.of<Database>(context, listen: false);
+
     return InkWell(
       onTap: () {
         if (!isSameDay(taskData.focusedDay, DateTime.now())) {
@@ -92,7 +94,7 @@ class BossTile extends StatelessWidget {
                 completedTask++;
               }
             }
-            print(completedTask);
+
             if (completedTask < taskLength) {
               showDialog(
                   context: context,
@@ -162,114 +164,164 @@ class BossTile extends StatelessWidget {
           }
         }
       },
-      child: Container(
-        height: 100,
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromARGB(99, 158, 158, 158),
-              spreadRadius: 0,
-              blurRadius: 10,
-              offset: Offset(0, 2), // changes position of shadow
-            )
-          ],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            const Image(image: AssetImage("assets/boss/boss.png")),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Current boss",
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('user_info')
-                      .where('uid',
-                          isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const CircularProgressIndicator();
-                    }
-                    final bossName = "Reaper";
-                    final progressValue =
-                        snapshot.data!.docs.first.data()['BossHp'] as int? ?? 0;
-                    final maxProgressValue = 500000;
-                    final progressPercent = progressValue / maxProgressValue;
-                    return Column(
-                      children: [
-                        Text(
-                          bossName,
-                          style: const TextStyle(
+      child: context.watch<Database>().bossHp <= 0
+          ? Container(
+              height: 100,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(99, 158, 158, 158),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: Offset(0, 2), // changes position of shadow
+                  )
+                ],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const SizedBox(
+                    width: 70,
+                    height: 70,
+                    child: Image(
+                      image: AssetImage("assets/boss/boss.png"),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Congratulation",
+                        style: TextStyle(
                             fontSize: 20,
-                            color: Colors.black,
                             fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: LinearProgressIndicator(
-                            value: progressPercent,
-                            backgroundColor: Colors.grey,
-                            valueColor: progressValue.toInt() >= 250000 &&
-                                    progressValue.toInt() <= 500000
-                                ? const AlwaysStoppedAnimation<Color>(
-                                    Colors.green)
-                                : progressValue.toInt() >= 100000 &&
-                                        progressValue.toInt() < 250000
-                                    ? const AlwaysStoppedAnimation<Color>(
-                                        Color.fromARGB(255, 221, 181, 36))
-                                    : const AlwaysStoppedAnimation<Color>(
-                                        Colors.red),
-                          ),
-                        ),
-                        Text("$progressValue/$maxProgressValue"),
-                      ],
-                    );
-                  },
-                ),
-              ],
+                            color: Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                      Text(
+                        "You Defeated The Boss",
+                        style: TextStyle(
+                            fontSize: 14, color: Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.green),
+                        shape: MaterialStateProperty.all(const CircleBorder()),
+                      ),
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      color: Colors.white)
+                ],
+              ),
+            )
+          : Container(
+              height: 100,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(99, 158, 158, 158),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: Offset(0, 2), // changes position of shadow
+                  )
+                ],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const SizedBox(
+                    width: 70,
+                    height: 70,
+                    child: Image(
+                      image: AssetImage("assets/boss/boss.png"),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Current boss",
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('user_info')
+                            .where('uid',
+                                isEqualTo:
+                                    FirebaseAuth.instance.currentUser?.uid)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const CircularProgressIndicator();
+                          }
+                          const bossName = "Reaper";
+                          final progressValue = snapshot.data!.docs.first
+                                  .data()['BossHp'] as int? ??
+                              0;
+                          const maxProgressValue = 500000;
+                          final progressPercent =
+                              progressValue / maxProgressValue;
+                          return Column(
+                            children: [
+                              const Text(
+                                bossName,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 100,
+                                child: LinearProgressIndicator(
+                                  value: progressPercent,
+                                  backgroundColor: Colors.grey,
+                                  valueColor: progressValue.toInt() >= 250000 &&
+                                          progressValue.toInt() <= 500000
+                                      ? const AlwaysStoppedAnimation<Color>(
+                                          Colors.green)
+                                      : progressValue.toInt() >= 100000 &&
+                                              progressValue.toInt() < 250000
+                                          ? const AlwaysStoppedAnimation<Color>(
+                                              Color.fromARGB(255, 221, 181, 36))
+                                          : const AlwaysStoppedAnimation<Color>(
+                                              Colors.red),
+                                ),
+                              ),
+                              Text("$progressValue/$maxProgressValue"),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.primaries[0]),
+                        shape: MaterialStateProperty.all(const CircleBorder()),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MainChallenge()));
+                      },
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      color: Colors.white)
+                ],
+              ),
             ),
-
-            //     Text("Reaper",
-            //         style: TextStyle(
-            //             fontSize: 20,
-            //             color: Colors.black,
-            //             fontWeight: FontWeight.bold)),
-            //     SizedBox(
-            //       width: 100,
-            //       child: LinearProgressIndicator(
-            //         value: 0.5,
-            //         backgroundColor: Colors.grey,
-            //         valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-            //       ),
-            //     ),
-            //     Text("250/300")
-            //   ],
-            // ),
-            IconButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Colors.primaries[0]),
-                  shape: MaterialStateProperty.all(const CircleBorder()),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MainChallenge()));
-                },
-                icon: const Icon(Icons.arrow_forward_ios),
-                color: Colors.white)
-          ],
-        ),
-      ),
     );
   }
 }

@@ -140,7 +140,7 @@ class _GameState extends State<Game>
     });
 
     final userDamage = database.userDamage;
-    final damageUser = userDamage ?? 0;
+    final damageUser = userDamage;
     final userCollection = FirebaseFirestore.instance.collection('user_info');
     final querySnapshot = await userCollection
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
@@ -148,10 +148,37 @@ class _GameState extends State<Game>
 
     querySnapshot.docs.forEach((doc) async {
       if (doc.data()['BossHp'] - damageUser <= 0) {
-        // Navigator.push(context,
-        //     MaterialPageRoute(builder: (context) => const TaskListPage()));
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const Home()));
+        // showDialog(
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       return AlertDialog(
+        //           title: const Text("You have got"),
+        //           content: Column(
+        //             children: [
+        //               CircleAvatar(
+        //                   radius: 150,
+        //                   child: Image.asset(
+        //                     "assets/theme/Ogtheme.png",
+        //                   )),
+        //               const Text(
+        //                 "\n OG Theme",
+        //                 style: TextStyle(fontWeight: FontWeight.bold),
+        //               ),
+        //             ],
+        //           ), //Theme name and color
+
+        //           actions: [
+        //             TextButton(
+        //                 onPressed: () {
+        //                   Navigator.pushReplacement(
+        //                       context,
+        //                       MaterialPageRoute(
+        //                           builder: (context) => const Home()));
+        //                 },
+        //                 child: const Text("OK"))
+        //           ]);
+        //     });
+
         await doc.reference.update({'BossHp': 0});
       } else {
         await doc.reference
@@ -477,62 +504,34 @@ class _GameState extends State<Game>
 
   Widget showGameOver() {
     if (gameOver) {
-      return Stack(
-        children: <Widget>[
-          Container(
-            color: Color(0xEE000000),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FancyButton(
-                    size: width(context) / 10,
-                    color: Theme.of(context).colorScheme.primary,
-                    onPressed: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Home()));
-                      // Navigator.of(context).pushReplacement(Home());
-                    },
-                    child: Text(
-                      "บอสยังชนะไม่ได้จะไปชนะใจเธอได้ยังไง",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: width(context) / 12,
-                        fontFamily: 'Gameplay',
-                      ),
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                title: const Text("You have got"),
+                content: Column(
+                  children: [
+                    CircleAvatar(
+                        radius: 150,
+                        child: Image.asset(
+                          "assets/theme/Ogtheme.png",
+                        )),
+                    const Text(
+                      "\n OG Theme",
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: FancyButton(
-                      size: width(context) / 20,
-                      color: Color(0xFF67AC5B),
-                      onPressed: share,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 5),
-                        child: Text(
-                          "SHARE TO HER",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: width(context) / 25,
-                            fontFamily: 'Gameplay',
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
+                  ],
+                ), //Theme name and color
+
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        MaterialPageRoute(builder: (context) => Home());
+                      },
+                      child: const Text("OK"))
+                ]);
+          });
+      return showGameOver();
     } else {
       return Container();
     }
