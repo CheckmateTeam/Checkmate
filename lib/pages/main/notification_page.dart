@@ -84,15 +84,19 @@ class _NotificationPageState extends State<NotificationPage> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Today",
+                      children:  [
+                        const Text("Today",
                             style: TextStyle(
                                 fontSize: 14,
                                 color: Color.fromARGB(132, 0, 0, 0))),
-                        Text("Mark as all read",
+
+
+                        TextButton(
+                          onPressed: () {data.updateAllRead(data);},
+                          child: Text("Mark as all read",
                             style: TextStyle(
                                 fontSize: 14,
-                                color: Theme.of(context).primaryColor)),
+                                color: Theme.of(context).primaryColor))),
                       ],
                     ),
                     Divider(

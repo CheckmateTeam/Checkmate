@@ -308,6 +308,10 @@ class CalendarModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
+
+
   void updateReadTask(Task task) async {
     final QuerySnapshot querySnapshot = await db
         .collection('user_task')
@@ -361,6 +365,62 @@ class CalendarModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void updateAllRead(CalendarModel data) async {
+    final QuerySnapshot querySnapshot = await db
+        .collection('user_task')
+        .where('user_uid', isEqualTo: user?.uid)
+        .get();
+
+    querySnapshot.docs[0].reference
+        .update({'isRead': !querySnapshot.docs[0]['isRead']});
+
+    for(var task in todayNoti ){
+
+      int prevIndex = todayNoti!.indexWhere((t) => t.taskId == task.taskId);
+      todayNoti!.remove(task);
+
+      todayNoti!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: task.isDone, 
+              isRead: !querySnapshot.docs[0]['isRead'],
+              notiDate: task.notiDate));
+
+    }
+
+    for(var task in olderNoti){
+      int prevIndex = olderNoti!.indexWhere((t) => t.taskId == task.taskId);
+      olderNoti!.remove(task);
+
+      olderNoti!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: task.isDone, 
+              isRead: !querySnapshot.docs[0]['isRead'],
+              notiDate: task.notiDate));
+    
+    }
+
+    notifyListeners();
+  }
+
+
+
 
   void deleteTask(Task task) async {
     await db
@@ -434,6 +494,10 @@ class CalendarModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+
+
+
 
 Future<DateTime> convert_notiDate(
     int month, 
