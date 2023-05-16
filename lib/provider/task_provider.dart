@@ -142,6 +142,7 @@ class CalendarModel extends ChangeNotifier {
             isDone: task['isDone'],
             cycle: task['cycle'],
             notify: task['notify'],
+            isRead: task['isRead'],
             notiDate: task['notiDate'].toDate()
           ));
         }
@@ -156,6 +157,7 @@ class CalendarModel extends ChangeNotifier {
             isDone: task['isDone'],
             cycle: task['cycle'],
             notify: task['notify'],
+            isRead: task['isRead'],
             notiDate: task['notiDate'].toDate()
           ));
         }
@@ -303,6 +305,60 @@ class CalendarModel extends ChangeNotifier {
     //     [];
 
 
+    notifyListeners();
+  }
+
+  void updateReadTask(Task task) async {
+    final QuerySnapshot querySnapshot = await db
+        .collection('user_task')
+        .where('taskId', isEqualTo: task.taskId)
+        .get();
+    querySnapshot.docs[0].reference
+        .update({'isRead': !querySnapshot.docs[0]['isRead']});
+    final keyDate = DateTime(
+      task.startDate.year,
+      task.startDate.month,
+      task.startDate.day,
+    );
+    final key = keyDate;
+
+    if(todayNoti.map((item) => item.taskId).contains(task.taskId)){
+      int prevIndex = todayNoti!.indexWhere((t) => t.taskId == task.taskId);
+      todayNoti!.remove(task);
+
+      todayNoti!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: task.isDone, 
+              isRead: !querySnapshot.docs[0]['isRead'],
+              notiDate: task.notiDate));
+    }
+
+    else{
+      int prevIndex = olderNoti!.indexWhere((t) => t.taskId == task.taskId);
+      olderNoti!.remove(task);
+
+      olderNoti!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: task.isDone, 
+              isRead: !querySnapshot.docs[0]['isRead'],
+              notiDate: task.notiDate));
+    }
     notifyListeners();
   }
 
