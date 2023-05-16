@@ -124,112 +124,94 @@ class _TaskListAllState extends State<TaskListAll> {
                 ],
               ),
             ),
-            Flexible(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      Row(children: []),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: data.taskList.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color:
-                                            Color.fromARGB(99, 158, 158, 158),
-                                        spreadRadius: 0,
-                                        blurRadius: 10,
-                                        offset: Offset(
-                                            0, 2), // changes position of shadow
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  margin: const EdgeInsets.only(left: 10.0),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(14.0),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              child: Icon(
-                                                  Icons.table_view_sharp,
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                            ),
-                                            const SizedBox(width: 15.0),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  data.taskList[index].taskName,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                      decoration:
-                                                          TextDecoration.none),
-                                                ),
-                                                Text(
-                                                  data.taskList[index].taskDesc
-                                                              .length >
-                                                          15
-                                                      ? data.taskList[index]
-                                                              .taskDesc
-                                                              .substring(
-                                                                  0, 15) +
-                                                          "..."
-                                                      : data.taskList[index]
-                                                          .taskDesc,
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      decoration:
-                                                          TextDecoration.none),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                            DateFormat('MM/dd').format(
-                                                data.taskList[index].startDate),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: data.taskList.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color.fromARGB(99, 158, 158, 158),
+                                  spreadRadius: 0,
+                                  blurRadius: 10,
+                                  offset: Offset(
+                                      0, 2), // changes position of shadow
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin: const EdgeInsets.only(left: 10.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(14.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        child: Icon(Icons.table_view_sharp,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                      ),
+                                      const SizedBox(width: 15.0),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            data.taskList[index].taskName,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                decoration: TextDecoration.none,
+                                                color: Colors.black87),
+                                          ),
+                                          Text(
+                                            data.taskList[index].taskDesc
+                                                        .length >
+                                                    15
+                                                ? data.taskList[index].taskDesc
+                                                        .substring(0, 15) +
+                                                    "..."
+                                                : data.taskList[index].taskDesc,
                                             style: TextStyle(
                                                 fontSize: 16,
-                                                color: Colors.grey[600],
-                                                decoration:
-                                                    TextDecoration.none)),
-                                      ],
-                                    ),
+                                                decoration: TextDecoration.none,
+                                                color: Colors.black54),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 30.0,
-                                    ),
-                                    child: Seperator()),
-                              ],
-                            );
-                          }),
-                    ],
-                  ),
-                ),
+                                  Text(
+                                      DateFormat('MM/dd').format(
+                                          data.taskList[index].startDate),
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[600],
+                                          decoration: TextDecoration.none)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 30.0,
+                              ),
+                              child: Seperator()),
+                        ],
+                      );
+                    }),
               ),
             ),
           ],

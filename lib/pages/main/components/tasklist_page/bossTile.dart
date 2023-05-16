@@ -196,7 +196,7 @@ class _BossTileState extends State<BossTile> {
                 Text("Ancient Wizard",
                     style: TextStyle(
                         fontSize: 20,
-                        color: Colors.black,
+                        color: Theme.of(context).secondaryHeaderColor,
                         fontWeight: FontWeight.bold)),
                 SizedBox(
                   width: 100,

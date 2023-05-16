@@ -1,4 +1,5 @@
 import 'package:checkmate/main.dart';
+import 'package:checkmate/pages/home.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -91,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 builder: (context, db, child) => Text(
                                   db.userName,
                                   style: const TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.center,
@@ -140,6 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         Duration(seconds: 2),
                                                   ),
                                                 );
+
                                                 Navigator.of(context).pop();
                                               },
                                               child: const Text("Save"),
@@ -181,8 +183,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
-                menuList("Points shop", Icons.shopping_bag_outlined, false,
-                    Colors.black87, context, false, onTap: () async {
+                menuList(
+                    "Points shop",
+                    Icons.shopping_bag_outlined,
+                    false,
+                    Theme.of(context).secondaryHeaderColor,
+                    context,
+                    false, onTap: () async {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -192,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     "How to points can be use?",
                     Icons.question_mark_rounded,
                     false,
-                    Colors.black87,
+                    Theme.of(context).secondaryHeaderColor,
                     context,
                     false, onTap: () {
                   showModalBottomSheet<dynamic>(
@@ -200,15 +207,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       context: context,
                       builder: (context) => const HowToUsePointSheet());
                 }),
-                menuList("Change theme", Icons.edit_outlined, false,
-                    Colors.black87, context, false, onTap: () {
+                menuList(
+                    "Change theme",
+                    Icons.edit_outlined,
+                    false,
+                    Theme.of(context).secondaryHeaderColor,
+                    context,
+                    false, onTap: () {
                   showModalBottomSheet<dynamic>(
                       isScrollControlled: true,
                       context: context,
                       builder: (context) => const ChangeTheme());
                 }),
                 menuList("Dark mode", Icons.dark_mode_outlined, true,
-                    Colors.black87, context, false,
+                    Theme.of(context).secondaryHeaderColor, context, false,
                     onTap: () {}),
                 menuList("Sign out", Icons.logout, false,
                     Theme.of(context).primaryColor, context, false, onTap: () {
@@ -267,7 +279,7 @@ Widget menuList(String title, IconData icon, bool isToggle, Color fontColor,
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -292,6 +304,12 @@ Widget menuList(String title, IconData icon, bool isToggle, Color fontColor,
                       value: context.watch<ThemeProvider>().isDark,
                       onChanged: (value) {
                         context.read<ThemeProvider>().setIsDark(value);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Home(
+                                      sindex: 4,
+                                    )));
                       },
                       inactiveTrackColor: Color.fromARGB(255, 255, 255, 255),
                       activeTrackColor: Theme.of(context).primaryColor,

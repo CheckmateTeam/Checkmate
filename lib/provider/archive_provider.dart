@@ -60,7 +60,7 @@ class ArchiveProvider extends ChangeNotifier {
         ));
       }
     }
-    for (var task in _taskList) {
+    for (var task in _taskList) {                         
       final keyDate = DateTime(
         task.startDate.year,
         task.startDate.month,

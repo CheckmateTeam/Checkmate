@@ -579,8 +579,12 @@ class _GameState extends State<Game>
                     size: width(context) / 10,
                     color: Theme.of(context).colorScheme.primary,
                     onPressed: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Home()));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Home(
+                                    sindex: 0,
+                                  )));
                       // Navigator.of(context).pushReplacement(Home());
                     },
                     child: Text(

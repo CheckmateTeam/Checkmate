@@ -13,7 +13,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   bool get isDark => storage.getItem('isDark') ?? false;
-
+  String get themeColor => storage.getItem('themeColor') ?? 'Default';
   void setIsDark(bool value) {
     if (value == false) {
       storage.setItem('themeColor', 'Default');
@@ -41,7 +41,9 @@ class ThemeProvider extends ChangeNotifier {
           ),
           fontFamily: GoogleFonts.nunito().fontFamily,
           textTheme: Typography.whiteCupertino,
-        )
+          primaryColor: const Color.fromRGBO(241, 91, 91, 1), //adding by boom
+          secondaryHeaderColor: Colors.white //adding by boom
+          )
       : _themeColor == 'Default'
           ? ThemeData(
               useMaterial3: true,
@@ -52,7 +54,8 @@ class ThemeProvider extends ChangeNotifier {
                 secondary: const Color.fromARGB(255, 252, 154, 27),
               ),
               fontFamily: GoogleFonts.nunito().fontFamily,
-              textTheme: GoogleFonts.nunitoTextTheme())
+              textTheme: GoogleFonts.nunitoTextTheme(),
+              secondaryHeaderColor: Colors.black) //adding by boom
           : _themeColor == 'Blue'
               ? ThemeData(
                   useMaterial3: true,
@@ -63,6 +66,7 @@ class ThemeProvider extends ChangeNotifier {
                     secondary: const Color.fromARGB(255, 174, 228, 252),
                   ),
                   fontFamily: GoogleFonts.nunito().fontFamily,
+                  secondaryHeaderColor: Colors.black, //adding by boom
                   textTheme: GoogleFonts.nunitoTextTheme())
               : _themeColor == 'Green'
                   ? ThemeData(
@@ -73,6 +77,7 @@ class ThemeProvider extends ChangeNotifier {
                           primary: const Color.fromRGBO(52, 199, 89, 1),
                           secondary: Colors.yellow),
                       fontFamily: GoogleFonts.nunito().fontFamily,
+                      secondaryHeaderColor: Colors.black, //adding by boom
                       textTheme: GoogleFonts.nunitoTextTheme())
                   : _themeColor == 'Yellow'
                       ? ThemeData(
@@ -84,6 +89,7 @@ class ThemeProvider extends ChangeNotifier {
                             secondary: Colors.red,
                           ),
                           fontFamily: GoogleFonts.nunito().fontFamily,
+                          secondaryHeaderColor: Colors.black, //adding by boom
                           textTheme: GoogleFonts.nunitoTextTheme())
                       : _themeColor == 'Purple'
                           ? ThemeData(
@@ -95,6 +101,8 @@ class ThemeProvider extends ChangeNotifier {
                                   secondary:
                                       const Color.fromARGB(255, 255, 0, 132)),
                               fontFamily: GoogleFonts.nunito().fontFamily,
+                              secondaryHeaderColor:
+                                  Colors.black, //adding by boom
                               textTheme: GoogleFonts.nunitoTextTheme())
                           : ThemeData(
                               useMaterial3: true,
@@ -106,6 +114,8 @@ class ThemeProvider extends ChangeNotifier {
                                     const Color.fromARGB(255, 252, 154, 27),
                               ),
                               fontFamily: GoogleFonts.nunito().fontFamily,
+                              secondaryHeaderColor:
+                                  Colors.black, //adding by boom
                               textTheme: GoogleFonts.nunitoTextTheme());
   void toggleTheme() {
     storage.setItem('isDark', !_isDark);

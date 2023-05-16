@@ -64,127 +64,107 @@ class _TaskListYearState extends State<TaskListYear> {
               ],
             ),
             //month
-            Flexible(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      Row(children: [
-                        Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                                DateFormat('y').format(DateTime(
-                                      DateTime.now().year - 1,
-                                      DateTime.now().month,
-                                      DateTime.now().day,
-                                    )) +
-                                    " - " +
-                                    DateFormat('y').format(DateTime.now()),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ))),
-                      ]),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: taskList.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color:
-                                            Color.fromARGB(99, 158, 158, 158),
-                                        spreadRadius: 0,
-                                        blurRadius: 10,
-                                        offset: Offset(
-                                            0, 2), // changes position of shadow
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  margin: const EdgeInsets.only(left: 10.0),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(14.0),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              child: Icon(
-                                                  Icons.table_view_sharp,
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                            ),
-                                            const SizedBox(width: 15.0),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  taskList[index].taskName,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                      decoration:
-                                                          TextDecoration.none),
-                                                ),
-                                                Text(
-                                                  taskList[index]
-                                                              .taskDesc
-                                                              .length >
-                                                          15
-                                                      ? taskList[index]
-                                                              .taskDesc
-                                                              .substring(
-                                                                  0, 15) +
-                                                          "..."
-                                                      : taskList[index]
-                                                          .taskDesc,
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      decoration:
-                                                          TextDecoration.none),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                            DateFormat('MM/dd').format(
-                                                taskList[index].startDate),
+            Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 40.0, vertical: 10.0),
+                child: Text(
+                    DateFormat('y').format(DateTime(
+                          DateTime.now().year - 1,
+                          DateTime.now().month,
+                          DateTime.now().day,
+                        )) +
+                        " - " +
+                        DateFormat('y').format(DateTime.now()),
+                    style: TextStyle(
+                      fontSize: 16,
+                    ))),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: taskList.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color.fromARGB(99, 158, 158, 158),
+                                  spreadRadius: 0,
+                                  blurRadius: 10,
+                                  offset: Offset(
+                                      0, 2), // changes position of shadow
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin: const EdgeInsets.only(left: 10.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(14.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        child: Icon(Icons.table_view_sharp,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                      ),
+                                      const SizedBox(width: 15.0),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            taskList[index].taskName,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                decoration: TextDecoration.none,
+                                                color: Colors.black87),
+                                          ),
+                                          Text(
+                                            taskList[index].taskDesc.length > 15
+                                                ? taskList[index]
+                                                        .taskDesc
+                                                        .substring(0, 15) +
+                                                    "..."
+                                                : taskList[index].taskDesc,
                                             style: TextStyle(
                                                 fontSize: 16,
-                                                color: Colors.grey[600],
-                                                decoration:
-                                                    TextDecoration.none)),
-                                      ],
-                                    ),
+                                                decoration: TextDecoration.none,
+                                                color: Colors.black54),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 30.0,
-                                    ),
-                                    child: Seperator()),
-                              ],
-                            );
-                          }),
-                    ],
-                  ),
-                ),
+                                  Text(
+                                      DateFormat('MM/dd')
+                                          .format(taskList[index].startDate),
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[600],
+                                          decoration: TextDecoration.none)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 30.0,
+                              ),
+                              child: Seperator()),
+                        ],
+                      );
+                    }),
               ),
             ),
           ],
@@ -221,8 +201,8 @@ class _TaskListYearState extends State<TaskListYear> {
       );
 
   Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Color.fromARGB(255, 44, 44, 44),
+    final style = TextStyle(
+      color: Theme.of(context).secondaryHeaderColor,
       fontWeight: FontWeight.bold,
       fontSize: 13,
     );
