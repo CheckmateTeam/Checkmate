@@ -49,6 +49,13 @@ class Database extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setGoal(int goal) {
+    db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
+        (QuerySnapshot querySnapshot) =>
+            querySnapshot.docs[0].reference.update({'goal': goal}));
+    notifyListeners();
+  }
+
   void deductPoint(int point) {
     db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
         (QuerySnapshot querySnapshot) => querySnapshot.docs[0].reference
