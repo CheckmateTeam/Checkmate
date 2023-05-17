@@ -21,6 +21,8 @@ class CalendarModel extends ChangeNotifier {
   //Firestore instance
   FirebaseFirestore db = FirebaseFirestore.instance;
   List<Task> taskList = [];
+  List<Task> todayNoti = [];
+  List<Task> olderNoti = [];
 
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
@@ -57,6 +59,8 @@ class CalendarModel extends ChangeNotifier {
     _taskMap.clear();
     _taskStatus.clear();
     _selectedTasks!.clear();
+    todayNoti.clear();
+    olderNoti.clear();
     notifyListeners();
   }
 
@@ -73,9 +77,9 @@ class CalendarModel extends ChangeNotifier {
         taskDesc: task['taskDesc'],
         startDate: (task['startDate'] as Timestamp).toDate(),
         endDate: (task['endDate'] as Timestamp).toDate(),
+        notiDate: (task['notiDate'] as Timestamp).toDate(),
         cycle: task['cycle'],
         notify: task['notify'],
-        notiDate: (task['notiDate'] as Timestamp).toDate(),
       );
       final keyDate = DateTime(
         newTask.startDate.year,
@@ -164,14 +168,71 @@ class CalendarModel extends ChangeNotifier {
     return 'success';
   }
 
-  Future<String> fetchNotiTask() async {
+
+  Future<String> fetchNotiTask() async{
+    await clearAll();
+    print('fetching Noti');
     QuerySnapshot querySnapshot = await db
         .collection('user_task')
         .where('user_uid', isEqualTo: user?.uid)
-        .where('noti')
-        .orderBy('startDate')
+        .where('notiDate', isLessThan: DateTime.now())
+        .orderBy('notiDate')
         .get();
-    return "1";
+
+    
+      for (final task in querySnapshot.docs) {
+        if(isSameDay((task['notiDate'] as Timestamp).toDate(), DateTime.now())){
+          
+          todayNoti.add(Task(
+            taskId: task['taskId'],
+            taskName: task['taskName'],
+            taskDesc: task['taskDesc'],
+            startDate: task['startDate'].toDate(),
+            endDate: task['endDate'].toDate(),
+            isDone: task['isDone'],
+            cycle: task['cycle'],
+            notify: task['notify'],
+            isRead: task['isRead'],
+            notiDate: task['notiDate'].toDate()
+          ));
+        }
+
+        else{
+          olderNoti.add(Task(
+            taskId: task['taskId'],
+            taskName: task['taskName'],
+            taskDesc: task['taskDesc'],
+            startDate: task['startDate'].toDate(),
+            endDate: task['endDate'].toDate(),
+            isDone: task['isDone'],
+            cycle: task['cycle'],
+            notify: task['notify'],
+            isRead: task['isRead'],
+            notiDate: task['notiDate'].toDate()
+          ));
+        }
+      }
+    
+    for (var task in todayNoti) {
+      final keyDate = DateTime(
+        task.startDate.year,
+        task.startDate.month,
+        task.startDate.day,
+      );
+      final key = keyDate;
+    }
+
+    for (var task in olderNoti) {
+      final keyDate = DateTime(
+        task.startDate.year,
+        task.startDate.month,
+        task.startDate.day,
+      );
+      final key = keyDate;
+    }
+    notifyListeners();
+    Duration(milliseconds: 1000);
+    return "success";
   }
 
   _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -292,6 +353,133 @@ class CalendarModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
+
+
+  void updateReadTask(Task task) async {
+    final QuerySnapshot querySnapshot = await db
+        .collection('user_task')
+        .where('taskId', isEqualTo: task.taskId)
+        .get();
+    querySnapshot.docs[0].reference
+        .update({'isRead': !querySnapshot.docs[0]['isRead']});
+    final keyDate = DateTime(
+      task.startDate.year,
+      task.startDate.month,
+      task.startDate.day,
+    );
+    final key = keyDate;
+
+    if(todayNoti.map((item) => item.taskId).contains(task.taskId)){
+      int prevIndex = todayNoti!.indexWhere((t) => t.taskId == task.taskId);
+      todayNoti!.remove(task);
+
+      todayNoti!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: task.isDone, 
+              isRead: !querySnapshot.docs[0]['isRead'],
+              notiDate: task.notiDate));
+    }
+
+    else{
+      int prevIndex = olderNoti!.indexWhere((t) => t.taskId == task.taskId);
+      olderNoti!.remove(task);
+
+      olderNoti!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: task.isDone, 
+              isRead: !querySnapshot.docs[0]['isRead'],
+              notiDate: task.notiDate));
+    }
+    notifyListeners();
+  }
+
+  void updateAllRead(CalendarModel data) async {
+    final QuerySnapshot querySnapshot = await db
+        .collection('user_task')
+        .where('user_uid', isEqualTo: user?.uid)
+        .orderBy('notiDate')
+        .get();
+
+    var x = 0;
+
+    for(var task in todayNoti ){
+
+      int prevIndex = todayNoti!.indexWhere((t) => t.taskId == task.taskId);
+
+      todayNoti!.remove(task);
+
+      querySnapshot.docs[x].reference
+        .update({'isRead': true});
+      
+
+      todayNoti!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: task.isDone, 
+              isRead: true,
+              notiDate: task.notiDate));
+      
+      x+=1;
+
+    }
+
+    for(var task in olderNoti){
+      int prevIndex = olderNoti!.indexWhere((t) => t.taskId == task.taskId);
+      olderNoti!.remove(task);
+
+      querySnapshot.docs[x].reference
+        .update({'isRead': true});
+      
+
+      olderNoti!.insert(
+          prevIndex,
+          Task(
+              taskId: task.taskId,
+              taskName: task.taskName,
+              taskDesc: task.taskDesc,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              cycle: task.cycle,
+              notify: task.notify,
+              isDone: task.isDone, 
+              isRead: true,
+              notiDate: task.notiDate));
+      x+=1;
+    }
+    
+    x = 0;
+
+    notifyListeners();
+  }
+
+
+
+
   void deleteTask(Task task) async {
     await db
         .collection('user_task')
@@ -365,9 +553,19 @@ class CalendarModel extends ChangeNotifier {
   }
 }
 
-Future<DateTime> notiDate(
-    int nmonth, int nday, int nhour, int nminutes, String deadline) async {
-  List<String> dropdownItems = [
+
+
+
+
+Future<DateTime> convert_notiDate(
+    int month, 
+    int day, 
+    int hour, 
+    int minutes, 
+    String deadline) async {
+
+
+    List<String> dropdownItems = [
     'Never',
     '5 mins before deadline',
     '10 mins before deadline',
@@ -382,66 +580,56 @@ Future<DateTime> notiDate(
 
   int x = dropdownItems.indexOf(deadline);
 
-  if (x == 0) {
-    nminutes += 0;
-  } else {
-    if (x == 1) {
-      nminutes -= 5;
-    } else if (x == 2) {
-      nminutes -= 10;
-    } else if (x == 3) {
-      nminutes -= 15;
-    } else if (x == 4) {
-      nminutes -= 30;
-    } else if (x == 5) {
-      nhour -= 1;
-    } else if (x == 6) {
-      nhour -= 2;
-    } else if (x == 7) {
-      nday -= 1;
-    } else if (x == 8) {
-      nday -= 2;
-    } else if (x == 9) {
-      nday -= 7;
+    if(x == 0){minutes += 0;}
+
+    else{
+    if(x == 1){minutes -= 5;}
+    else if(x == 2){minutes -= 10;}
+    else if(x == 3){minutes -= 15;}
+    else if(x == 4){minutes -= 30;}
+    else if(x == 5){hour -= 1;}
+    else if(x == 6){hour -= 2;}
+    else if(x == 7){day -= 1;}
+    else if(x == 8){day -= 2;}
+    else if(x == 9){day -= 7;}
+
+    if(minutes < 0){
+      minutes += 60;
+      hour -= 1;
     }
 
-    if (nminutes < 0) {
-      nminutes += 60;
-      nhour -= 1;
+    if(hour < 0){
+      hour += 24;
+      day -= 1;
     }
 
-    if (nhour < 0) {
-      nhour += 24;
-      nday -= 1;
-    }
-
-    if (nday <= 0) {
-      if (nmonth == 2 ||
-          nmonth == 4 ||
-          nmonth == 6 ||
-          nmonth == 8 ||
-          nmonth == 9 ||
-          nmonth == 11 ||
-          nmonth == 1) {
-        nday += 31;
-        nmonth -= 1;
-      } else if (nmonth == 5 || nmonth == 7 || nmonth == 10 || nmonth == 12) {
-        nday += 30;
-        nmonth -= 1;
+    if (day <= 0) {
+      if (month == 2 ||
+          month == 4 ||
+          month == 6 ||
+          month == 8 ||
+          month == 9 ||
+          month == 11 ||
+          month == 1) {
+        day += 31;
+        month -= 1;
+      } else if (month == 5 || month == 7 || month == 10 || month == 12) {
+        day += 30;
+        month -= 1;
       } else {
-        nday += 28;
-        nmonth -= 1;
+        day += 28;
+        month -= 1;
       }
     }
   }
 
-  DateTime notiBF = DateTime(
-    DateTime.now().year,
-    nmonth,
-    nday,
-    nhour,
-    nminutes,
-  );
+    DateTime notiBF = DateTime(
+      DateTime.now().year,
+      month,
+      day,
+      hour,
+      minutes,
+      );
 
   return notiBF;
 }
