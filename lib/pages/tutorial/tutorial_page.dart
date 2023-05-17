@@ -1,22 +1,66 @@
 import 'package:checkmate/pages/home.dart';
+import 'package:checkmate/provider/db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
+import 'package:provider/provider.dart';
 
-class TutorialPage extends StatelessWidget {
+class TutorialPage extends StatefulWidget {
   const TutorialPage({super.key});
+
+  @override
+  State<TutorialPage> createState() => _TutorialPageState();
+}
+
+class _TutorialPageState extends State<TutorialPage> {
+  TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return OnBoardingSlider(
       finishButtonText: 'Get started',
       onFinish: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const Home(
-                    sindex: 0,
-                  )),
-        );
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Set your monthly goal'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Your monthly goal is the number of tasks you want to complete in a month.',
+                    ),
+                    TextField(
+                      controller: _controller,
+                      keyboardType: TextInputType.number,
+                      keyboardAppearance: Brightness.dark,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        hintText: '',
+                      ),
+                    ),
+                  ],
+                ),
+                actionsAlignment: MainAxisAlignment.center,
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      context.read<Database>().setGoal(
+                            int.parse(_controller.text),
+                          );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Home(
+                                  sindex: 0,
+                                )),
+                      );
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            });
       },
       finishButtonStyle: FinishButtonStyle(
         backgroundColor: Theme.of(context).primaryColor,

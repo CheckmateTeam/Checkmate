@@ -1,4 +1,5 @@
 import 'package:checkmate/provider/archive_provider.dart';
+import 'package:checkmate/provider/db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -91,13 +92,38 @@ class _TaskListAllState extends State<TaskListAll> {
                       Column(
                         children: [
                           Stack(alignment: Alignment.center, children: [
-                            Text("Goal"),
+                            Column(
+                              children: [
+                                Text("Goal"),
+                                Text(
+                                  "${Provider.of<Database>(context).userGoal}",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ],
+                            ),
                             SizedBox(
                               width: 70,
                               height: 70,
                               child: CircularProgressIndicator(
                                 strokeWidth: 10,
-                                value: 50 / 100,
+                                value: Provider.of<ArchiveProvider>(context,
+                                                    listen: false)
+                                                .taskList
+                                                .length /
+                                            int.parse(
+                                                Provider.of<Database>(context)
+                                                    .userGoal) >
+                                        1
+                                    ? 1
+                                    : Provider.of<ArchiveProvider>(context,
+                                                listen: false)
+                                            .taskList
+                                            .length /
+                                        int.parse(Provider.of<Database>(context)
+                                            .userGoal),
                                 backgroundColor: Colors.grey.withOpacity(0.2),
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                     Theme.of(context).primaryColor),
@@ -108,7 +134,7 @@ class _TaskListAllState extends State<TaskListAll> {
                             height: 10,
                           ),
                           Text(
-                            "50%",
+                            "${Provider.of<ArchiveProvider>(context, listen: false).taskList.length / int.parse(Provider.of<Database>(context).userGoal) > 1 ? 100 : (Provider.of<ArchiveProvider>(context, listen: false).taskList.length / int.parse(Provider.of<Database>(context).userGoal) * 100)}%",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
