@@ -1,8 +1,8 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'powerups.dart';
 import 'bosses.dart';
 import 'dart:math';
 
@@ -20,9 +20,7 @@ class Utils {
     String values = "";
     matches.toList()[0].group(1)?.runes.forEach((int rune) {
       var character = String.fromCharCode(rune);
-      if (character != null) {
-        values += character;
-      }
+      values += character;
     });
     if (values.length < 6) {
       values =
@@ -35,39 +33,22 @@ class Utils {
       var string =
           min(max(0, parse! + (parse * lum)), 255).round().toRadixString(16);
 
-      rgb += ("00" + string).substring(string.length);
+      rgb += ("00$string").substring(string.length);
     }
 
     return rgb.toUpperCase();
   }
 
   static int hexToInt({required String color, double lum = 0.0}) {
-    var value = "0xFF${Utils.colorTest(color, lum ?? 0)}";
+    var value = "0xFF${Utils.colorTest(color, lum)}";
     return int.parse(value);
-  }
-
-  static List<PowerUps> getPowerUps() {
-    var list = <PowerUps>[];
-    list.add(PowerUps("Master Sword", 2.15, false, 50));
-    list.add(PowerUps("Lengendary Sword", 2.45, false, 180));
-    list.add(PowerUps("Keyblade", 3.75, false, 300));
-    list.add(PowerUps("Lightsaber", 4.95, false, 520));
-    list.add(PowerUps("Buster Sword", 6.15, false, 1700));
-    list.add(PowerUps("Soul Edge", 8.65, false, 2400));
-    return list;
   }
 
   static List<Bosses> getBosses() {
     var list = <Bosses>[];
-    list.add(Bosses("Reaper", 250, "assets/boss/boss.png"));
+    list.add(Bosses("Reaper", 150000, "assets/boss/boss.png"));
     list.add(Bosses("Your EX", 99999, "assets/boss/boss.png"));
-    list.add(Bosses("Tombster", 1120, "assets/boss/boss_three.png"));
-    list.add(Bosses("Glidestone", 2260, "assets/boss/boss_four.png"));
-    list.add(Bosses("Smocka", 2900, "assets/boss/boss_five.png"));
-    list.add(Bosses("Clowntorch", 4100, "assets/boss/boss_six.png"));
-    list.add(Bosses("Marsattack", 5380, "assets/boss/boss_seven.png"));
-    list.add(Bosses("Unknown", 7000, "assets/boss/boss_eight.png"));
-    list.add(Bosses("ExArthur", 10000, "assets/boss/boss_nine.png"));
+
     return list;
   }
 
@@ -114,7 +95,7 @@ class StrokeText extends StatelessWidget {
           text,
           style: TextStyle(
             fontSize: fontSize,
-            fontFamily: fontFamily,
+            fontFamily: GoogleFonts.nunito().fontFamily,
             color: color,
           ),
         ),
@@ -122,7 +103,7 @@ class StrokeText extends StatelessWidget {
           text,
           style: TextStyle(
             fontSize: fontSize,
-            fontFamily: fontFamily,
+            fontFamily: GoogleFonts.nunito().fontFamily,
             foreground: Paint()
               ..strokeWidth = strokeWidth
               ..color = strokeColor

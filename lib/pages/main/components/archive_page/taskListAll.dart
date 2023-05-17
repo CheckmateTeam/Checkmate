@@ -67,16 +67,16 @@ class _TaskListAllState extends State<TaskListAll> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "with ${20} challenge streaks",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          // SizedBox(
+                          //   height: 20,
+                          // ),
+                          // Text(
+                          //   "with ${20} challenge streaks",
+                          //   style: TextStyle(
+                          //     fontSize: 16,
+                          //     fontWeight: FontWeight.w500,
+                          //   ),
+                          // ),
                           SizedBox(
                             height: 20,
                           ),
