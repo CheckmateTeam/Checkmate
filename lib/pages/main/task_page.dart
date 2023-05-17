@@ -1,3 +1,4 @@
+import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -19,6 +20,7 @@ class _TaskListPageState extends State<TaskListPage> {
   void initState() {
     super.initState();
     initializeDateFormatting();
+    Provider.of<Database>(context, listen: false).init();
   }
 
   @override
