@@ -46,7 +46,7 @@ class Utils {
 
   static List<Bosses> getBosses() {
     var list = <Bosses>[];
-    list.add(Bosses("Reaper", 500000, "assets/boss/boss.png"));
+    list.add(Bosses("Reaper", 150000, "assets/boss/boss.png"));
     list.add(Bosses("Your EX", 99999, "assets/boss/boss.png"));
 
     return list;

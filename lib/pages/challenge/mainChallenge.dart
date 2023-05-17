@@ -356,13 +356,13 @@ class _GameState extends State<Game>
                                     0;
 
                                 return LinearProgressIndicator(
-                                  value: bossHp.toInt() / 500000,
-                                  backgroundColor: Color(0xFFEFF3ED),
-                                  valueColor: bossHp >= 250000 &&
-                                          bossHp <= 500000
+                                  value: bossHp.toInt() / 150000,
+                                  backgroundColor: const Color(0xFFEFF3ED),
+                                  valueColor: bossHp >= 75000 &&
+                                          bossHp <= 150000
                                       ? const AlwaysStoppedAnimation<Color>(
                                           Colors.green)
-                                      : bossHp >= 100000 && bossHp < 250000
+                                      : bossHp >= 35000 && bossHp < 75000
                                           ? const AlwaysStoppedAnimation<Color>(
                                               Color.fromARGB(255, 221, 181, 36))
                                           : const AlwaysStoppedAnimation<Color>(
@@ -396,7 +396,7 @@ class _GameState extends State<Game>
                                     0;
 
                                 return Text(
-                                  "$bossHp / 500000",
+                                  "$bossHp / 150000",
                                   style: const TextStyle(
                                     fontSize: 15,
                                     color: Color(0xFFEFF3ED),

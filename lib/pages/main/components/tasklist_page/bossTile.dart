@@ -286,12 +286,12 @@ class BossTile extends StatelessWidget {
                                 child: LinearProgressIndicator(
                                   value: progressPercent,
                                   backgroundColor: Colors.grey,
-                                  valueColor: progressValue.toInt() >= 250000 &&
-                                          progressValue.toInt() <= 500000
+                                  valueColor: progressValue.toInt() >= 75000 &&
+                                          progressValue.toInt() <= 150000
                                       ? const AlwaysStoppedAnimation<Color>(
                                           Colors.green)
-                                      : progressValue.toInt() >= 100000 &&
-                                              progressValue.toInt() < 250000
+                                      : progressValue.toInt() >= 35000 &&
+                                              progressValue.toInt() < 75000
                                           ? const AlwaysStoppedAnimation<Color>(
                                               Color.fromARGB(255, 221, 181, 36))
                                           : const AlwaysStoppedAnimation<Color>(
