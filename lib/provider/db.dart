@@ -9,6 +9,7 @@ class Database extends ChangeNotifier {
   String cycle = 'fetching...';
   int userDamage = 0;
   int bossHp = 0;
+  // int DamageUserDid = 0;
 
   Database() {
     init();
@@ -26,6 +27,7 @@ class Database extends ChangeNotifier {
       cycle = querySnapshot.docs[0]['cycle'].toString();
       userDamage = querySnapshot.docs[0]['UserDamage'];
       bossHp = querySnapshot.docs[0]['BossHp'];
+      // DamageUserDid = querySnapshot.docs[0]['DamageUserDid'];
     });
 
     notifyListeners();
@@ -56,6 +58,7 @@ class Database extends ChangeNotifier {
       'cycle': 'none',
       'BossHp': 150000,
       'UserDamage': 300,
+      // 'DamageUserDid': 0,
     });
     notifyListeners();
   }

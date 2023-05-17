@@ -48,7 +48,7 @@ class _GameState extends State<Game>
   static const MethodChannel _channel = MethodChannel('gamepad');
 
   static String skyAsset() => "assets/background/sky.png";
-  static var addedDuration = 1000 * 20;
+  static var addedDuration = 1000 * 10;
 
   var coins = 0;
   var positionX = 0.0;
@@ -130,6 +130,7 @@ class _GameState extends State<Game>
     });
   }
 
+  int totalDamage = 0;
   void damage(TapDownDetails? details) async {
     setState(() {
       if (details != null) {
@@ -139,50 +140,63 @@ class _GameState extends State<Game>
       tap = true;
     });
 
-    final userDamage = database.userDamage;
-    final damageUser = userDamage;
     final userCollection = FirebaseFirestore.instance.collection('user_info');
     final querySnapshot = await userCollection
         .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get();
 
+    // Variable to store the total damage
+
     querySnapshot.docs.forEach((doc) async {
+      final userDamage = database.userDamage;
+      final damageUser = userDamage;
+      final rewardpoints = doc.data()['points'] + 1000;
       if (doc.data()['BossHp'] - damageUser <= 0) {
-        // showDialog(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return AlertDialog(
-        //           title: const Text("You have got"),
-        //           content: Column(
-        //             children: [
-        //               CircleAvatar(
-        //                   radius: 150,
-        //                   child: Image.asset(
-        //                     "assets/theme/Ogtheme.png",
-        //                   )),
-        //               const Text(
-        //                 "\n OG Theme",
-        //                 style: TextStyle(fontWeight: FontWeight.bold),
-        //               ),
-        //             ],
-        //           ), //Theme name and color
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Congratulation!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold)),
+              content: RichText(
+                textAlign: TextAlign.center,
+                text: const TextSpan(
+                  style:
+                      TextStyle(color: Colors.black, fontSize: 16, height: 1.5),
+                  children: <TextSpan>[
+                    TextSpan(text: "You Defeated The Boss\n"),
+                    TextSpan(
+                      text: "You Earned 1000 Points\n",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(241, 91, 91, 1)),
+                    )
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Home()),
+                    );
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
 
-        //           actions: [
-        //             TextButton(
-        //                 onPressed: () {
-        //                   Navigator.pushReplacement(
-        //                       context,
-        //                       MaterialPageRoute(
-        //                           builder: (context) => const Home()));
-        //                 },
-        //                 child: const Text("OK"))
-        //           ]);
-        //     });
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const Home()));
-
+        await doc.reference.update({'points': rewardpoints});
         await doc.reference.update({'BossHp': 0});
       } else {
+        totalDamage += damageUser;
         await doc.reference
             .update({'BossHp': doc.data()['BossHp'] - damageUser});
       }
@@ -214,7 +228,7 @@ class _GameState extends State<Game>
         child: Column(
           children: <Widget>[
             const Padding(
-              padding: EdgeInsets.only(bottom: 15.0),
+              padding: EdgeInsets.only(bottom: 10.0),
               child: Material(
                 color: Colors.transparent,
                 child: StrokeText(
@@ -243,11 +257,6 @@ class _GameState extends State<Game>
 
   String hero() {
     return tap ? "assets/character/attack.png" : "assets/character/idle.png";
-  }
-
-  void share() {
-    Share.share(
-        "Tap Hero: I survive until ${bosses[bossIndex].name} LV$level! Now is your turn!");
   }
 
   Widget gameEngine(BuildContext context) {
@@ -504,32 +513,66 @@ class _GameState extends State<Game>
     super.dispose();
   }
 
-  Widget showGameOver() {
+  void updateTotalDamageToFirebase() async {
+    int currentPoints = 0;
+    final userCollection = FirebaseFirestore.instance.collection('user_info');
+    final querySnapshot = await userCollection
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get();
+
+    querySnapshot.docs.forEach((doc) async {
+      currentPoints = doc.data()['points'] ?? 0;
+      int pointsToAdd =
+          (totalDamage / 100).round(); // Calculate the points to add
+      int newPoints = currentPoints + pointsToAdd;
+      await doc.reference.update({'points': newPoints});
+      showGameOver(pointsToAdd);
+    });
+  }
+
+  Widget showGameOver(int pointsToAdd) {
     if (gameOver) {
-      return AlertDialog(
-          title: const Text("You have got"),
-          content: Column(
-            children: [
-              CircleAvatar(
-                  radius: 150,
-                  child: Image.asset(
-                    "assets/theme/Ogtheme.png",
-                  )),
-              const Text(
-                "\n OG Theme",
-                style: TextStyle(fontWeight: FontWeight.bold),
+      return Positioned.fill(
+        child: Container(
+          color: const Color.fromARGB(0, 224, 224, 221),
+          child: AlertDialog(
+            title: const Text("Congratulation!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
+            content: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(
+                    color: Colors.black, fontSize: 16, height: 1.5),
+                children: <TextSpan>[
+                  TextSpan(text: "Damage to boss: $totalDamage\n"),
+                  TextSpan(
+                    text: "+ $pointsToAdd Points",
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(241, 91, 91, 1)),
+                  )
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  updateTotalDamageToFirebase();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Home()),
+                  );
+                },
+                child: const Text("Continue"),
               ),
             ],
-          ), //Theme name and color
-
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => const Home()));
-                },
-                child: const Text("OK"))
-          ]);
+          ),
+        ),
+      );
     } else {
       return Container();
     }
@@ -542,7 +585,9 @@ class _GameState extends State<Game>
         child: Stack(
           children: <Widget>[
             gameEngine(context),
-            showGameOver(),
+            if (gameOver)
+              showGameOver((totalDamage / 100)
+                  .round()), // Pass totalDamage divided by 100 as an argument
           ],
         ),
       );

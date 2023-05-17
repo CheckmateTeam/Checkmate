@@ -123,17 +123,10 @@ class _PointShopPageState extends State<PointShopPage> {
                   runSpacing: 10,
                   children: <Widget>[
                     shopItem(
-                      itemName: "Hit Harder",
-                      itemDescription: "Hit harder in challenges",
+                      itemName: "+100 Damage",
+                      itemDescription: "Add Your Attack Power + 100 Damage",
                       itemImage: "assets/items/atkUp.png",
                       itemPrice: 500,
-                      currentPoint: _pointController,
-                    ),
-                    shopItem(
-                      itemName: "Za Warudo",
-                      itemDescription: "Add time in challenges",
-                      itemImage: "assets/items/addTime.png",
-                      itemPrice: 800,
                       currentPoint: _pointController,
                     ),
                   ],
@@ -153,6 +146,7 @@ class _PointShopPageState extends State<PointShopPage> {
                         MaterialStateProperty.all<Color>(Colors.redAccent)),
                 onPressed: () {
                   // ignore: avoid_print
+
                   Navigator.pop(context);
                 },
                 child: const Text("Return",

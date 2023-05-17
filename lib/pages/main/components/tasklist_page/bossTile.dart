@@ -13,8 +13,6 @@ class BossTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final taskData = context.watch<CalendarModel>();
-    final db = Provider.of<Database>(context, listen: false);
-
     return InkWell(
       onTap: () {
         if (!isSameDay(taskData.focusedDay, DateTime.now())) {

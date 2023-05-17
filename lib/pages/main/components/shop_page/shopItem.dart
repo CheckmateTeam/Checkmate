@@ -1,4 +1,5 @@
 import 'package:checkmate/provider/db.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,15 +27,29 @@ class shopItem extends StatefulWidget {
 // ignore: camel_case_types
 class _shopItemState extends State<shopItem> {
   int _currentPoint = 0;
-
+  late ValueNotifier<int> _currentPointNotifier;
   @override
   void initState() {
     super.initState();
-    // _currentPoint = widget.currentPoint;
+
     final db = Provider.of<Database>(context, listen: false);
     _currentPoint = int.parse(db.userPoints);
-    // _currentPoint = int.parse(context.read<Database>().userPoints);
-    // _currentPoint = int.parse(context.read<Database>().userPoints);
+    _currentPointNotifier = ValueNotifier<int>(_currentPoint);
+  }
+
+  void UpgradeUserDamage() async {
+    int currentDamage = 0;
+    final userCollection = FirebaseFirestore.instance.collection('user_info');
+    final querySnapshot = await userCollection
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get();
+
+    querySnapshot.docs.forEach((doc) async {
+      currentDamage = doc.data()['UserDamage'] ?? 0;
+
+      int newDamage = currentDamage + 100;
+      await doc.reference.update({'UserDamage': newDamage});
+    });
   }
 
   @override
@@ -43,11 +58,9 @@ class _shopItemState extends State<shopItem> {
       onTap: () async {
         final db = Provider.of<Database>(context, listen: false);
         if (widget.itemPrice != null && _currentPoint >= widget.itemPrice!) {
-          // context.read<Database>().buyItem(widget.itemPrice!);
-          // _currentPoint = _currentPoint - widget.itemPrice!;
           db.buyItem(widget.itemPrice!);
           _currentPoint -= widget.itemPrice!;
-
+          _currentPointNotifier.value = _currentPoint;
           if (widget.itemName == "Random New Theme") {
             // only for random theme
             showDialog(
@@ -90,7 +103,7 @@ class _shopItemState extends State<shopItem> {
                             style: const TextStyle(
                                 color: Colors.black, fontSize: 16, height: 1.5),
                             children: <TextSpan>[
-                              TextSpan(text: "You have purchased"),
+                              const TextSpan(text: "You have purchased"),
                               TextSpan(
                                   text: "\n ${widget.itemName} ",
                                   style: const TextStyle(
@@ -102,6 +115,7 @@ class _shopItemState extends State<shopItem> {
                       actions: [
                         TextButton(
                             onPressed: () {
+                              UpgradeUserDamage();
                               Navigator.of(context).pop();
                             },
                             child: const Text("OK"))
@@ -157,21 +171,29 @@ class _shopItemState extends State<shopItem> {
               ],
             ),
           ),
-          if (_currentPoint < widget.itemPrice! && widget.itemPrice != null)
-            Container(
-              height: 150,
-              width: 150,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.red),
-                borderRadius: BorderRadius.circular(40),
-                color: Colors.black.withOpacity(0.5),
-              ),
-              child: const Icon(
-                Icons.close,
-                color: Colors.red,
-                size: 100,
-              ),
-            ),
+          ValueListenableBuilder<int>(
+            valueListenable: _currentPointNotifier,
+            builder: (context, value, child) {
+              if (widget.itemPrice != null && value < widget.itemPrice!) {
+                return Container(
+                  height: 150,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.red),
+                    borderRadius: BorderRadius.circular(40),
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.red,
+                    size: 100,
+                  ),
+                );
+              } else {
+                return const SizedBox(); // Empty container when the condition is not met
+              }
+            },
+          ),
         ],
       ),
     );
