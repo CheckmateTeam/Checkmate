@@ -90,9 +90,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               Consumer<Database>(
                                 builder: (context, db, child) => Text(
-                                  db.userName,
+                                  db.userName.length > 15
+                                      ? db.userName.substring(0, 15) + " ..."
+                                      : db.userName,
                                   style: const TextStyle(
-                                    fontSize: 30,
+                                    fontSize: 22,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.center,

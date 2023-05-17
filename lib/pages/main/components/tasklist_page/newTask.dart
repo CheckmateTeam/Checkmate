@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
@@ -37,7 +38,7 @@ class _createTaskState extends State<createTask> {
     '2 days before deadline',
     '1 week before deadline'
   ];
-  String cycle = 'none';
+  String cycle = 'once';
   String dropdownValue = 'Never';
   TextEditingController taskName = TextEditingController();
   TextEditingController? taskDescription = TextEditingController();
@@ -226,52 +227,131 @@ class _createTaskState extends State<createTask> {
                   )
                 ],
               ),
-              const Text("Cycle",
+              const Text("Cycle (20 points per use)",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-              const Text("Please use points to enable this feature",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-              const SizedBox(height: 5),
-              ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 163, 163, 163),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40),
+              // const Text("Please use points to enable this feature",
+              //     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              // const SizedBox(height: 5),
+              // ElevatedButton.icon(
+              //     style: ElevatedButton.styleFrom(
+              //       primary: const Color.fromARGB(255, 163, 163, 163),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(40),
+              //       ),
+              //     ),
+              //     onPressed: () {},
+              //     icon: const Icon(
+              //       Icons.shopping_basket_outlined,
+              //       color: Colors.white,
+              //     ),
+              //     label: const Text("Go to points shop",
+              //         style: TextStyle(
+              //             fontSize: 14,
+              //             fontWeight: FontWeight.bold,
+              //             color: Colors.white))),
+              Container(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          cycle = "once";
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 5),
+                        decoration: cycle == "once"
+                            ? BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(40),
+                              )
+                            : null,
+                        child: Text("Once",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: cycle == "once"
+                                    ? Colors.white
+                                    : Colors.black)),
+                      ),
                     ),
-                  ),
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.shopping_basket_outlined,
-                    color: Colors.white,
-                  ),
-                  label: const Text("Go to points shop",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white))),
-              // Container(
-              //   height: 50,
-              //   decoration: BoxDecoration(
-              //     border: Border.all(color: Color.fromARGB(255, 87, 87, 87)!),
-              //     borderRadius: BorderRadius.circular(40),
-              //   ),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     children: [
-              //       Text("Once",
-              //           style: TextStyle(
-              //               fontSize: 14, fontWeight: FontWeight.bold)),
-              //       Text("Daily",
-              //           style: TextStyle(
-              //               fontSize: 14, fontWeight: FontWeight.bold)),
-              //       Text("Weekly",
-              //           style: TextStyle(
-              //               fontSize: 14, fontWeight: FontWeight.bold)),
-              //       Text("Monthly",
-              //           style: TextStyle(
-              //               fontSize: 14, fontWeight: FontWeight.bold)),
-              //     ],
-              //   ),
-              // ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          cycle = "daily";
+                        });
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 5),
+                          decoration: cycle == "daily"
+                              ? BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(40),
+                                )
+                              : null,
+                          child: Text("Daily",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: cycle == "daily"
+                                      ? Colors.white
+                                      : Colors.black))),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          cycle = "weekly";
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 5),
+                        decoration: cycle == "weekly"
+                            ? BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(40),
+                              )
+                            : null,
+                        child: Text("Weekly",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: cycle == "weekly"
+                                    ? Colors.white
+                                    : Colors.black)),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          cycle = "monthly";
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 5),
+                        decoration: cycle == "monthly"
+                            ? BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(40),
+                              )
+                            : null,
+                        child: Text("Monthly",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: cycle == "monthly"
+                                    ? Colors.white
+                                    : Colors.black)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 10),
               const Text("Notify",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
@@ -309,8 +389,6 @@ class _createTaskState extends State<createTask> {
           const SizedBox(height: 50),
           ElevatedButton(
               style: ButtonStyle(
-                  minimumSize:
-                      MaterialStateProperty.all<Size>(const Size(170, 40)),
                   backgroundColor: MaterialStateProperty.all<Color>(
                       Theme.of(context).primaryColor)),
               onPressed: () async {
@@ -321,38 +399,77 @@ class _createTaskState extends State<createTask> {
                   });
                   return;
                 }
-                context.read<CalendarModel>().addTask(Task(
-                    taskName: taskName.text,
-                    taskDesc: taskDescription!.text,
-                    startDate: DateTime(datestart.year, datestart.month,
-                        datestart.day, timestart.hour, timestart.minute),
-                    endDate: DateTime(dateend.year, dateend.month, dateend.day,
-                        timeend.hour, timeend.minute),
-                    cycle: cycle,
-                    notify: dropdownValue,
-                    notiId: notiId,
-                    notiDate:await convert_notiDate(
-                      datestart.month,
-                      datestart.day,
-                      timestart.hour, 
-                      timestart.minute, 
-                      dropdownValue)));
 
-                AnimatedSnackBar.material("Success! Your task has created",
-                        type: AnimatedSnackBarType.success)
-                    .show(context);
-                Navigator.pop(context, true);
-                await Provider.of<CalendarModel>(context, listen: false)
-                    .updateTask(DateTime.now());
-                NotificationService().scheduledNotification(
-                    title: taskName.text,
-                    body: taskDescription!.text,
-                    month: datestart.month,
-                    day: datestart.day,
-                    hour: timestart.hour,
-                    minutes: timestart.minute,
-                    id: notiId,
-                    deadline: dropdownValue);
+                int points = int.parse(
+                    Provider.of<Database>(context, listen: false).userPoints);
+                if (points < 20 && cycle != "once") {
+                  AnimatedSnackBar.material(
+                          "You don't have enough points to create a task",
+                          type: AnimatedSnackBarType.error)
+                      .show(context);
+                  return;
+                } else {
+                  if (cycle == "once") {
+                    context.read<CalendarModel>().addTask(Task(
+                        taskName: taskName.text,
+                        taskDesc: taskDescription!.text,
+                        startDate: DateTime(datestart.year, datestart.month,
+                            datestart.day, timestart.hour, timestart.minute),
+                        endDate: DateTime(dateend.year, dateend.month,
+                            dateend.day, timeend.hour, timeend.minute),
+                        cycle: cycle,
+                        notify: dropdownValue,
+                        notiId: notiId,
+                        notiDate: await notiDate(datestart.month, datestart.day,
+                            timestart.hour, timestart.minute, dropdownValue)));
+
+                    AnimatedSnackBar.material("Success! Your task has created",
+                            type: AnimatedSnackBarType.success)
+                        .show(context);
+                    Navigator.pop(context, true);
+                    await Provider.of<CalendarModel>(context, listen: false)
+                        .updateTask(DateTime.now());
+                    NotificationService().scheduledNotification(
+                        title: taskName.text,
+                        body: taskDescription!.text,
+                        month: datestart.month,
+                        day: datestart.day,
+                        hour: timestart.hour,
+                        minutes: timestart.minute,
+                        id: notiId,
+                        deadline: dropdownValue);
+                  } else {
+                    context.read<Database>().deductPoint(20);
+                    context.read<CalendarModel>().addTask(Task(
+                        taskName: taskName.text,
+                        taskDesc: taskDescription!.text,
+                        startDate: DateTime(datestart.year, datestart.month,
+                            datestart.day, timestart.hour, timestart.minute),
+                        endDate: DateTime(dateend.year, dateend.month,
+                            dateend.day, timeend.hour, timeend.minute),
+                        cycle: cycle,
+                        notify: dropdownValue,
+                        notiId: notiId,
+                        notiDate: await notiDate(datestart.month, datestart.day,
+                            timestart.hour, timestart.minute, dropdownValue)));
+
+                    AnimatedSnackBar.material("Success! Your task has created",
+                            type: AnimatedSnackBarType.success)
+                        .show(context);
+                    Navigator.pop(context, true);
+                    await Provider.of<CalendarModel>(context, listen: false)
+                        .updateTask(DateTime.now());
+                    NotificationService().scheduledNotification(
+                        title: taskName.text,
+                        body: taskDescription!.text,
+                        month: datestart.month,
+                        day: datestart.day,
+                        hour: timestart.hour,
+                        minutes: timestart.minute,
+                        id: notiId,
+                        deadline: dropdownValue);
+                  }
+                }
               },
               child: const Text("Create",
                   style: TextStyle(

@@ -15,8 +15,6 @@ int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }
 
-
-
 class CalendarModel extends ChangeNotifier {
   // User instance
   User? get user => FirebaseAuth.instance.currentUser;
@@ -82,8 +80,6 @@ class CalendarModel extends ChangeNotifier {
         notiDate: (task['notiDate'] as Timestamp).toDate(),
         cycle: task['cycle'],
         notify: task['notify'],
-        
-        
       );
       final keyDate = DateTime(
         newTask.startDate.year,
@@ -98,6 +94,60 @@ class CalendarModel extends ChangeNotifier {
         }
       } else {
         _taskMap[key] = [newTask];
+      }
+
+      //cycle check
+      if (newTask.cycle == "daily") {
+        DateTime nextDate = newTask.startDate.add(Duration(days: 1));
+        while (nextDate.isBefore(newTask.endDate)) {
+          final key = DateTime(
+            nextDate.year,
+            nextDate.month,
+            nextDate.day,
+          );
+          if (_taskMap.containsKey(key)) {
+            if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+              _taskMap[key]!.add(newTask);
+            }
+          } else {
+            _taskMap[key] = [newTask];
+          }
+          nextDate = nextDate.add(Duration(days: 1));
+        }
+      } else if (newTask.cycle == "weekly") {
+        DateTime nextDate = newTask.startDate.add(Duration(days: 7));
+        while (nextDate.isBefore(newTask.endDate)) {
+          final key = DateTime(
+            nextDate.year,
+            nextDate.month,
+            nextDate.day,
+          );
+          if (_taskMap.containsKey(key)) {
+            if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+              _taskMap[key]!.add(newTask);
+            }
+          } else {
+            _taskMap[key] = [newTask];
+          }
+          nextDate = nextDate.add(Duration(days: 7));
+        }
+      } else if (newTask.cycle == "monthly") {
+        DateTime nextDate = newTask.startDate.add(Duration(days: 30));
+        while (nextDate.isBefore(newTask.endDate)) {
+          final key = DateTime(
+            nextDate.year,
+            nextDate.month,
+            nextDate.day,
+          );
+          if (_taskMap.containsKey(key)) {
+            if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+              _taskMap[key]!.add(newTask);
+            }
+          } else {
+            _taskMap[key] = [newTask];
+          }
+          nextDate = nextDate.add(Duration(days: 30));
+        }
       }
 
       final taskIdKey = task['taskId'];
@@ -123,7 +173,7 @@ class CalendarModel extends ChangeNotifier {
     await clearAll();
     print('fetching Noti');
     QuerySnapshot querySnapshot = await db
-    .collection('user_task')
+        .collection('user_task')
         .where('user_uid', isEqualTo: user?.uid)
         .where('notiDate', isLessThan: DateTime.now())
         .orderBy('notiDate')
@@ -185,7 +235,6 @@ class CalendarModel extends ChangeNotifier {
     return "success";
   }
 
-
   _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       _selectedDay = selectedDay;
@@ -230,9 +279,6 @@ class CalendarModel extends ChangeNotifier {
         )] ??
         [];
   }
-
-  
-
 
   Future<void> addTask(Task task) async {
     await db.collection('user_task').add({
@@ -280,7 +326,7 @@ class CalendarModel extends ChangeNotifier {
             endDate: task.endDate,
             cycle: task.cycle,
             notify: task.notify,
-            isDone: !querySnapshot.docs[0]['isDone'], 
+            isDone: !querySnapshot.docs[0]['isDone'],
             notiDate: task.notiDate));
     // int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
     // _taskMap[key]!.remove(task);
@@ -303,7 +349,6 @@ class CalendarModel extends ChangeNotifier {
     //       _selectedDay!.day,
     //     )] ??
     //     [];
-
 
     notifyListeners();
   }
@@ -532,9 +577,8 @@ Future<DateTime> convert_notiDate(
     '2 days before deadline',
     '1 week before deadline'
   ];
-      
-    
-    int x = dropdownItems.indexOf(deadline);
+
+  int x = dropdownItems.indexOf(deadline);
 
     if(x == 0){minutes += 0;}
 
@@ -559,23 +603,25 @@ Future<DateTime> convert_notiDate(
       day -= 1;
     }
 
-    if(day <= 0){
-      if(month == 2 || month == 4 || month == 6 || month == 8 || month == 9 || month == 11 || month == 1){
+    if (day <= 0) {
+      if (month == 2 ||
+          month == 4 ||
+          month == 6 ||
+          month == 8 ||
+          month == 9 ||
+          month == 11 ||
+          month == 1) {
         day += 31;
         month -= 1;
-      }
-      else if(month == 5 || month == 7 || month == 10 || month == 12){
+      } else if (month == 5 || month == 7 || month == 10 || month == 12) {
         day += 30;
         month -= 1;
-      }
-      else{
+      } else {
         day += 28;
         month -= 1;
       }
     }
-    }
-  
-  
+  }
 
     DateTime notiBF = DateTime(
       DateTime.now().year,
@@ -585,6 +631,5 @@ Future<DateTime> convert_notiDate(
       minutes,
       );
 
-
-    return notiBF;
-  }
+  return notiBF;
+}
