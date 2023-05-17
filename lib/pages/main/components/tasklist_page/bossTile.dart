@@ -1,6 +1,8 @@
 import 'package:checkmate/pages/challenge/mainChallenge.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -143,25 +145,6 @@ class _BossTileState extends State<BossTile> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        content: Column(
-                          children: [
-                            const Text(
-                              "You can come back to fight the boss tomorrow",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                context.read<Database>().enterBoss(
-                                    DateTime.now()
-                                        .subtract(const Duration(days: 1)));
-                              },
-                              child: Text('reset'),
-                            ),
-                          ],
-                        ),
                         actions: [
                           TextButton(
                               onPressed: () {
@@ -221,250 +204,164 @@ class _BossTileState extends State<BossTile> {
           }
         }
       },
-      child: Container(
-        height: 100,
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromARGB(99, 158, 158, 158),
-              spreadRadius: 0,
-              blurRadius: 10,
-              offset: Offset(0, 2), // changes position of shadow
-            )
-          ],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            // InkWell(
-            //   onTap: () {
-            //     context.read<Database>().enterBoss(
-            //         DateTime.now().subtract(const Duration(days: 1)));
-            //   },
-            //   child: Text('reset'),
-            // ),
-            const Image(image: AssetImage("assets/boss/boss.png")),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Current boss",
-                    style: TextStyle(fontSize: 14, color: Colors.grey)),
-                Text("Ancient Wizard",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).secondaryHeaderColor,
-                        fontWeight: FontWeight.bold)),
-                SizedBox(
-                  width: 100,
-                  child: LinearProgressIndicator(
-                    value: 1,
-                    backgroundColor: Colors.grey,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor),
+      child: context.watch<Database>().bossHp <= 0
+          ? Container(
+              height: 100,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(99, 158, 158, 158),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: Offset(0, 2), // changes position of shadow
+                  )
+                ],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const SizedBox(
+                    width: 70,
+                    height: 70,
+                    child: Image(
+                      image: AssetImage("assets/boss/boss.png"),
+                    ),
                   ),
-                ),
-                Text("5000/5000")
-              ],
-            ),
-            IconButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Theme.of(context).primaryColor),
-                  shape: MaterialStateProperty.all(const CircleBorder()),
-                ),
-                onPressed: () {
-                  if (!isSameDay(taskData.focusedDay, DateTime.now())) {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            icon: const Icon(Icons.warning_amber_rounded,
-                                size: 50),
-                            iconColor: Theme.of(context).primaryColor,
-                            title: const Text(
-                              "You can only fight the boss on the current day",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("OK"))
-                            ],
-                          );
-                        });
-                  } else {
-                    if (taskData.tasks[DateTime(
-                              DateTime.now().year,
-                              DateTime.now().month,
-                              DateTime.now().day,
-                            )] ==
-                            null ||
-                        taskData
-                                .tasks[DateTime(
-                              DateTime.now().year,
-                              DateTime.now().month,
-                              DateTime.now().day,
-                            )]
-                                .length ==
-                            0) {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              icon: const Icon(Icons.warning_amber_rounded,
-                                  size: 50),
-                              iconColor: Theme.of(context).primaryColor,
-                              title: const Text(
-                                "You need to complete at least one task to fight the boss",
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Congratulation",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                      Text(
+                        "You Defeated The Boss",
+                        style: TextStyle(
+                            fontSize: 14, color: Color.fromARGB(255, 0, 0, 0)),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.green),
+                        shape: MaterialStateProperty.all(const CircleBorder()),
+                      ),
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      color: Colors.white)
+                ],
+              ),
+            )
+          : Container(
+              height: 100,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(99, 158, 158, 158),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: Offset(0, 2), // changes position of shadow
+                  )
+                ],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const SizedBox(
+                    width: 70,
+                    height: 70,
+                    child: Image(
+                      image: AssetImage("assets/boss/boss.png"),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Current boss",
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('user_info')
+                            .where('uid',
+                                isEqualTo:
+                                    FirebaseAuth.instance.currentUser?.uid)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const CircularProgressIndicator();
+                          }
+                          const bossName = "Reaper";
+                          final progressValue = snapshot.data!.docs.first
+                                  .data()['BossHp'] as int? ??
+                              0;
+                          const maxProgressValue = 150000;
+                          final progressPercent =
+                              progressValue / maxProgressValue;
+                          return Column(
+                            children: [
+                              const Text(
+                                bossName,
                                 style: TextStyle(
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text("OK"))
-                              ],
-                            );
-                          });
-                      return;
-                    } else {
-                      int taskLength = taskData
-                          .tasks[DateTime(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day,
-                      )]
-                          .length;
-
-                      int completedTask = 0;
-                      for (int i = 0; i < taskLength; i++) {
-                        print(taskData.selectedTasks[i].isDone);
-                        if (taskData.selectedTasks[i].isDone) {
-                          completedTask++;
-                        }
-                      }
-
-                      if (completedTask != taskLength) {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                icon: const Icon(Icons.warning_amber_rounded,
-                                    size: 50),
-                                iconColor: Theme.of(context).primaryColor,
-                                title: const Text(
-                                  "You need to complete all tasks to fight the boss",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                              SizedBox(
+                                width: 100,
+                                child: LinearProgressIndicator(
+                                  value: progressPercent,
+                                  backgroundColor: Colors.grey,
+                                  valueColor: progressValue.toInt() >= 75000 &&
+                                          progressValue.toInt() <= 150000
+                                      ? const AlwaysStoppedAnimation<Color>(
+                                          Colors.green)
+                                      : progressValue.toInt() >= 35000 &&
+                                              progressValue.toInt() < 75000
+                                          ? const AlwaysStoppedAnimation<Color>(
+                                              Color.fromARGB(255, 221, 181, 36))
+                                          : const AlwaysStoppedAnimation<Color>(
+                                              Colors.red),
                                 ),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("OK"))
-                                ],
-                              );
-                            });
-                        return;
-                      } else {
-                        DateTime lastBossFight =
-                            context.read<Database>().userLastBoss;
-
-                        if (isSameDay(lastBossFight, DateTime.now())) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  icon: const Icon(Icons.warning_amber_rounded,
-                                      size: 50),
-                                  iconColor: Theme.of(context).primaryColor,
-                                  title: const Text(
-                                    "You can only fight the boss once a day",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("OK"))
-                                  ],
-                                );
-                              });
-                          return;
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  icon:
-                                      const Icon(Icons.info_outlined, size: 50),
-                                  iconColor: Color.fromARGB(255, 1, 67, 117),
-                                  title: const Text(
-                                    "Enter the boss fight?",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  content: const Text(
-                                    "You can only fight the boss once a day. You can come back to fight the boss later if you want to complete more tasks.",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  actionsAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("Cancel")),
-                                    TextButton(
-                                        onPressed: () {
-                                          context
-                                              .read<Database>()
-                                              .enterBoss(DateTime.now());
-                                          Navigator.pop(context);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const MainChallenge()));
-                                        },
-                                        child: const Text("Go"))
-                                  ],
-                                );
-                              });
-                        }
-                      }
-                    }
-                  }
-                },
-                icon: const Icon(Icons.arrow_forward_ios),
-                color: Colors.white)
-          ],
-        ),
-      ),
+                              ),
+                              Text("$progressValue/$maxProgressValue"),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.primaries[0]),
+                        shape: MaterialStateProperty.all(const CircleBorder()),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MainChallenge()));
+                      },
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      color: Colors.white)
+                ],
+              ),
+            ),
     );
   }
 }

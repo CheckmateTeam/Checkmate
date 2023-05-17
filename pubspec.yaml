@@ -58,4 +58,5 @@ flutter:
     - assets/audio/
     - assets/items/
     - assets/items/comingsoon.png
+    - assets/theme/
   uses-material-design: true
