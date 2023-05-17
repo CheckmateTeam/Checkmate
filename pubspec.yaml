@@ -31,6 +31,9 @@ dependencies:
   audioplayers: ^4.0.1
   flutter_onboarding_slider: ^1.0.9
 
+  chewie: ^1.5.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,6 +59,7 @@ flutter:
     - assets/boss/
     - assets/elements/
     - assets/audio/
+    - assets/audio/banvideoflutter.mp4
     - assets/items/
     - assets/items/comingsoon.png
     - assets/theme/
