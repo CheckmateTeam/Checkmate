@@ -1,4 +1,4 @@
-import 'package:checkmate/pages/main/components/tasklist_page/taskList.dart';
+
 import 'package:checkmate/pages/main/components/tasklist_page/taskSheet.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
@@ -8,23 +8,23 @@ class NotiList extends StatefulWidget {
   const NotiList({super.key});
 
   @override
-  State<TaskList> createState() => _TaskListState();
+  State<NotiList> createState() => _NotiListState();
 }
 
-class _TaskListState extends State<TaskList> {
-  late Future<String> _myFuture;
+class _NotiListState extends State<NotiList> {
+  late Future<String> _myNoti;
 
   @override
   void initState() {
     super.initState();
-    _myFuture = Provider.of<CalendarModel>(context, listen: false).fetchTask();
+    _myNoti = Provider.of<CalendarModel>(context, listen: false).fetchTask();
   }
 
   @override
   Widget build(BuildContext context) {
     final data = context.watch<CalendarModel>();
     return FutureBuilder(
-      future: _myFuture,
+      future: _myNoti,
       builder: (context, AsyncSnapshot snapshot) => snapshot.connectionState ==
               ConnectionState.waiting
           ? const Center(child: CircularProgressIndicator())

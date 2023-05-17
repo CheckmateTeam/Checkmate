@@ -1,15 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 
 class Database extends ChangeNotifier {
+  final LocalStorage storage = LocalStorage('boss');
+
   String username = 'fetching...';
   String email = 'fetching...';
   String points = 'fetching...';
   String cycle = 'fetching...';
+  String goal = 'fetching...';
   int userDamage = 0;
   int bossHp = 0;
   // int DamageUserDid = 0;
+  DateTime lastBoss = DateTime.now().subtract(const Duration(days: 1));
 
   Database() {
     init();
@@ -25,11 +30,13 @@ class Database extends ChangeNotifier {
       email = querySnapshot.docs[0]['email'];
       points = querySnapshot.docs[0]['points'].toString();
       cycle = querySnapshot.docs[0]['cycle'].toString();
+      goal = querySnapshot.docs[0]['goal'].toString();
       userDamage = querySnapshot.docs[0]['UserDamage'];
       bossHp = querySnapshot.docs[0]['BossHp'];
       // DamageUserDid = querySnapshot.docs[0]['DamageUserDid'];
     });
-
+    lastBoss = DateTime.parse(storage.getItem('lastBoss')) ??
+        DateTime.now().subtract(Duration(days: 1));
     notifyListeners();
   }
 
@@ -43,6 +50,8 @@ class Database extends ChangeNotifier {
   String get userEmail => email;
   String get userPoints => points;
   String get userCycle => cycle;
+  String get userGoal => goal;
+  DateTime get userLastBoss => lastBoss;
   int get userDamageget => userDamage;
   int get bossHpGet => bossHp;
 
@@ -63,6 +72,20 @@ class Database extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setGoal(int goal) {
+    db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
+        (QuerySnapshot querySnapshot) =>
+            querySnapshot.docs[0].reference.update({'goal': goal}));
+    notifyListeners();
+  }
+
+  void deductPoint(int point) {
+    db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
+        (QuerySnapshot querySnapshot) => querySnapshot.docs[0].reference
+            .update({'points': int.parse(points) - point}));
+    notifyListeners();
+  }
+
   void updateLogin() {
     init();
     db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
@@ -77,6 +100,29 @@ class Database extends ChangeNotifier {
             querySnapshot.docs[0].reference.update({'displayName': name}));
     username = name;
     notifyListeners();
+  }
+
+  void enterBoss(DateTime time) {
+    storage.setItem('lastBoss', time.toIso8601String());
+    lastBoss = time;
+    notifyListeners();
+    void buyItem(int itemPrice) {
+      db
+          .collection('user_info')
+          .where('uid', isEqualTo: user?.uid)
+          .get()
+          .then((QuerySnapshot querySnapshot) async {
+        int points = querySnapshot.docs[0]['points'];
+        if (points != null && points >= itemPrice) {
+          final newPoints = points - itemPrice;
+          await db
+              .collection('user_info')
+              .doc(querySnapshot.docs[0].id)
+              .update({'points': newPoints});
+          notifyListeners();
+        }
+      });
+    }
   }
 
   void buyItem(int itemPrice) {

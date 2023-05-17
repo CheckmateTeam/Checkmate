@@ -25,9 +25,8 @@ class _HowToUsePointSheetState extends State<HowToUsePointSheet> {
               color: Colors.grey,
             ),
             SizedBox(height: 20),
-            Text('Lerem ipsum', style: TextStyle(fontSize: 16)),
+            Text('Points can be use to unlock fetures.Such as new theme, cycle reminder, etc. And also can be use for udgrading in challange! Go to points shop to see more.', style: TextStyle(fontSize: 16)),
             SizedBox(height: 20),
-            
           ],
         ),
       ),

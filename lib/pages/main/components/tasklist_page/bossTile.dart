@@ -1,3 +1,4 @@
+import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/pages/challenge/mainChallenge.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
@@ -7,8 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class BossTile extends StatelessWidget {
+class BossTile extends StatefulWidget {
   const BossTile({super.key});
+
+  @override
+  State<BossTile> createState() => _BossTileState();
+}
+
+class _BossTileState extends State<BossTile> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +32,7 @@ class BossTile extends StatelessWidget {
               builder: (BuildContext context) {
                 return AlertDialog(
                   icon: const Icon(Icons.warning_amber_rounded, size: 50),
-                  iconColor: Colors.red,
+                  iconColor: Theme.of(context).primaryColor,
                   title: const Text(
                     "You can only fight the boss on the current day",
                     style: TextStyle(
@@ -39,20 +50,26 @@ class BossTile extends StatelessWidget {
                 );
               });
         } else {
-          if (taskData
-                  .tasks[DateTime(
-                DateTime.now().year,
-                DateTime.now().month,
-                DateTime.now().day,
-              )]
-                  .length ==
-              0) {
+          if (taskData.tasks[DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    DateTime.now().day,
+                  )] ==
+                  null ||
+              taskData
+                      .tasks[DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    DateTime.now().day,
+                  )]
+                      .length ==
+                  0) {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     icon: const Icon(Icons.warning_amber_rounded, size: 50),
-                    iconColor: Colors.red,
+                    iconColor: Theme.of(context).primaryColor,
                     title: const Text(
                       "You need to complete at least one task to fight the boss",
                       style: TextStyle(
@@ -71,35 +88,25 @@ class BossTile extends StatelessWidget {
                 });
             return;
           } else {
-            int taskLength = taskData
-                .tasks[DateTime(
-              DateTime.now().year,
-              DateTime.now().month,
-              DateTime.now().day,
-            )]
-                .length;
-            print(taskLength);
+            List<Task> tasks =
+                Provider.of<CalendarModel>(context, listen: false)
+                    .selectedTasks;
+            Map<String, bool> taskstatus =
+                Provider.of<CalendarModel>(context, listen: false).taskStatus;
             int completedTask = 0;
-            for (int i = 0; i < taskLength; i++) {
-              if (taskData
-                      .tasks[DateTime(
-                    DateTime.now().year,
-                    DateTime.now().month,
-                    DateTime.now().day,
-                  )][i]
-                      .isDone ==
-                  true) {
+            for (int i = 0; i < tasks.length; i++) {
+              if (taskstatus[tasks[i].taskId] == true) {
                 completedTask++;
               }
             }
-
-            if (completedTask < taskLength) {
+            print(completedTask);
+            if (completedTask != tasks.length) {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
                       icon: const Icon(Icons.warning_amber_rounded, size: 50),
-                      iconColor: Colors.red,
+                      iconColor: Theme.of(context).primaryColor,
                       title: const Text(
                         "You need to complete all tasks to fight the boss",
                         style: TextStyle(
@@ -118,46 +125,89 @@ class BossTile extends StatelessWidget {
                   });
               return;
             } else {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      icon: const Icon(Icons.info_outlined, size: 50),
-                      iconColor: Color.fromARGB(255, 1, 67, 117),
-                      title: const Text(
-                        "Enter the boss fight?",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
+              DateTime lastBossFight = context.read<Database>().userLastBoss;
+
+              if (isSameDay(lastBossFight, DateTime.now())) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        icon: const Icon(Icons.warning_amber_rounded, size: 50),
+                        iconColor: Theme.of(context).primaryColor,
+                        title: const Text(
+                          "You can only fight the boss once a day",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                      content: const Text(
-                        "You can only fight the boss once a day. You can come back to fight the boss later if you want to complete more tasks.",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("OK"))
+                        ],
+                      );
+                    });
+                return;
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        icon: const Icon(Icons.info_outlined, size: 50),
+                        iconColor: Color.fromARGB(255, 1, 67, 117),
+                        title: const Text(
+                          "Enter the boss fight?",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                      actionsAlignment: MainAxisAlignment.spaceAround,
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Cancel")),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const MainChallenge()));
-                            },
-                            child: const Text("Go"))
-                      ],
-                    );
-                  });
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Text(
+                              "You can only fight the boss once a day. You can come back to fight the boss later if you want to complete more tasks.",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Text(
+                              "Once you click 'go', the timer will start remaining!!",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        actionsAlignment: MainAxisAlignment.spaceAround,
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Cancel")),
+                          TextButton(
+                              onPressed: () {
+                                context
+                                    .read<Database>()
+                                    .enterBoss(DateTime.now());
+                                Navigator.pop(context);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MainChallenge()));
+                              },
+                              child: const Text("Go"))
+                        ],
+                      );
+                    });
+              }
             }
           }
         }
@@ -198,7 +248,7 @@ class BossTile extends StatelessWidget {
                             color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                       Text(
-                        "You Defeated The Boss",
+                        "The boss has been defeated.",
                         style: TextStyle(
                             fontSize: 14, color: Color.fromARGB(255, 0, 0, 0)),
                       ),

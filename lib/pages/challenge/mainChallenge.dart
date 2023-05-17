@@ -183,7 +183,7 @@ class _GameState extends State<Game>
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const Home()),
+                      MaterialPageRoute(builder: (context) => const Home(sindex: 0,)),
                     );
                   },
                   child: const Text("OK"),
@@ -564,7 +564,7 @@ class _GameState extends State<Game>
                   updateTotalDamageToFirebase();
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const Home()),
+                    MaterialPageRoute(builder: (context) => const Home(sindex: 0,)),
                   );
                 },
                 child: const Text("Continue"),
