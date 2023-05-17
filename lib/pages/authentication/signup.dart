@@ -1,6 +1,7 @@
 import 'package:checkmate/main.dart';
 import 'package:checkmate/pages/authentication/signin.dart';
 import 'package:checkmate/pages/home.dart';
+import 'package:checkmate/pages/tutorial/tutorial_page.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -180,17 +181,26 @@ class _SignUpState extends State<SignUp> {
                                                             passwordController
                                                                 .text);
                                                     context
+                                                        .read<CalendarModel>()
+                                                        .clearAll();
+                                                    context
                                                         .read<Database>()
                                                         .init();
                                                     context
                                                         .read<CalendarModel>()
                                                         .fetchTask();
-                                                    Navigator.pushAndRemoveUntil(
+                                                    Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                const MainApp()),
-                                                        (route) => false);
+                                                                const TutorialPage()));
+
+                                                    // Navigator.pushAndRemoveUntil(
+                                                    //     context,
+                                                    //     MaterialPageRoute(
+                                                    //         builder: (context) =>
+                                                    //             const MainApp()),
+                                                    //     (route) => false);
                                                   },
                                                   child: const Text(
                                                       'Go to application'))

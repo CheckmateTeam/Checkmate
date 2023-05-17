@@ -1,12 +1,8 @@
-import 'package:checkmate/provider/archive_provider.dart';
-import 'package:fl_chart/fl_chart.dart';
+import 'package:checkmate/pages/main/components/archive_page/taskListAll.dart';
+import 'package:checkmate/pages/main/components/archive_page/taskListMonth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
 import 'components/archive_page/taskListWeek.dart';
+import 'components/archive_page/taskListYear.dart';
 
 class ArchivePage extends StatefulWidget {
   const ArchivePage({super.key});
@@ -27,11 +23,11 @@ class _ArchivePageState extends State<ArchivePage> {
       body: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: 25, horizontal: 0),
+            padding: EdgeInsets.only(top: 25, bottom: 5),
             child: Text(
               "Archive",
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 26,
                 fontWeight: FontWeight.w900,
               ),
               textAlign: TextAlign.center,
@@ -75,17 +71,16 @@ class SelectWeek extends StatefulWidget {
 class _SelectWeekState extends State<SelectWeek> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   // ignore: constant_identifier_names
   static const List<Widget> mode_index = <Widget>[
     TaskListWeek(),
-    Text("month"),
-    Text("year"),
-    Text("all")
+    TaskListMonth(),
+    TaskListYear(),
+    TaskListAll()
   ];
 
   @override
@@ -195,6 +190,11 @@ class _SelectWeekState extends State<SelectWeek> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = 3;
+                      });
+                    },
                     child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),

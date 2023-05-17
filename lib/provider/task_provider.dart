@@ -1,12 +1,10 @@
-import 'dart:collection';
-import 'package:checkmate/Services/noti_service.dart';
+import 'dart:math';
+
 import 'package:checkmate/model/taskModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:uuid/uuid.dart';
 
 final kToday = DateTime.now();
@@ -16,8 +14,6 @@ final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
 int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }
-
-int x = 0;
 
 class CalendarModel extends ChangeNotifier {
   // User instance
@@ -46,6 +42,7 @@ class CalendarModel extends ChangeNotifier {
   get rangeEnd => _rangeEnd;
   get calendarFormat => _calendarFormat;
   get taskStatus => _taskStatus;
+  get clearAll => _clearAll;
 
   CalendarModel() {
     _selectedDay = _focusedDay;
@@ -55,6 +52,12 @@ class CalendarModel extends ChangeNotifier {
           DateTime.now().day,
         )] ??
         [];
+  }
+  void _clearAll() {
+    _taskMap.clear();
+    _taskStatus.clear();
+    _selectedTasks!.clear();
+    notifyListeners();
   }
 
   Future<String> fetchTask() async {
@@ -72,6 +75,7 @@ class CalendarModel extends ChangeNotifier {
         endDate: (task['endDate'] as Timestamp).toDate(),
         cycle: task['cycle'],
         notify: task['notify'],
+        notiDate: (task['notiDate'] as Timestamp).toDate(),
       );
       final keyDate = DateTime(
         newTask.startDate.year,
@@ -88,8 +92,64 @@ class CalendarModel extends ChangeNotifier {
         _taskMap[key] = [newTask];
       }
 
+      //cycle check
+      if (newTask.cycle == "daily") {
+        DateTime nextDate = newTask.startDate.add(Duration(days: 1));
+        while (nextDate.isBefore(newTask.endDate)) {
+          final key = DateTime(
+            nextDate.year,
+            nextDate.month,
+            nextDate.day,
+          );
+          if (_taskMap.containsKey(key)) {
+            if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+              _taskMap[key]!.add(newTask);
+            }
+          } else {
+            _taskMap[key] = [newTask];
+          }
+          nextDate = nextDate.add(Duration(days: 1));
+        }
+      } else if (newTask.cycle == "weekly") {
+        DateTime nextDate = newTask.startDate.add(Duration(days: 7));
+        while (nextDate.isBefore(newTask.endDate)) {
+          final key = DateTime(
+            nextDate.year,
+            nextDate.month,
+            nextDate.day,
+          );
+          if (_taskMap.containsKey(key)) {
+            if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+              _taskMap[key]!.add(newTask);
+            }
+          } else {
+            _taskMap[key] = [newTask];
+          }
+          nextDate = nextDate.add(Duration(days: 7));
+        }
+      } else if (newTask.cycle == "monthly") {
+        DateTime nextDate = newTask.startDate.add(Duration(days: 30));
+        while (nextDate.isBefore(newTask.endDate)) {
+          final key = DateTime(
+            nextDate.year,
+            nextDate.month,
+            nextDate.day,
+          );
+          if (_taskMap.containsKey(key)) {
+            if (!_taskMap[key]!.any((t) => t.taskId == newTask.taskId)) {
+              _taskMap[key]!.add(newTask);
+            }
+          } else {
+            _taskMap[key] = [newTask];
+          }
+          nextDate = nextDate.add(Duration(days: 30));
+        }
+      }
+
       final taskIdKey = task['taskId'];
       final isDone = task['isDone'];
+      final isRead = task['isRead'];
+      final notiId = task['notiId'];
       _taskStatus[taskIdKey] = isDone;
     }
     _selectedDay = _focusedDay;
@@ -102,6 +162,16 @@ class CalendarModel extends ChangeNotifier {
     await Future.delayed(Duration(milliseconds: 100));
     notifyListeners();
     return 'success';
+  }
+
+  Future<String> fetchNotiTask() async {
+    QuerySnapshot querySnapshot = await db
+        .collection('user_task')
+        .where('user_uid', isEqualTo: user?.uid)
+        .where('noti')
+        .orderBy('startDate')
+        .get();
+    return "1";
   }
 
   _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -152,6 +222,7 @@ class CalendarModel extends ChangeNotifier {
   Future<void> addTask(Task task) async {
     await db.collection('user_task').add({
       'user_uid': user?.uid,
+      'notiId': Random().nextInt(10000000),
       'taskId': const Uuid().v4().toString(),
       'taskName': task.taskName,
       'taskDesc': task.taskDesc,
@@ -160,62 +231,63 @@ class CalendarModel extends ChangeNotifier {
       'cycle': task.cycle,
       'notify': task.notify,
       'isDone': task.isDone,
+      'isRead': task.isRead,
+      'notiDate': task.notiDate
     });
 
     notifyListeners();
   }
 
   void updateDoneTask(Task task) async {
-    await db
+    final QuerySnapshot querySnapshot = await db
         .collection('user_task')
         .where('taskId', isEqualTo: task.taskId)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs[0].reference
-          .update({'isDone': !querySnapshot.docs[0]['isDone']});
-    });
+        .get();
+    querySnapshot.docs[0].reference
+        .update({'isDone': !querySnapshot.docs[0]['isDone']});
     final keyDate = DateTime(
       task.startDate.year,
       task.startDate.month,
       task.startDate.day,
     );
     final key = keyDate;
-    if (task.isDone == true) {
-      int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
-      _taskMap[key]!.remove(task);
-      _taskMap[key]!.insert(
-          prevIndex,
-          Task(
-              taskId: task.taskId,
-              taskName: task.taskName,
-              taskDesc: task.taskDesc,
-              startDate: task.startDate,
-              endDate: task.endDate,
-              cycle: task.cycle,
-              notify: task.notify,
-              isDone: false));
-    } else {
-      int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
-      _taskMap[key]!.remove(task);
-      _taskMap[key]!.insert(
-          prevIndex,
-          Task(
-              taskId: task.taskId,
-              taskName: task.taskName,
-              taskDesc: task.taskDesc,
-              startDate: task.startDate,
-              endDate: task.endDate,
-              cycle: task.cycle,
-              notify: task.notify,
-              isDone: true));
-    }
-    _selectedDay = _focusedDay;
-    _selectedTasks = _taskMap[DateTime(
-          _selectedDay!.year,
-          _selectedDay!.month,
-          _selectedDay!.day,
-        )] ??
-        [];
+
+    int prevIndex = _selectedTasks!.indexWhere((t) => t.taskId == task.taskId);
+    _selectedTasks!.remove(task);
+
+    _selectedTasks!.insert(
+        prevIndex,
+        Task(
+            taskId: task.taskId,
+            taskName: task.taskName,
+            taskDesc: task.taskDesc,
+            startDate: task.startDate,
+            endDate: task.endDate,
+            cycle: task.cycle,
+            notify: task.notify,
+            isDone: !querySnapshot.docs[0]['isDone'],
+            notiDate: task.notiDate));
+    // int prevIndex = _taskMap[key]!.indexWhere((t) => t.taskId == task.taskId);
+    // _taskMap[key]!.remove(task);
+    // _taskMap[key]!.insert(
+    //     prevIndex,
+    //     Task(
+    //         taskId: task.taskId,
+    //         taskName: task.taskName,
+    //         taskDesc: task.taskDesc,
+    //         startDate: task.startDate,
+    //         endDate: task.endDate,
+    //         cycle: task.cycle,
+    //         notify: task.notify,
+    //         isDone: !task.isDone));
+
+    // _selectedDay = _focusedDay;
+    // _selectedTasks = _taskMap[DateTime(
+    //       _selectedDay!.year,
+    //       _selectedDay!.month,
+    //       _selectedDay!.day,
+    //     )] ??
+    //     [];
 
     notifyListeners();
   }
@@ -248,7 +320,6 @@ class CalendarModel extends ChangeNotifier {
         )] ??
         [];
     await Future.delayed(Duration(milliseconds: 100));
-    NotificationService().cancel(task.notiId);
     notifyListeners();
   }
 
@@ -292,4 +363,85 @@ class CalendarModel extends ChangeNotifier {
     await Future.delayed(Duration(milliseconds: 100));
     notifyListeners();
   }
+}
+
+Future<DateTime> notiDate(
+    int nmonth, int nday, int nhour, int nminutes, String deadline) async {
+  List<String> dropdownItems = [
+    'Never',
+    '5 mins before deadline',
+    '10 mins before deadline',
+    '15 mins before deadline',
+    '30 mins before deadline',
+    '1 hour before deadline',
+    '2 hours before deadline',
+    '1 day before deadline',
+    '2 days before deadline',
+    '1 week before deadline'
+  ];
+
+  int x = dropdownItems.indexOf(deadline);
+
+  if (x == 0) {
+    nminutes += 0;
+  } else {
+    if (x == 1) {
+      nminutes -= 5;
+    } else if (x == 2) {
+      nminutes -= 10;
+    } else if (x == 3) {
+      nminutes -= 15;
+    } else if (x == 4) {
+      nminutes -= 30;
+    } else if (x == 5) {
+      nhour -= 1;
+    } else if (x == 6) {
+      nhour -= 2;
+    } else if (x == 7) {
+      nday -= 1;
+    } else if (x == 8) {
+      nday -= 2;
+    } else if (x == 9) {
+      nday -= 7;
+    }
+
+    if (nminutes < 0) {
+      nminutes += 60;
+      nhour -= 1;
+    }
+
+    if (nhour < 0) {
+      nhour += 24;
+      nday -= 1;
+    }
+
+    if (nday <= 0) {
+      if (nmonth == 2 ||
+          nmonth == 4 ||
+          nmonth == 6 ||
+          nmonth == 8 ||
+          nmonth == 9 ||
+          nmonth == 11 ||
+          nmonth == 1) {
+        nday += 31;
+        nmonth -= 1;
+      } else if (nmonth == 5 || nmonth == 7 || nmonth == 10 || nmonth == 12) {
+        nday += 30;
+        nmonth -= 1;
+      } else {
+        nday += 28;
+        nmonth -= 1;
+      }
+    }
+  }
+
+  DateTime notiBF = DateTime(
+    DateTime.now().year,
+    nmonth,
+    nday,
+    nhour,
+    nminutes,
+  );
+
+  return notiBF;
 }

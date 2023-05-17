@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 
 class Database extends ChangeNotifier {
+  final LocalStorage storage = LocalStorage('boss');
+
   String username = 'fetching...';
   String email = 'fetching...';
   String points = 'fetching...';
@@ -10,6 +13,8 @@ class Database extends ChangeNotifier {
   int userDamage = 0;
   int bossHp = 0;
   // int DamageUserDid = 0;
+  String goal = 'fetching...';
+  late DateTime lastBoss;
 
   Database() {
     init();
@@ -28,8 +33,10 @@ class Database extends ChangeNotifier {
       userDamage = querySnapshot.docs[0]['UserDamage'];
       bossHp = querySnapshot.docs[0]['BossHp'];
       // DamageUserDid = querySnapshot.docs[0]['DamageUserDid'];
+      goal = querySnapshot.docs[0]['goal'].toString();
     });
-
+    lastBoss = DateTime.parse(storage.getItem('lastBoss')) ??
+        DateTime.now().subtract(Duration(days: 1));
     notifyListeners();
   }
 
@@ -45,6 +52,8 @@ class Database extends ChangeNotifier {
   String get userCycle => cycle;
   int get userDamageget => userDamage;
   int get bossHpGet => bossHp;
+  String get userGoal => goal;
+  DateTime get userLastBoss => lastBoss;
 
   //DB FUNCTION
   Future<void> addNewUser(String email, String name) async {
@@ -60,6 +69,20 @@ class Database extends ChangeNotifier {
       'UserDamage': 300,
       // 'DamageUserDid': 0,
     });
+    notifyListeners();
+  }
+
+  void setGoal(int goal) {
+    db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
+        (QuerySnapshot querySnapshot) =>
+            querySnapshot.docs[0].reference.update({'goal': goal}));
+    notifyListeners();
+  }
+
+  void deductPoint(int point) {
+    db.collection('user_info').where('uid', isEqualTo: user?.uid).get().then(
+        (QuerySnapshot querySnapshot) => querySnapshot.docs[0].reference
+            .update({'points': int.parse(points) - point}));
     notifyListeners();
   }
 
@@ -95,5 +118,9 @@ class Database extends ChangeNotifier {
         notifyListeners();
       }
     });
+  void enterBoss(DateTime time) {
+    storage.setItem('lastBoss', time.toIso8601String());
+    lastBoss = time;
+    notifyListeners();
   }
 }

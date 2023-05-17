@@ -25,8 +25,8 @@ class _TaskListMonthState extends State<TaskListMonth> {
   }
 
   Widget build(BuildContext context) {
-    final taskList = context.read<ArchiveProvider>().taskList;
-    final barData = context.read<ArchiveProvider>().taskMap;
+    final taskList = context.watch<ArchiveProvider>().taskList;
+    barData = context.watch<ArchiveProvider>().taskMap;
     return FutureBuilder(
       future: _myFuture,
       builder: (context, snapshot) {
@@ -38,31 +38,31 @@ class _TaskListMonthState extends State<TaskListMonth> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    taskList.length.toString() + " tasks",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Text("01:20:00 hours",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      )),
-                  Text(taskList.length.toString() + " days",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ))
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 50),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     children: [
+            //       Text(
+            //         taskList.length.toString() + " tasks",
+            //         style: TextStyle(
+            //           fontSize: 14,
+            //           fontWeight: FontWeight.w700,
+            //         ),
+            //       ),
+            //       // Text("01:20:00 hours",
+            //       //     style: TextStyle(
+            //       //       fontSize: 14,
+            //       //       fontWeight: FontWeight.w700,
+            //       //     )),
+            //       Text(barData.length.toString() + " days",
+            //           style: TextStyle(
+            //             fontSize: 14,
+            //             fontWeight: FontWeight.w700,
+            //           ))
+            //     ],
+            //   ),
+            // ),
             const SizedBox(
               height: 20,
             ),
@@ -86,109 +86,107 @@ class _TaskListMonthState extends State<TaskListMonth> {
                     )),
               ],
             ),
-            //week
+            //month
             Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Text(DateFormat('MMMM').format(DateTime(
-                      0, DateTime.now().subtract(Duration(days: 7)).month)) +
-                  " " +
-                  DateTime.now().subtract(Duration(days: 7)).day.toString() +
-                  " - " +
-                  DateFormat('MMMM').format(DateTime(
-                      0, DateTime.now().subtract(Duration(days: 1)).month)) +
-                  " " +
-                  DateTime.now().subtract(Duration(days: 1)).day.toString()),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: taskList.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            InkWell(
-                              onTap: () {},
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color.fromARGB(99, 158, 158, 158),
-                                      spreadRadius: 0,
-                                      blurRadius: 10,
-                                      offset: Offset(
-                                          0, 2), // changes position of shadow
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                margin: const EdgeInsets.only(left: 10.0),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(14.0),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40.0,
+                  vertical: 10,
+                ),
+                child: Text(
+                    DateFormat('y').format(DateTime.now()) +
+                        " " +
+                        DateFormat('MMMM').format(DateTime.now()),
+                    style: TextStyle(
+                      fontSize: 16,
+                    ))),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: taskList.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color.fromARGB(99, 158, 158, 158),
+                                  spreadRadius: 0,
+                                  blurRadius: 10,
+                                  offset: Offset(
+                                      0, 2), // changes position of shadow
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin: const EdgeInsets.only(left: 10.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(14.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
                                     children: [
-                                      Row(
+                                      CircleAvatar(
+                                        child: Icon(Icons.table_view_sharp,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                      ),
+                                      const SizedBox(width: 15.0),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          const CircleAvatar(
-                                            child: Icon(Icons.table_view_sharp,
-                                                color: Colors.red),
+                                          Text(
+                                            taskList[index].taskName,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                decoration: TextDecoration.none,
+                                                color: Colors.black87),
                                           ),
-                                          const SizedBox(width: 15.0),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                taskList[index].taskName,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
-                                                    decoration:
-                                                        TextDecoration.none),
-                                              ),
-                                              Text(
-                                                taskList[index]
-                                                            .taskDesc
-                                                            .length >
-                                                        15
-                                                    ? taskList[index]
-                                                            .taskDesc
-                                                            .substring(0, 15) +
-                                                        "..."
-                                                    : taskList[index].taskDesc,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    decoration:
-                                                        TextDecoration.none),
-                                              ),
-                                            ],
+                                          Text(
+                                            taskList[index].taskDesc.length > 15
+                                                ? taskList[index]
+                                                        .taskDesc
+                                                        .substring(0, 15) +
+                                                    "..."
+                                                : taskList[index].taskDesc,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                decoration: TextDecoration.none,
+                                                color: Colors.black54),
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                ),
+                                  Text(
+                                      DateFormat('MM/dd')
+                                          .format(taskList[index].startDate),
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[600],
+                                          decoration: TextDecoration.none)),
+                                ],
                               ),
                             ),
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 30.0,
-                                ),
-                                child: Seperator()),
-                          ],
-                        );
-                      }),
-                ),
-              ],
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 30.0,
+                              ),
+                              child: Seperator()),
+                        ],
+                      );
+                    }),
+              ),
             ),
           ],
         );
@@ -210,10 +208,13 @@ class _TaskListMonthState extends State<TaskListMonth> {
             int rodIndex,
           ) {
             return BarTooltipItem(
-              rod.toY.round().toString(),
+              rod.toY.round().toString() == "0"
+                  ? ""
+                  : rod.toY.round().toString(),
               const TextStyle(
-                color: Colors.black,
+                color: Color.fromARGB(255, 77, 77, 77),
                 fontWeight: FontWeight.bold,
+                fontSize: 12,
               ),
             );
           },
@@ -221,183 +222,17 @@ class _TaskListMonthState extends State<TaskListMonth> {
       );
 
   Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Colors.black,
+    final style = TextStyle(
+      color: Theme.of(context).secondaryHeaderColor,
       fontWeight: FontWeight.bold,
       fontSize: 14,
     );
     String text = '';
-    switch (value.toInt()) {
-      case 0:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 6)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-        break;
-      case 1:
-        text = 'Te';
-        break;
-      case 2:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 5)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-        break;
-      case 3:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 4)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-        break;
-      case 4:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 3)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-        break;
-      case 5:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 2)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-
-        break;
-      case 6:
-        switch (DateFormat('EEEE')
-            .format(DateTime.now().subtract(Duration(days: 1)))
-            .toString()) {
-          case "Monday":
-            text = "Mn";
-            break;
-          case "Tuesday":
-            text = "Te";
-            break;
-          case "Wednesday":
-            text = "Wd";
-            break;
-          case "Thursday":
-            text = "Tu";
-            break;
-          case "Friday":
-            text = "Fr";
-            break;
-          case "Saturday":
-            text = "St";
-            break;
-          case "Sunday":
-            text = "Sn";
-            break;
-        }
-
-        break;
-      default:
-        text = '';
-        break;
+    int day = value.toInt();
+    if (day % 6 == 0) {
+      text = day.toString();
+    } else {
+      text = '';
     }
     return SideTitleWidget(
       axisSide: meta.axisSide,
@@ -432,94 +267,37 @@ class _TaskListMonthState extends State<TaskListMonth> {
 
   LinearGradient get _barsGradient => LinearGradient(
         colors: [
-          Color.fromARGB(255, 235, 75, 0),
-          Color.fromARGB(255, 255, 129, 26),
+          Theme.of(context).primaryColor,
+          Theme.of(context).colorScheme.secondary,
         ],
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
       );
 
   List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: barData[DateTime(
-                DateTime.now().subtract(Duration(days: 6)).year,
-                DateTime.now().subtract(Duration(days: 6)).month,
-                DateTime.now().subtract(Duration(days: 6)).day,
-              )]!
-                  .toDouble(),
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: barData[DateTime(
-                DateTime.now().subtract(Duration(days: 5)).year,
-                DateTime.now().subtract(Duration(days: 5)).month,
-                DateTime.now().subtract(Duration(days: 5)).day,
-              )]!
-                  .toDouble(),
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: 2,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: 4,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: 6,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: 9,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: 3,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
+        for (int i = 0; i < 31; i++)
+          BarChartGroupData(
+            x: i + 1,
+            barRods: [
+              BarChartRodData(
+                fromY: 0,
+                toY: barData[DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      i + 1,
+                    )]
+                        ?.toDouble() ??
+                    0,
+                gradient: _barsGradient,
+                backDrawRodData: BackgroundBarChartRodData(
+                  show: true,
+                  toY: 20,
+                  color: Colors.grey[200],
+                ),
+              ),
+            ],
+            showingTooltipIndicators: [0],
+          ),
       ];
 }
 
