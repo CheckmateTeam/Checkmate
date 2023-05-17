@@ -169,12 +169,24 @@ class _BossTileState extends State<BossTile> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        content: const Text(
-                          "You can only fight the boss once a day. You can come back to fight the boss later if you want to complete more tasks.",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                          ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Text(
+                              "You can only fight the boss once a day. You can come back to fight the boss later if you want to complete more tasks.",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Text(
+                              "Once you click 'go', the timer will start remaining!!",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         ),
                         actionsAlignment: MainAxisAlignment.spaceAround,
                         actions: [

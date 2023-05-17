@@ -11,10 +11,10 @@ class Database extends ChangeNotifier {
   String points = 'fetching...';
   String cycle = 'fetching...';
   String goal = 'fetching...';
-  late DateTime lastBoss;
   int userDamage = 0;
   int bossHp = 0;
   // int DamageUserDid = 0;
+  DateTime lastBoss = DateTime.now().subtract(const Duration(days: 1));
 
   Database() {
     init();
@@ -123,5 +123,23 @@ class Database extends ChangeNotifier {
         }
       });
     }
+  }
+
+  void buyItem(int itemPrice) {
+    db
+        .collection('user_info')
+        .where('uid', isEqualTo: user?.uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) async {
+      int points = querySnapshot.docs[0]['points'];
+      if (points != null && points >= itemPrice) {
+        final newPoints = points - itemPrice;
+        await db
+            .collection('user_info')
+            .doc(querySnapshot.docs[0].id)
+            .update({'points': newPoints});
+        notifyListeners();
+      }
+    });
   }
 }
