@@ -11,7 +11,7 @@ class Database extends ChangeNotifier {
   String points = 'fetching...';
   String cycle = 'fetching...';
   String goal = 'fetching...';
-  DateTime lastBoss = DateTime.now().subtract(Duration(days: 1));
+  DateTime lastBoss = DateTime.now().subtract(const Duration(days: 1));
 
   Database() {
     init();

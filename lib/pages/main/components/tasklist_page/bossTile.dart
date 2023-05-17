@@ -1,3 +1,4 @@
+import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/pages/challenge/mainChallenge.dart';
 import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
@@ -15,7 +16,6 @@ class BossTile extends StatefulWidget {
 class _BossTileState extends State<BossTile> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -86,23 +86,19 @@ class _BossTileState extends State<BossTile> {
                 });
             return;
           } else {
-            int taskLength = taskData
-                .tasks[DateTime(
-              DateTime.now().year,
-              DateTime.now().month,
-              DateTime.now().day,
-            )]
-                .length;
-
+            List<Task> tasks =
+                Provider.of<CalendarModel>(context, listen: false)
+                    .selectedTasks;
+            Map<String, bool> taskstatus =
+                Provider.of<CalendarModel>(context, listen: false).taskStatus;
             int completedTask = 0;
-            for (int i = 0; i < taskLength; i++) {
-              print(taskData.selectedTasks[i].isDone);
-              if (taskData.selectedTasks[i].isDone) {
+            for (int i = 0; i < tasks.length; i++) {
+              if (taskstatus[tasks[i].taskId] == true) {
                 completedTask++;
               }
             }
-
-            if (completedTask != taskLength) {
+            print(completedTask);
+            if (completedTask != tasks.length) {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
