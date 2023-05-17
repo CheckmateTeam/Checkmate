@@ -124,3 +124,6 @@ class Database extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+  void enterBoss(DateTime dateTime) {}
+}
