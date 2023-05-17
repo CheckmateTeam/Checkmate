@@ -29,6 +29,11 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   share: ^2.0.4
   audioplayers: ^4.0.1
+<<<<<<< Updated upstream
+=======
+  flutter_onboarding_slider: ^1.0.9
+  chewie: ^1.5.0
+>>>>>>> Stashed changes
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +60,7 @@ flutter:
     - assets/boss/
     - assets/elements/
     - assets/audio/
+    - assets/audio/banvideoflutter.mp4
     - assets/items/
     - assets/items/comingsoon.png
     - assets/theme/

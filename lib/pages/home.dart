@@ -1,3 +1,4 @@
+import 'package:checkmate/pages/main/Banpage.dart';
 import 'package:checkmate/pages/main/archive_page.dart';
 import 'package:checkmate/pages/main/notification_page.dart';
 import 'package:checkmate/pages/main/profile_page.dart';
@@ -24,9 +25,13 @@ class _HomeState extends State<Home> {
   static const List<Widget> screen_index = <Widget>[
     TaskListPage(),
     ArchivePage(),
+<<<<<<< Updated upstream
     Text(
       'Add todo',
     ),
+=======
+    BanPage(),
+>>>>>>> Stashed changes
     NotificationPage(),
     ProfilePage()
   ];

@@ -52,7 +52,11 @@ class BanPageState extends State<BanPage> {
           const Positioned(
             top: 16.0,
             child: Text(
+<<<<<<< Updated upstream
               'Your account have been banned!',
+=======
+              'Your accout have been banned!',
+>>>>>>> Stashed changes
               style: TextStyle(
                 color: Colors.red,
                 fontSize: 24,
