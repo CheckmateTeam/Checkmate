@@ -13,21 +13,6 @@ class Database extends ChangeNotifier {
   Database() {
     init();
   }
-  // int _bossHp = 0;
-
-  // int get bossHp => _bossHp;
-
-  // set bossHp(int value) {
-  //   _bossHp = value;
-  //   // Update the value in Firestore
-  //   FirebaseFirestore.instance
-  //       .collection('user_info')
-  //       .doc(user!.uid)
-  //       .update({'BossHp': value})
-  //       .then((value) => print('BossHp updated in Firestore'))
-  //       .catchError((error) => print('Failed to update BossHp: $error'));
-  //   notifyListeners();
-  // }
 
   Future<void> init() async {
     await db

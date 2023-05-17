@@ -268,7 +268,7 @@ class BossTile extends StatelessWidget {
                           final progressValue = snapshot.data!.docs.first
                                   .data()['BossHp'] as int? ??
                               0;
-                          const maxProgressValue = 500000;
+                          const maxProgressValue = 150000;
                           final progressPercent =
                               progressValue / maxProgressValue;
                           return Column(

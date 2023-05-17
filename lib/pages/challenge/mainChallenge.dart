@@ -46,7 +46,7 @@ class _GameState extends State<Game>
   int? durationBackup;
   final Database database = Database();
   static const MethodChannel _channel = MethodChannel('gamepad');
-  final GlobalKey _bossKey = GlobalKey();
+
   static String skyAsset() => "assets/background/sky.png";
   static var addedDuration = 1000 * 20;
 
@@ -178,6 +178,8 @@ class _GameState extends State<Game>
         //                 child: const Text("OK"))
         //           ]);
         //     });
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const Home()));
 
         await doc.reference.update({'BossHp': 0});
       } else {
@@ -504,34 +506,30 @@ class _GameState extends State<Game>
 
   Widget showGameOver() {
     if (gameOver) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-                title: const Text("You have got"),
-                content: Column(
-                  children: [
-                    CircleAvatar(
-                        radius: 150,
-                        child: Image.asset(
-                          "assets/theme/Ogtheme.png",
-                        )),
-                    const Text(
-                      "\n OG Theme",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ), //Theme name and color
+      return AlertDialog(
+          title: const Text("You have got"),
+          content: Column(
+            children: [
+              CircleAvatar(
+                  radius: 150,
+                  child: Image.asset(
+                    "assets/theme/Ogtheme.png",
+                  )),
+              const Text(
+                "\n OG Theme",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ), //Theme name and color
 
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        MaterialPageRoute(builder: (context) => Home());
-                      },
-                      child: const Text("OK"))
-                ]);
-          });
-      return showGameOver();
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const Home()));
+                },
+                child: const Text("OK"))
+          ]);
     } else {
       return Container();
     }
