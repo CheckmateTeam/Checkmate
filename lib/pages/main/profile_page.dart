@@ -76,10 +76,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const CircleAvatar(
-                        radius: 50,
-                        backgroundImage:
-                            AssetImage('assets/images/avatar_01.png'),
+                      GestureDetector(
+                        child: const CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              AssetImage('assets/images/avatar_01.png'),
+                        ),
+                        onDoubleTap: () {
+                          context.read<Database>().enterBoss(
+                              DateTime.now().subtract(const Duration(days: 1)));
+                        },
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width / 15,
