@@ -11,11 +11,15 @@ class Database extends ChangeNotifier {
   String points = 'fetching...';
   String cycle = 'fetching...';
   String goal = 'fetching...';
+  int userDamage = 0;
+  int bossHp = 0;
+  // int DamageUserDid = 0;
   DateTime lastBoss = DateTime.now().subtract(const Duration(days: 1));
 
   Database() {
     init();
   }
+
   Future<void> init() async {
     await db
         .collection('user_info')
@@ -27,6 +31,9 @@ class Database extends ChangeNotifier {
       points = querySnapshot.docs[0]['points'].toString();
       cycle = querySnapshot.docs[0]['cycle'].toString();
       goal = querySnapshot.docs[0]['goal'].toString();
+      userDamage = querySnapshot.docs[0]['UserDamage'];
+      bossHp = querySnapshot.docs[0]['BossHp'];
+      // DamageUserDid = querySnapshot.docs[0]['DamageUserDid'];
     });
     lastBoss = DateTime.parse(storage.getItem('lastBoss')) ??
         DateTime.now().subtract(Duration(days: 1));
@@ -38,12 +45,15 @@ class Database extends ChangeNotifier {
 
   //Firestore instance
   FirebaseFirestore db = FirebaseFirestore.instance;
+
   String get userName => username;
   String get userEmail => email;
   String get userPoints => points;
   String get userCycle => cycle;
   String get userGoal => goal;
   DateTime get userLastBoss => lastBoss;
+  int get userDamageget => userDamage;
+  int get bossHpGet => bossHp;
 
   //DB FUNCTION
   Future<void> addNewUser(String email, String name) async {
@@ -55,6 +65,9 @@ class Database extends ChangeNotifier {
       'lastLogin': DateTime.now(),
       'points': 0,
       'cycle': 'none',
+      'BossHp': 150000,
+      'UserDamage': 300,
+      // 'DamageUserDid': 0,
     });
     notifyListeners();
   }
@@ -93,5 +106,40 @@ class Database extends ChangeNotifier {
     storage.setItem('lastBoss', time.toIso8601String());
     lastBoss = time;
     notifyListeners();
+    void buyItem(int itemPrice) {
+      db
+          .collection('user_info')
+          .where('uid', isEqualTo: user?.uid)
+          .get()
+          .then((QuerySnapshot querySnapshot) async {
+        int points = querySnapshot.docs[0]['points'];
+        if (points != null && points >= itemPrice) {
+          final newPoints = points - itemPrice;
+          await db
+              .collection('user_info')
+              .doc(querySnapshot.docs[0].id)
+              .update({'points': newPoints});
+          notifyListeners();
+        }
+      });
+    }
+  }
+
+  void buyItem(int itemPrice) {
+    db
+        .collection('user_info')
+        .where('uid', isEqualTo: user?.uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) async {
+      int points = querySnapshot.docs[0]['points'];
+      if (points != null && points >= itemPrice) {
+        final newPoints = points - itemPrice;
+        await db
+            .collection('user_info')
+            .doc(querySnapshot.docs[0].id)
+            .update({'points': newPoints});
+        notifyListeners();
+      }
+    });
   }
 }
