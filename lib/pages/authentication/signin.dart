@@ -1,3 +1,4 @@
+import 'package:checkmate/pages/authentication/forgot.dart';
 import 'package:checkmate/pages/authentication/signup.dart';
 import 'package:checkmate/pages/tutorial/tutorial_page.dart';
 import 'package:checkmate/provider/db.dart';
@@ -17,6 +18,8 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  bool showPass = true;
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -129,7 +132,7 @@ class _SignInState extends State<SignIn> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
                           margin: const EdgeInsets.all(20),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -146,14 +149,28 @@ class _SignInState extends State<SignIn> {
                               const SizedBox(height: 20),
                               TextField(
                                   controller: passwordController,
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
+                                  obscureText: showPass,
+                                  decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     hintText: "Password",
                                     labelText: "Password",
                                     prefixIcon: Icon(Icons.search),
+                                    suffixIcon: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            showPass = !showPass;
+                                          });
+                                        },
+                                        icon: showPass
+                                            ? Icon(Icons.visibility)
+                                            : Icon(Icons.visibility_off)),
                                   ),
                                   style: const TextStyle(fontSize: 12)),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [],
+                              ),
                             ],
                           )),
                       SizedBox(
@@ -192,6 +209,21 @@ class _SignInState extends State<SignIn> {
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ))),
+                      ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ForgotPage()));
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 117, 117, 117),
+                              fontSize: 14),
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
