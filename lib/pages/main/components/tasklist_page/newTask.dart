@@ -418,7 +418,7 @@ class _createTaskState extends State<createTask> {
                         cycle: cycle,
                         notify: dropdownValue,
                         notiId: notiId,
-                        notiDate: await notiDate(datestart.month, datestart.day,
+                        notiDate: await convert_notiDate(datestart.month, datestart.day,
                             timestart.hour, timestart.minute, dropdownValue)));
 
                     AnimatedSnackBar.material("Success! Your task has created",
@@ -448,7 +448,7 @@ class _createTaskState extends State<createTask> {
                         cycle: cycle,
                         notify: dropdownValue,
                         notiId: notiId,
-                        notiDate: await notiDate(datestart.month, datestart.day,
+                        notiDate: await convert_notiDate(datestart.month, datestart.day,
                             timestart.hour, timestart.minute, dropdownValue)));
 
                     AnimatedSnackBar.material("Success! Your task has created",
