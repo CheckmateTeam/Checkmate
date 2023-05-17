@@ -49,7 +49,7 @@ class _GameState extends State<Game>
 
   static String skyAsset() => "assets/background/sky.png";
   static var addedDuration = 1000 * 10;
-
+  bool showText = true;
   var coins = 0;
   var positionX = 0.0;
   var positionY = 0.0;
@@ -100,7 +100,14 @@ class _GameState extends State<Game>
     onEarnTime = () {
       initClock(add: addedDuration);
     };
-    onEarnTime.call();
+
+    Future.delayed(const Duration(seconds: 4), () {
+      setState(() {
+        showText = false;
+        onEarnTime.call();
+      });
+    });
+// Delayed update to hide the text
 
     GamePad.isGamePadConnected.then((connected) {
       setState(() {
@@ -183,7 +190,10 @@ class _GameState extends State<Game>
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const Home(sindex: 0,)),
+                      MaterialPageRoute(
+                          builder: (context) => const Home(
+                                sindex: 0,
+                              )),
                     );
                   },
                   child: const Text("OK"),
@@ -564,7 +574,10 @@ class _GameState extends State<Game>
                   updateTotalDamageToFirebase();
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const Home(sindex: 0,)),
+                    MaterialPageRoute(
+                        builder: (context) => const Home(
+                              sindex: 0,
+                            )),
                   );
                 },
                 child: const Text("Continue"),
@@ -581,16 +594,45 @@ class _GameState extends State<Game>
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Material(
-        child: Stack(
-          children: <Widget>[
-            gameEngine(context),
-            if (gameOver)
-              showGameOver((totalDamage / 100)
-                  .round()), // Pass totalDamage divided by 100 as an argument
-          ],
+      return GestureDetector(
+          child: Container(
+        color: const Color.fromARGB(
+            255, 44, 41, 41), // Set your desired background color here
+        child: Material(
+          child: Stack(
+            children: <Widget>[
+              gameEngine(context),
+              if (gameOver) showGameOver((totalDamage / 100).round()),
+
+              // Show text if `showText` is true
+              if (showText)
+                Overlay(
+                  initialEntries: [
+                    OverlayEntry(
+                      builder: (context) {
+                        return Container(
+                          color: Colors.black.withOpacity(
+                              0.5), // Set your desired background color here
+                          child: const Center(
+                            child: Text(
+                              'Tap the boss to deal damage!',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors
+                                    .white, // Set your desired text color here
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
-      );
+      ));
     });
   }
 }
