@@ -85,10 +85,10 @@ class _NotificationPageState extends State<NotificationPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:  [
-                        const Text("Today",
+                        Text("Today",
                             style: TextStyle(
                                 fontSize: 14,
-                                color: Color.fromARGB(132, 0, 0, 0))),
+                                color: Theme.of(context).secondaryHeaderColor)),
 
 
                         TextButton(
@@ -183,7 +183,7 @@ class _NotificationPageState extends State<NotificationPage> {
           padding: const EdgeInsets.symmetric(
           vertical: 20.0),
           decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).scaffoldBackgroundColor,
           boxShadow: [
             BoxShadow(
               color: task.isRead ? Color.fromARGB(0, 158, 158, 158) : Color.fromARGB(99, 158, 158, 158),
@@ -209,14 +209,14 @@ class _NotificationPageState extends State<NotificationPage> {
                         Text(task.taskName,
                         style: TextStyle(
                         fontSize: 20,
-                        color: task.isRead ? Colors.grey : Colors.black,
+                        color: task.isRead ? Colors.grey : Theme.of(context).secondaryHeaderColor,
                         fontWeight:FontWeight.w700)),
                         
                         
                         Text(task.taskDesc,
                         style: TextStyle(
                         fontSize: 16,
-                        color: task.isRead ? Colors.grey : Colors.black,
+                        color: task.isRead ? Colors.grey : Theme.of(context).secondaryHeaderColor,
                         ))
                       ],
                     ),
@@ -224,8 +224,8 @@ class _NotificationPageState extends State<NotificationPage> {
                 ),
                 Checkbox(
                   value: !task.isRead,
-                  checkColor: Colors.red,
-                  activeColor: Colors.red,
+                  checkColor: Theme.of(context).primaryColor,
+                  activeColor: Theme.of(context).primaryColor,
                   side: BorderSide(width: 2,color: Colors.grey),
                   onChanged: (bool? value) {
                     data.updateReadTask(task);
