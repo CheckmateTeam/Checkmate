@@ -248,7 +248,7 @@ class _BossTileState extends State<BossTile> {
                             color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                       Text(
-                        "You Defeated The Boss",
+                        "The boss has been defeated.",
                         style: TextStyle(
                             fontSize: 14, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
