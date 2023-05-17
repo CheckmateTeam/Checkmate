@@ -1,4 +1,5 @@
 import 'package:checkmate/pages/challenge/mainChallenge.dart';
+import 'package:checkmate/provider/db.dart';
 import 'package:checkmate/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -126,46 +127,96 @@ class _BossTileState extends State<BossTile> {
                   });
               return;
             } else {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      icon: const Icon(Icons.info_outlined, size: 50),
-                      iconColor: Color.fromARGB(255, 1, 67, 117),
-                      title: const Text(
-                        "Enter the boss fight?",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
+              DateTime lastBossFight = context.read<Database>().userLastBoss;
+
+              if (isSameDay(lastBossFight, DateTime.now())) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        icon: const Icon(Icons.warning_amber_rounded, size: 50),
+                        iconColor: Theme.of(context).primaryColor,
+                        title: const Text(
+                          "You can only fight the boss once a day",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                      content: const Text(
-                        "You can only fight the boss once a day. You can come back to fight the boss later if you want to complete more tasks.",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
+                        content: Column(
+                          children: [
+                            const Text(
+                              "You can come back to fight the boss tomorrow",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                context.read<Database>().enterBoss(
+                                    DateTime.now()
+                                        .subtract(const Duration(days: 1)));
+                              },
+                              child: Text('reset'),
+                            ),
+                          ],
                         ),
-                      ),
-                      actionsAlignment: MainAxisAlignment.spaceAround,
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Cancel")),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const MainChallenge()));
-                            },
-                            child: const Text("Go"))
-                      ],
-                    );
-                  });
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("OK"))
+                        ],
+                      );
+                    });
+                return;
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        icon: const Icon(Icons.info_outlined, size: 50),
+                        iconColor: Color.fromARGB(255, 1, 67, 117),
+                        title: const Text(
+                          "Enter the boss fight?",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        content: const Text(
+                          "You can only fight the boss once a day. You can come back to fight the boss later if you want to complete more tasks.",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        actionsAlignment: MainAxisAlignment.spaceAround,
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Cancel")),
+                          TextButton(
+                              onPressed: () {
+                                context
+                                    .read<Database>()
+                                    .enterBoss(DateTime.now());
+                                Navigator.pop(context);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MainChallenge()));
+                              },
+                              child: const Text("Go"))
+                        ],
+                      );
+                    });
+              }
             }
           }
         }
@@ -187,6 +238,13 @@ class _BossTileState extends State<BossTile> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            // InkWell(
+            //   onTap: () {
+            //     context.read<Database>().enterBoss(
+            //         DateTime.now().subtract(const Duration(days: 1)));
+            //   },
+            //   child: Text('reset'),
+            // ),
             const Image(image: AssetImage("assets/boss/boss.png")),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -323,46 +381,81 @@ class _BossTileState extends State<BossTile> {
                             });
                         return;
                       } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                icon: const Icon(Icons.info_outlined, size: 50),
-                                iconColor: Color.fromARGB(255, 1, 67, 117),
-                                title: const Text(
-                                  "Enter the boss fight?",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
+                        DateTime lastBossFight =
+                            context.read<Database>().userLastBoss;
+
+                        if (isSameDay(lastBossFight, DateTime.now())) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  icon: const Icon(Icons.warning_amber_rounded,
+                                      size: 50),
+                                  iconColor: Theme.of(context).primaryColor,
+                                  title: const Text(
+                                    "You can only fight the boss once a day",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                ),
-                                content: const Text(
-                                  "You can only fight the boss once a day. You can come back to fight the boss later if you want to complete more tasks.",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("OK"))
+                                  ],
+                                );
+                              });
+                          return;
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  icon:
+                                      const Icon(Icons.info_outlined, size: 50),
+                                  iconColor: Color.fromARGB(255, 1, 67, 117),
+                                  title: const Text(
+                                    "Enter the boss fight?",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                ),
-                                actionsAlignment: MainAxisAlignment.spaceAround,
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("Cancel")),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const MainChallenge()));
-                                      },
-                                      child: const Text("Go"))
-                                ],
-                              );
-                            });
+                                  content: const Text(
+                                    "You can only fight the boss once a day. You can come back to fight the boss later if you want to complete more tasks.",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  actionsAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Cancel")),
+                                    TextButton(
+                                        onPressed: () {
+                                          context
+                                              .read<Database>()
+                                              .enterBoss(DateTime.now());
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const MainChallenge()));
+                                        },
+                                        child: const Text("Go"))
+                                  ],
+                                );
+                              });
+                        }
                       }
                     }
                   }

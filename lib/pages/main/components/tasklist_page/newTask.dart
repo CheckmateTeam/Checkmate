@@ -1,6 +1,4 @@
 // ignore_for_file: camel_case_types
-
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
@@ -8,8 +6,6 @@ import 'package:checkmate/model/taskModel.dart';
 import 'package:checkmate/pages/home.dart';
 import 'package:checkmate/pages/main/task_page.dart';
 import 'package:checkmate/provider/db.dart';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -386,9 +382,11 @@ class _createTaskState extends State<createTask> {
               ),
             ],
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 30),
           ElevatedButton(
               style: ButtonStyle(
+                  minimumSize: MaterialStateProperty.all<Size>(
+                      const Size(double.infinity, 50)),
                   backgroundColor: MaterialStateProperty.all<Color>(
                       Theme.of(context).primaryColor)),
               onPressed: () async {
