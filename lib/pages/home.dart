@@ -25,13 +25,7 @@ class _HomeState extends State<Home> {
   static const List<Widget> screen_index = <Widget>[
     TaskListPage(),
     ArchivePage(),
-<<<<<<< Updated upstream
-    Text(
-      'Add todo',
-    ),
-=======
     BanPage(),
->>>>>>> Stashed changes
     NotificationPage(),
     ProfilePage()
   ];
