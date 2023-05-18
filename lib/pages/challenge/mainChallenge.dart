@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:checkmate/pages/authentication/signin.dart';
+import 'package:checkmate/pages/main/Banpage.dart';
 import 'package:checkmate/pages/main/task_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -210,7 +211,7 @@ class _GameState extends State<Game>
       } else {
         if (damageUser <= 5000) {
           await doc.reference.update({'BanStatus': 1});
-          MaterialPageRoute(builder: (context) => const SignIn());
+          MaterialPageRoute(builder: (context) => const BanPage());
         }
         totalDamage += damageUser;
         await doc.reference
