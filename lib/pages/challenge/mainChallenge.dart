@@ -210,7 +210,7 @@ class _GameState extends State<Game>
         await doc.reference.update({'BossHp': 0});
       } else {
         print(HackDamage);
-        if (HackDamage >= 5000) {
+        if (HackDamage >= 1000) {
           print("Hack Detected");
           Navigator.pushReplacement(
             context,
