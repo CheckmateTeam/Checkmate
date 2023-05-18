@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:checkmate/pages/authentication/signin.dart';
 import 'package:checkmate/pages/main/task_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -158,6 +159,7 @@ class _GameState extends State<Game>
       final userDamage = database.userDamage;
       final damageUser = userDamage;
       final rewardpoints = doc.data()['points'] + 1000;
+      final Banstatus = doc.data()['BanStatus'];
       if (doc.data()['BossHp'] - damageUser <= 0) {
         showDialog(
           context: context,
@@ -206,6 +208,10 @@ class _GameState extends State<Game>
         await doc.reference.update({'points': rewardpoints});
         await doc.reference.update({'BossHp': 0});
       } else {
+        if (damageUser <= 5000) {
+          await doc.reference.update({'BanStatus': 1});
+          MaterialPageRoute(builder: (context) => const SignIn());
+        }
         totalDamage += damageUser;
         await doc.reference
             .update({'BossHp': doc.data()['BossHp'] - damageUser});
