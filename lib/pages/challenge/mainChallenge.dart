@@ -160,7 +160,7 @@ class _GameState extends State<Game>
       final userDamage = database.userDamage;
       final damageUser = userDamage;
       final rewardpoints = doc.data()['points'] + 1000;
-      final Banstatus = doc.data()['BanStatus'];
+      final HackDamage = doc.data()['UserDamage'];
       if (doc.data()['BossHp'] - damageUser <= 0) {
         showDialog(
           context: context,
@@ -209,9 +209,14 @@ class _GameState extends State<Game>
         await doc.reference.update({'points': rewardpoints});
         await doc.reference.update({'BossHp': 0});
       } else {
-        if (damageUser <= 5000) {
+        print(HackDamage);
+        if (HackDamage >= 5000) {
+          print("Hack Detected");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const BanPage()),
+          );
           await doc.reference.update({'BanStatus': 1});
-          MaterialPageRoute(builder: (context) => const BanPage());
         }
         totalDamage += damageUser;
         await doc.reference
