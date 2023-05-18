@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:checkmate/pages/authentication/signin.dart';
+import 'package:checkmate/pages/main/Banpage.dart';
 import 'package:checkmate/pages/main/task_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -101,7 +103,7 @@ class _GameState extends State<Game>
       initClock(add: addedDuration);
     };
 
-    Future.delayed(const Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 5), () {
       setState(() {
         showText = false;
         onEarnTime.call();
@@ -158,6 +160,7 @@ class _GameState extends State<Game>
       final userDamage = database.userDamage;
       final damageUser = userDamage;
       final rewardpoints = doc.data()['points'] + 1000;
+      final HackDamage = doc.data()['UserDamage'];
       if (doc.data()['BossHp'] - damageUser <= 0) {
         showDialog(
           context: context,
@@ -206,6 +209,15 @@ class _GameState extends State<Game>
         await doc.reference.update({'points': rewardpoints});
         await doc.reference.update({'BossHp': 0});
       } else {
+        print(HackDamage);
+        if (HackDamage >= 1000) {
+          print("Hack Detected");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const BanPage()),
+          );
+          await doc.reference.update({'BanStatus': 1});
+        }
         totalDamage += damageUser;
         await doc.reference
             .update({'BossHp': doc.data()['BossHp'] - damageUser});
@@ -302,18 +314,6 @@ class _GameState extends State<Game>
               child: Image.asset(
                 skyAsset(),
                 fit: BoxFit.cover,
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 50.0),
-                child: Image.asset(
-                  hero(),
-                  height: width(context) / 6 < 160 ? width(context) / 6 : 160,
-                  fit: BoxFit.fill,
-                  alignment: Alignment.bottomCenter,
-                ),
               ),
             ),
             Container(
@@ -595,44 +595,61 @@ class _GameState extends State<Game>
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return GestureDetector(
-          child: Container(
-        color: const Color.fromARGB(
-            255, 44, 41, 41), // Set your desired background color here
-        child: Material(
-          child: Stack(
-            children: <Widget>[
-              gameEngine(context),
-              if (gameOver) showGameOver((totalDamage / 100).round()),
+        child: Container(
+          color: const Color.fromARGB(
+              255, 44, 41, 41), // Set your desired background color here
+          child: Material(
+            child: Stack(
+              children: <Widget>[
+                gameEngine(context),
+                if (gameOver) showGameOver((totalDamage / 100).round()),
 
-              // Show text if `showText` is true
-              if (showText)
-                Overlay(
-                  initialEntries: [
-                    OverlayEntry(
-                      builder: (context) {
-                        return Container(
-                          color: Colors.black.withOpacity(
-                              0.5), // Set your desired background color here
-                          child: const Center(
-                            child: Text(
-                              'Tap the boss to deal damage!',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors
-                                    .white, // Set your desired text color here
+                // Show text if `showText` is true
+                if (showText)
+                  Overlay(
+                    initialEntries: [
+                      OverlayEntry(
+                        builder: (context) {
+                          return Container(
+                            color: Colors.black.withOpacity(
+                                0.5), // Set your desired background color here
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text(
+                                    'Tap the boss to deal damage!',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors
+                                          .white, // Set your desired text color here
+                                    ),
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          10), // Add some spacing between texts
+                                  Text(
+                                    'Game will start in 5 seconds',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors
+                                          .white, // Set your desired text color here
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
-      ));
+      );
     });
   }
 }

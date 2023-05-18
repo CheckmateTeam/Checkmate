@@ -50,9 +50,9 @@ class BanPageState extends State<BanPage> {
             ],
           ),
           const Positioned(
-            top: 16.0,
+            top: 20.0,
             child: Text(
-              'Your account have been banned!',
+              'Are you kidding me?',
               style: TextStyle(
                 color: Colors.red,
                 fontSize: 24,
@@ -63,7 +63,18 @@ class BanPageState extends State<BanPage> {
           const Positioned(
             top: 55.0,
             child: Text(
-              'It just planner app, why you have to be mad?',
+              'It just planner app, why you have to be mad',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Positioned(
+            top: 80.0,
+            child: Text(
+              'on GameChallenge?',
               style: TextStyle(
                 color: Colors.red,
                 fontSize: 18,
