@@ -15,6 +15,7 @@ class Database extends ChangeNotifier {
   int bossHp = 0;
   // int DamageUserDid = 0;
   DateTime lastBoss = DateTime.now().subtract(const Duration(days: 1));
+  int accountban = 0;
 
   Database() {
     init();
@@ -33,6 +34,7 @@ class Database extends ChangeNotifier {
       goal = querySnapshot.docs[0]['goal'].toString();
       userDamage = querySnapshot.docs[0]['UserDamage'];
       bossHp = querySnapshot.docs[0]['BossHp'];
+      accountban = querySnapshot.docs[0]['BanStatus'];
       // DamageUserDid = querySnapshot.docs[0]['DamageUserDid'];
     });
     lastBoss = DateTime.parse(storage.getItem('lastBoss')) ??
@@ -54,6 +56,7 @@ class Database extends ChangeNotifier {
   DateTime get userLastBoss => lastBoss;
   int get userDamageget => userDamage;
   int get bossHpGet => bossHp;
+  int get userBanStatus => accountban;
 
   //DB FUNCTION
   Future<void> addNewUser(String email, String name) async {
@@ -67,6 +70,7 @@ class Database extends ChangeNotifier {
       'cycle': 'none',
       'BossHp': 150000,
       'UserDamage': 300,
+      'BanStatus': 0,
       // 'DamageUserDid': 0,
     });
     notifyListeners();
